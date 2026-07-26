@@ -130,6 +130,9 @@ public class EmployeeJobService : IEmployeeJobService
         if (await _dao.HasAppliedAsync(employeeUserAccountId, jobPostId))
             return new ServiceResult(false, "You've already expressed interest in this job.");
 
+        if (await _dao.GetActiveApplicantCountAsync(jobPostId) >= job.RequiredWorkerNbr)
+            return new ServiceResult(false, "All positions for this job have already been filled.");
+
         await _dao.InsertApplicationAsync(employeeUserAccountId, jobPostId, ipAddress);
 
         _logger.LogInformation("Employee {EmployeeId} expressed interest in JobPostId={JobPostId}",

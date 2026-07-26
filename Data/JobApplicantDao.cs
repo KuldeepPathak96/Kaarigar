@@ -162,5 +162,21 @@ public class JobApplicantDao : IJobApplicantDao
         application.UpdatedBy = "EMPLOYER_CANCEL_APPLICANT";
         application.UpdatedTs = DateTime.UtcNow;
         await _db.SaveChangesAsync();
+
+        // A slot just freed up — reopen the job if it had been auto-closed for being full.
+        var jobPost = await _db.JobPosts.FirstOrDefaultAsync(jp => jp.JobPostId == application.JobPostId);
+        if (jobPost != null && jobPost.StatusCd == "CLOSED")
+        {
+            var activeApplicantCount = await _db.JobApplications
+                .CountAsync(a => a.JobPostId == jobPost.JobPostId && a.StatusCd != "CANCELLED");
+
+            if (activeApplicantCount < jobPost.RequiredWorkerNbr)
+            {
+                jobPost.StatusCd = "ACTIVE";
+                jobPost.UpdatedBy = "JOB_POST_AUTO_REOPEN";
+                jobPost.UpdatedTs = DateTime.UtcNow;
+                await _db.SaveChangesAsync();
+            }
+        }
     }
 }

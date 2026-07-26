@@ -59,7 +59,7 @@
                         @(job.RequiredSkillNames.Any() ? string.Join(", ", job.RequiredSkillNames) : "No specific skills required")
                     </p>
                     <p class="k-job-card__meta">Posted: @job.DatePosted.ToString("dd MMM yyyy")</p>
-                    <p class="k-job-card__meta"><strong>@job.ApplicationsCount</strong> application(s)</p>
+                    <p class="k-job-card__meta"><strong>@job.ApplicationsCount</strong> application(s) &nbsp;·&nbsp; <strong>@job.RemainingWorkerNbr</strong> remaining / @job.RequiredWorkerNbr required</p>
 
                     <div class="k-job-card__actions">
                         <a href="/job/applicants/@job.JobPostId" class="k-btn k-btn--sm k-btn--secondary">View Applicants</a>

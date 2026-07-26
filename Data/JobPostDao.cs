@@ -114,6 +114,13 @@ public class JobPostDao : IJobPostDao
             .Select(g => new { JobPostId = g.Key, Count = g.Count() })
             .ToDictionaryAsync(x => x.JobPostId, x => x.Count);
 
+        var filledCounts = await _db.JobApplications
+            .AsNoTracking()
+            .Where(a => jobPostIds.Contains(a.JobPostId) && a.StatusCd != "CANCELLED")
+            .GroupBy(a => a.JobPostId)
+            .Select(g => new { JobPostId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.JobPostId, x => x.Count);
+
         return jobPosts.Select(jp => new JobPostListItemViewModel
         {
             JobPostId = jp.JobPostId,
@@ -122,6 +129,8 @@ public class JobPostDao : IJobPostDao
                                               .Where(n => n.Length > 0).ToList(),
             DatePosted = jp.CreatedTs,
             ApplicationsCount = applicationCounts.TryGetValue(jp.JobPostId, out var count) ? count : 0,
+            RequiredWorkerNbr = jp.RequiredWorkerNbr,
+            FilledWorkerNbr = filledCounts.TryGetValue(jp.JobPostId, out var filled) ? filled : 0,
             StatusCd = jp.StatusCd,
         }).ToList();
     }

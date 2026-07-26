@@ -25,6 +25,12 @@ public class JobDetailViewModel
     public string StatusCd { get; set; } = "ACTIVE";
     public List<string> RequiredSkillNames { get; set; } = new();
 
+    /// <summary>Count of applicants not CANCELLED — counts toward filling RequiredWorkerNbr.</summary>
+    public int FilledWorkerNbr { get; set; }
+
+    /// <summary>Positions still open (never negative).</summary>
+    public int RemainingWorkerNbr => Math.Max(0, RequiredWorkerNbr - FilledWorkerNbr);
+
     public List<ApplicantListItemViewModel> Applicants { get; set; } = new();
 }
 

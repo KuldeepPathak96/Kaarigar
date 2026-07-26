@@ -98,5 +98,8 @@ public class JobPostListItemViewModel
     public List<string> RequiredSkillNames { get; set; } = new();
     public DateTime DatePosted { get; set; }
     public int ApplicationsCount { get; set; }
+    public int RequiredWorkerNbr { get; set; }
+    public int FilledWorkerNbr { get; set; }
+    public int RemainingWorkerNbr => Math.Max(0, RequiredWorkerNbr - FilledWorkerNbr);
     public string StatusCd { get; set; } = "ACTIVE"; // ACTIVE | PAUSED | CLOSED
 }

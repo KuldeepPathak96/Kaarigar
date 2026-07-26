@@ -35,12 +35,15 @@
         <div class="k-dash-section__header">
             <h2 class="k-dash-section__title">Job Details</h2>
             <span class="@statusBadgeClass">@Model.StatusCd</span>
+            <span class="k-badge @(Model.RemainingWorkerNbr == 0 ? "k-badge--red" : "k-badge--amber")">
+                @Model.RemainingWorkerNbr remaining / @Model.RequiredWorkerNbr required
+            </span>
         </div>
 
         <div class="k-form__row">
             <div class="k-form__group">
                 <label>Required Workers</label>
-                <p>@Model.RequiredWorkerNbr</p>
+                <p>@Model.FilledWorkerNbr filled of @Model.RequiredWorkerNbr (@Model.RemainingWorkerNbr remaining)</p>
             </div>
             <div class="k-form__group">
                 <label>Hourly Rate</label>

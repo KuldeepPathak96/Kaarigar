@@ -70,6 +70,10 @@ public class EmployeeJobDao : IEmployeeJobDao
         _db.JobApplications.AsNoTracking()
            .AnyAsync(a => a.EmployeeUserAccountId == employeeUserAccountId && a.JobPostId == jobPostId);
 
+    public Task<int> GetActiveApplicantCountAsync(int jobPostId) =>
+        _db.JobApplications.AsNoTracking()
+           .CountAsync(a => a.JobPostId == jobPostId && a.StatusCd != "CANCELLED");
+
     public async Task InsertApplicationAsync(int employeeUserAccountId, int jobPostId, string? ipAddress)
     {
         var application = new JobApplication
@@ -84,6 +88,21 @@ public class EmployeeJobDao : IEmployeeJobDao
 
         _db.JobApplications.Add(application);
         await _db.SaveChangesAsync();
+
+        // Auto-close the job once enough Kaarigars have applied for the required positions.
+        var jobPost = await _db.JobPosts.FirstOrDefaultAsync(jp => jp.JobPostId == jobPostId);
+        if (jobPost != null && jobPost.StatusCd == "ACTIVE")
+        {
+            var activeApplicantCount = await GetActiveApplicantCountAsync(jobPostId);
+
+            if (activeApplicantCount >= jobPost.RequiredWorkerNbr)
+            {
+                jobPost.StatusCd = "CLOSED";
+                jobPost.UpdatedBy = "JOB_POST_AUTO_CLOSE";
+                jobPost.UpdatedTs = DateTime.UtcNow;
+                await _db.SaveChangesAsync();
+            }
+        }
     }
 
     // ── W-05: MY APPLICATIONS ────────────────────────────────────────────────

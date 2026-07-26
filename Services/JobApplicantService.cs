@@ -85,6 +85,7 @@ public class JobApplicantService : IJobApplicantService
             RequiredSkillNames = jobPost.JobSkills.Select(js => js.Skill?.SkillName ?? string.Empty)
                                                     .Where(n => n.Length > 0).ToList(),
             Applicants = applicantItems,
+            FilledWorkerNbr = applicantItems.Count(a => a.StatusCd != "CANCELLED"),
         };
     }
 

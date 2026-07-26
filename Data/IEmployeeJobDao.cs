@@ -24,6 +24,9 @@ public interface IEmployeeJobDao
 
     Task<bool> HasAppliedAsync(int employeeUserAccountId, int jobPostId);
 
+    /// <summary>Count of applications not CANCELLED for this job — used to guard against exceeding RequiredWorkerNbr.</summary>
+    Task<int> GetActiveApplicantCountAsync(int jobPostId);
+
     /// <summary>Inserts the JOB_APPLICATION row representing "Express Interest" (Screen W-04). One-click, cannot be undone.</summary>
     Task InsertApplicationAsync(int employeeUserAccountId, int jobPostId, string? ipAddress);
 
