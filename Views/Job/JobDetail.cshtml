@@ -231,6 +231,15 @@
                                 <td data-label="" style="white-space:nowrap">
                                     <a href="/job/applicant/@applicant.JobApplicationId" class="k-btn k-btn--sm k-btn--secondary">View Profile</a>
 
+                                    @if (string.IsNullOrEmpty(applicant.RevealedContactNbr))
+                                    {
+                                        <form asp-action="ContactEmployee" asp-controller="Job" asp-route-jobApplicationId="@applicant.JobApplicationId" method="post" class="k-inline-form">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="jobPostId" value="@Model.JobPostId" />
+                                            <button type="submit" class="k-btn k-btn--sm k-btn--secondary">Contact</button>
+                                        </form>
+                                    }
+
                                     @if (applicant.CanCancel)
                                     {
                                         <button type="button" class="k-btn k-btn--sm k-btn--danger" onclick="document.getElementById('cancel-modal-@applicant.JobApplicationId').classList.remove('k-hidden')">Cancel</button>

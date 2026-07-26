@@ -8,5 +8,11 @@ namespace Kaarigar.Controllers
         {
             return View();
         }
+
+        [HttpGet("/terms")]
+        public IActionResult Terms()
+        {
+            return View();
+        }
     }
 }

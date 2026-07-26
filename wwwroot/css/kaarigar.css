@@ -678,6 +678,82 @@ img {
     color: var(--k-muted);
 }
 
+/* ── LEGAL PAGES (Terms of Use, etc.) ───────────────────────────────────── */
+.k-legal {
+    padding: 3rem 0 5rem;
+}
+
+.k-legal__container {
+    max-width: 780px;
+}
+
+.k-legal__back {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--k-muted);
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+}
+
+.k-legal__back:hover {
+    color: var(--k-black);
+}
+
+.k-legal__title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--k-black);
+    margin-bottom: 0.4rem;
+}
+
+.k-legal__updated {
+    color: var(--k-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.75rem;
+}
+
+.k-legal__notice {
+    background: var(--k-surface);
+    border: 1px solid var(--k-border);
+    border-radius: var(--r-md);
+    padding: 1rem 1.25rem;
+    font-size: 0.88rem;
+    color: var(--k-black-60);
+    margin-bottom: 2rem;
+}
+
+.k-legal h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--k-black);
+    margin: 2rem 0 0.75rem;
+}
+
+.k-legal p,
+.k-legal li {
+    color: var(--k-black-60);
+    line-height: 1.7;
+    font-size: 0.97rem;
+}
+
+.k-legal p {
+    margin-bottom: 1rem;
+}
+
+.k-legal ul {
+    margin: 0 0 1rem 1.25rem;
+    padding: 0;
+}
+
+.k-legal li {
+    margin-bottom: 0.5rem;
+}
+
+.k-legal strong {
+    color: var(--k-black);
+}
+
 /* ── FINAL CTA ───────────────────────────────────────────────────────────── */
 .k-cta {
     background: var(--k-black);
