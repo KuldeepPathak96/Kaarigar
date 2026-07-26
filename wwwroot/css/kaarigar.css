@@ -1,0 +1,1531 @@
+/* ============================================================================
+   KAARIGAR — New Brand Theme
+   Colors: Yellow #FFCC00 | Green #22C55E | Black #111827
+   ============================================================================ */
+
+:root {
+    --k-yellow: #FFCC00;
+    --k-yellow-dk: #E6B800;
+    --k-green: #22C55E;
+    --k-green-dk: #16A34A;
+    --k-black: #111827;
+    --k-black-80: #1F2937;
+    --k-black-60: #374151;
+    --k-white: #FFFFFF;
+    --k-surface: #F8FAFC;
+    --k-border: #E5E7EB;
+    --k-muted: #6B7280;
+    --k-text: #111827;
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --shadow-lift: 0 10px 40px rgba(0, 0, 0, 0.12);
+    --font-display: 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --nav-h: 72px;
+    --container-w: 1200px;
+}
+
+/* ── RESET & BASE ────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body.k-body {
+    font-family: var(--font-body);
+    color: var(--k-text);
+    background: var(--k-white);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ── CONTAINER ───────────────────────────────────────────────────────────── */
+.k-container {
+    max-width: var(--container-w);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* ── NAV ─────────────────────────────────────────────────────────────────── */
+.k-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--nav-h);
+    background: var(--k-white);
+    border-bottom: 1px solid var(--k-border);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.k-nav__inner {
+    max-width: var(--container-w);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.k-nav__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.k-nav__logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.k-nav__brand-text {
+    font-family: var(--font-display);
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--k-black);
+    letter-spacing: -0.02em;
+}
+
+.k-nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────────────── */
+.k-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: var(--r-md);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+    .k-btn:hover {
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+.k-btn--primary {
+    background: var(--k-yellow);
+    color: var(--k-black);
+    border-color: var(--k-yellow);
+    font-weight: 800;
+}
+
+    .k-btn--primary:hover {
+        background: var(--k-yellow-dk);
+        border-color: var(--k-yellow-dk);
+    }
+
+.k-btn--green {
+    background: var(--k-green);
+    color: white;
+    border-color: var(--k-green);
+}
+
+    .k-btn--green:hover {
+        background: var(--k-green-dk);
+        border-color: var(--k-green-dk);
+    }
+
+.k-btn--outline {
+    background: transparent;
+    color: var(--k-black);
+    border-color: var(--k-black);
+}
+
+    .k-btn--outline:hover {
+        background: var(--k-black);
+        color: white;
+    }
+
+.k-btn--ghost {
+    background: transparent;
+    color: var(--k-black-60);
+    border-color: transparent;
+}
+
+    .k-btn--ghost:hover {
+        background: var(--k-surface);
+        color: var(--k-black);
+    }
+
+.k-btn--lg {
+    padding: 0.85rem 1.8rem;
+    font-size: 1.05rem;
+}
+
+.k-btn--sm {
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+}
+
+.k-btn--full {
+    width: 100%;
+    justify-content: center;
+}
+
+/* ── HERO ────────────────────────────────────────────────────────────────── */
+.k-hero {
+    background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
+    color: white;
+    padding: 5rem 0 4.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.k-hero__bg {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 30%, rgba(255,204,0,0.08) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(34,197,94,0.08) 0%, transparent 50%);
+}
+
+.k-hero .k-container {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.k-hero__content {
+    max-width: 560px;
+}
+
+.k-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,204,0,0.15);
+    color: var(--k-yellow);
+    padding: 0.35rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(255,204,0,0.3);
+}
+
+.k-hero__title {
+    font-size: clamp(2.8rem, 6vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 1.25rem;
+    color: white;
+}
+
+    .k-hero__title .highlight {
+        color: var(--k-yellow);
+    }
+
+.k-hero__subtitle {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.k-hero__cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.k-hero__stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.k-stat {
+    text-align: left;
+}
+
+    .k-stat strong {
+        display: block;
+        font-size: 1.85rem;
+        font-weight: 800;
+        color: var(--k-yellow);
+    }
+
+    .k-stat span {
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.7);
+    }
+
+/* Hero illustration */
+.k-hero__illustration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.k-hero-card {
+    background: white;
+    border-radius: var(--r-xl);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-lift);
+    width: 100%;
+    max-width: 340px;
+    color: var(--k-black);
+}
+
+.k-hero-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.k-hero-card__badge {
+    background: #DCFCE7;
+    color: #166534;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.7rem;
+    border-radius: 9999px;
+}
+
+.k-hero-card__title {
+    font-weight: 800;
+    font-size: 1.15rem;
+    margin-bottom: 0.35rem;
+}
+
+.k-hero-card__meta {
+    color: var(--k-muted);
+    font-size: 0.9rem;
+}
+
+/* ── ROLES SECTION ───────────────────────────────────────────────────────── */
+.k-roles {
+    padding: 5rem 0;
+    background: var(--k-surface);
+}
+
+.k-section-title {
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--k-black);
+}
+
+.k-section-subtitle {
+    text-align: center;
+    color: var(--k-muted);
+    max-width: 520px;
+    margin: 0 auto 3rem;
+}
+
+.k-roles__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.k-role-card {
+    background: white;
+    border-radius: var(--r-xl);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-card);
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+    .k-role-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-lift);
+    }
+
+.k-role-card--employer {
+    border-color: var(--k-yellow);
+}
+
+.k-role-card--employee {
+    border-color: var(--k-green);
+}
+
+.k-role-card__icon {
+    width: 64px;
+    height: 64px;
+    background: var(--k-surface);
+    border-radius: var(--r-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    margin-bottom: 1.25rem;
+}
+
+.k-role-card h3 {
+    font-size: 1.55rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+}
+
+.k-role-card p {
+    color: var(--k-muted);
+    margin-bottom: 1.5rem;
+}
+
+.k-role-card ul {
+    margin-bottom: 2rem;
+}
+
+    .k-role-card ul li {
+        padding: 0.45rem 0;
+        padding-left: 1.6rem;
+        position: relative;
+    }
+
+        .k-role-card ul li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--k-green);
+            font-weight: 700;
+        }
+
+/* ── HOW IT WORKS ────────────────────────────────────────────────────────── */
+.k-how {
+    padding: 5rem 0;
+}
+
+.k-how__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+}
+
+.k-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.k-flow-label {
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--k-muted);
+    margin-bottom: 0.75rem;
+}
+
+.k-step {
+    display: flex;
+    gap: 1.25rem;
+}
+
+.k-step__num {
+    width: 42px;
+    height: 42px;
+    background: var(--k-black);
+    color: white;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    flex-shrink: 0;
+}
+
+.k-step__content h4 {
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+}
+
+.k-step__content p {
+    color: var(--k-muted);
+    font-size: 0.95rem;
+}
+
+/* ── SKILLS BANNER ───────────────────────────────────────────────────────── */
+.k-skills {
+    background: var(--k-black);
+    padding: 1.5rem 0;
+    overflow: hidden;
+}
+
+.k-skills-track {
+    display: flex;
+    gap: 1.5rem;
+    animation: skills-scroll 25s linear infinite;
+}
+
+.k-skill-pill {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    padding: 0.6rem 1.4rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+@keyframes skills-scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* ── TRUST ───────────────────────────────────────────────────────────────── */
+.k-trust {
+    padding: 5rem 0;
+    background: var(--k-surface);
+}
+
+.k-trust__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.75rem;
+}
+
+.k-trust-card {
+    background: white;
+    padding: 2rem 1.75rem;
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-card);
+    text-align: center;
+}
+
+.k-trust-card__icon {
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+}
+
+.k-trust-card h4 {
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+}
+
+.k-trust-card p {
+    font-size: 0.9rem;
+    color: var(--k-muted);
+}
+
+/* ── SHIFT LIFECYCLE ─────────────────────────────────────────────────────── */
+.k-lifecycle {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+.k-lifecycle__step {
+    background: white;
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-card);
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    width: 190px;
+    flex-shrink: 0;
+}
+
+.k-lifecycle__icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.k-lifecycle__step h4 {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+}
+
+.k-lifecycle__step p {
+    font-size: 0.8rem;
+    color: var(--k-muted);
+}
+
+.k-lifecycle__arrow {
+    align-self: center;
+    font-size: 1.5rem;
+    color: var(--k-muted);
+    flex-shrink: 0;
+}
+
+/* ── CITY / AREA PICKER ──────────────────────────────────────────────────── */
+.k-autocomplete-wrap {
+    position: relative;
+}
+
+.k-autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    margin-top: 4px;
+    max-height: 220px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid var(--k-border, #E5E7EB);
+    border-radius: var(--r-md, 8px);
+    box-shadow: var(--shadow-card, 0 4px 12px rgba(0,0,0,0.08));
+}
+
+.k-autocomplete-item {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.k-autocomplete-item:hover {
+    background: var(--k-surface, #F9FAFB);
+}
+
+
+.k-pain {
+    padding: 5rem 0;
+    background: var(--k-surface);
+}
+
+.k-pain__tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 2rem 0 2.5rem;
+    flex-wrap: wrap;
+}
+
+.k-pain__tab {
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 9999px;
+    border: 2px solid var(--k-border, #E5E7EB);
+    background: white;
+    color: var(--k-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.k-pain__tab:hover {
+    border-color: var(--k-primary, #FFCC00);
+}
+
+.k-pain__tab.active {
+    background: var(--k-black);
+    border-color: var(--k-black);
+    color: white;
+}
+
+.k-pain__panels {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.k-pain__panel {
+    display: none;
+    background: white;
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-card);
+    padding: 2.5rem 2rem;
+    text-align: center;
+}
+
+.k-pain__panel.active {
+    display: block;
+}
+
+.k-pain__icon {
+    font-size: 2.6rem;
+    margin-bottom: 1rem;
+}
+
+.k-pain__statement {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--k-black);
+    margin-bottom: 1rem;
+}
+
+.k-pain__resolve {
+    font-size: 1rem;
+    color: var(--k-muted);
+}
+
+/* ── FINAL CTA ───────────────────────────────────────────────────────────── */
+.k-cta {
+    background: var(--k-black);
+    color: white;
+    padding: 4.5rem 0;
+}
+
+.k-cta__box {
+    background: #1F2937;
+    border-radius: var(--r-xl);
+    padding: 3.25rem 3.5rem;
+    text-align: center;
+}
+
+    .k-cta__box h2 {
+        font-size: 2.3rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+    }
+
+    .k-cta__box p {
+        color: rgba(255,255,255,0.75);
+        margin-bottom: 2rem;
+    }
+
+.k-cta__buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────────── */
+.k-footer {
+    background: #0F172A;
+    color: rgba(255,255,255,0.7);
+    padding: 2.5rem 0 2rem;
+}
+
+.k-footer__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.k-footer__brand {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: white;
+}
+
+.k-footer__links {
+    display: flex;
+    gap: 1.75rem;
+}
+
+    .k-footer__links a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+        .k-footer__links a:hover {
+            color: var(--k-yellow);
+        }
+
+/* ── AUTH PAGES — full styles below ─────────────────────────────────────── */
+
+/* Responsive */
+@media (max-width: 900px) {
+    .k-hero .k-container {
+        grid-template-columns: 1fr;
+    }
+
+    .k-hero__illustration {
+        display: none;
+    }
+
+    .k-roles__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .k-how__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .k-trust__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .k-pain__tabs {
+        gap: 0.5rem;
+    }
+
+    .k-lifecycle__arrow {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .k-hero__cta {
+        flex-direction: column;
+    }
+
+    .k-btn--lg {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .k-trust__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .k-pain__panel {
+        padding: 2rem 1.25rem;
+    }
+
+    .k-lifecycle__step {
+        width: 100%;
+    }
+}
+
+/* Nav bar — no small-screen handling existed before; brand text + action
+   buttons could overflow the viewport on narrow phones. */
+@media (max-width: 480px) {
+    .k-nav__inner {
+        padding: 0 1rem;
+    }
+
+    .k-nav__brand-text {
+        font-size: 1.15rem;
+    }
+
+    .k-nav__logo {
+        width: 36px;
+        height: 36px;
+    }
+
+    .k-nav__actions {
+        gap: 0.4rem;
+    }
+
+    .k-nav .k-btn {
+        padding: 0.5rem 0.85rem;
+        font-size: 0.82rem;
+    }
+}
+/* ── WHITE BUTTON (used in hero) ─────────────────────────────────────────── */
+.k-btn--white {
+    background: white;
+    color: var(--k-black);
+    border-color: white;
+}
+
+    .k-btn--white:hover {
+        background: var(--k-surface);
+        border-color: var(--k-surface);
+    }
+
+/* ── AUTH PAGES ──────────────────────────────────────────────────────────── */
+.k-auth-page {
+    min-height: 100vh;
+    background: var(--k-surface);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3rem 1rem 4rem;
+}
+
+.k-auth-card {
+    background: white;
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-lift);
+    padding: 2.75rem;
+    width: 100%;
+    max-width: 580px;
+    border: 1px solid var(--k-border);
+}
+
+.k-auth-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-bottom: 1.75rem;
+}
+
+    .k-auth-brand img {
+        width: 44px;
+        height: 44px;
+    }
+
+.k-auth-title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--k-black);
+    margin-bottom: 0.4rem;
+}
+
+.k-auth-sub {
+    color: var(--k-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.75rem;
+}
+
+.k-auth-success {
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+    .k-auth-success .k-success-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .k-auth-success h2 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--k-black);
+        margin-bottom: 0.75rem;
+    }
+
+    .k-auth-success p {
+        color: var(--k-muted);
+        line-height: 1.7;
+        margin-bottom: 2rem;
+    }
+
+/* ── ROLE TOGGLE ─────────────────────────────────────────────────────────── */
+.k-role-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--k-surface);
+    border-radius: 9999px;
+    padding: 4px;
+    margin-bottom: 1.75rem;
+    border: 1px solid var(--k-border);
+}
+
+.k-role-toggle__btn {
+    padding: 0.65rem 1rem;
+    border: none;
+    border-radius: 9999px;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--k-muted);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    text-align: center;
+    font-family: inherit;
+}
+
+    .k-role-toggle__btn.active {
+        background: var(--k-black);
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(17, 24, 39, 0.25);
+    }
+
+    .k-role-toggle__btn:not(.active):hover {
+        background: rgba(255, 255, 255, 0.7);
+        color: var(--k-black);
+    }
+
+/* ── FORM ELEMENTS ───────────────────────────────────────────────────────── */
+.k-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.k-form__section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--k-muted);
+    margin: 1.5rem 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--k-border);
+}
+
+.k-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.k-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 0.9rem;
+}
+
+    .k-form__group label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--k-black);
+    }
+
+.k-input {
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid var(--k-border);
+    border-radius: var(--r-md);
+    font-size: 0.92rem;
+    color: var(--k-text);
+    background: white;
+    width: 100%;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+}
+
+    .k-input:focus {
+        outline: none;
+        border-color: var(--k-yellow);
+        box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.15);
+    }
+
+.k-input-prefix-group {
+    display: flex;
+}
+
+.k-input-prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 0.75rem;
+    background: var(--k-surface);
+    border: 1.5px solid var(--k-border);
+    border-right: none;
+    border-radius: var(--r-md) 0 0 var(--r-md);
+    font-size: 0.9rem;
+    color: var(--k-muted);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.k-input--with-prefix {
+    border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+
+.k-alert {
+    padding: 0.75rem 1rem;
+    border-radius: var(--r-md);
+    font-size: 0.87rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.k-alert--error {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #991B1B;
+}
+
+.req {
+    color: #EF4444;
+}
+
+.k-btn--full {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1.25rem;
+    border: none;
+    cursor: pointer;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .k-form__row {
+        grid-template-columns: 1fr;
+    }
+
+    .k-auth-card {
+        padding: 1.75rem 1.25rem;
+    }
+
+    .k-auth-page {
+        padding: 1.5rem 0.75rem 3rem;
+    }
+}
+
+/* ── AUTH BRAND ELEMENTS ─────────────────────────────────────────────────── */
+.k-auth-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-bottom: 1.75rem;
+}
+
+.k-auth-brand__logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+
+.k-auth-brand__name {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--k-black);
+    letter-spacing: -0.02em;
+}
+
+/* ── FORM UTILITIES ──────────────────────────────────────────────────────── */
+.k-req {
+    color: #EF4444;
+}
+
+.k-field-error {
+    font-size: 0.78rem;
+    color: #EF4444;
+    margin-top: 0.2rem;
+    display: block;
+}
+
+.k-field-hint {
+    font-size: 0.78rem;
+    color: var(--k-muted);
+    margin-top: 0.2rem;
+    display: block;
+}
+
+.k-select {
+    cursor: pointer;
+    appearance: auto;
+}
+
+.k-form__group--checkbox {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.k-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.87rem;
+    color: var(--k-muted);
+    cursor: pointer;
+    line-height: 1.5;
+}
+
+    .k-checkbox-label input[type="checkbox"] {
+        margin-top: 0.2rem;
+        flex-shrink: 0;
+        accent-color: var(--k-yellow);
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+    }
+
+    .k-checkbox-label a {
+        color: var(--k-black);
+        font-weight: 600;
+    }
+
+/* ── SUBMIT BUTTON ───────────────────────────────────────────────────────── */
+.k-btn--submit {
+    margin-top: 1.5rem;
+    padding: 0.85rem 1.5rem;
+    font-size: 1rem;
+    border-radius: var(--r-md);
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+    .k-btn--submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+/* ── LOADING SPINNER ─────────────────────────────────────────────────────── */
+.k-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: k-spin 0.65s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes k-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── AUTH SWITCH LINK ────────────────────────────────────────────────────── */
+.k-auth-switch {
+    text-align: center;
+    font-size: 0.87rem;
+    color: var(--k-muted);
+    margin-top: 1.25rem;
+}
+
+    .k-auth-switch a {
+        color: var(--k-black);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+        .k-auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+/* ── RESPONSIVE — REGISTER PAGE ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .k-auth-page {
+        padding: 1.25rem 0.75rem 3rem;
+    }
+
+    .k-auth-card {
+        padding: 1.5rem 1.1rem;
+        border-radius: var(--r-lg);
+    }
+
+    .k-form__row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .k-role-toggle {
+        border-radius: var(--r-lg);
+    }
+
+    .k-role-toggle__btn {
+        border-radius: calc(var(--r-lg) - 2px);
+        font-size: 0.85rem;
+        padding: 0.6rem 0.5rem;
+    }
+
+    .k-btn--submit {
+        font-size: 0.95rem;
+        padding: 0.8rem 1rem;
+    }
+}
+/* ============================================================================
+   KAARIGAR — Login Page (Coming Soon)
+   ============================================================================ */
+
+/* Auth Page Container */
+.k-auth-page {
+    min-height: 100vh;
+    background: var(--k-surface);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3rem 1rem 4rem;
+}
+
+/* Auth Card */
+.k-auth-card {
+    background: white;
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-lift);
+    padding: 2.75rem;
+    width: 100%;
+    max-width: 520px;
+    border: 1px solid var(--k-border);
+}
+
+/* Brand */
+.k-auth-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-bottom: 1.75rem;
+}
+
+.k-auth-brand__logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+
+.k-auth-brand__name {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--k-black);
+    letter-spacing: -0.02em;
+}
+
+/* Coming Soon Specific */
+.k-auth-card--coming-soon {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Blurred Login Form Preview */
+.k-cs-preview {
+    background: var(--k-surface);
+    border: 1.5px solid var(--k-border);
+    border-radius: var(--r-lg);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    filter: blur(2px);
+    opacity: 0.4;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Under Development Badge */
+.k-cs-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #FFF7ED;
+    border: 1px solid #FED7AA;
+    color: #C2410C;
+    border-radius: 9999px;
+    padding: 0.25rem 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+/* What's Coming Checklist */
+.k-cs-checklist {
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: var(--r-md);
+    padding: 1.25rem 1.5rem;
+    margin-top: 1.25rem;
+}
+
+    .k-cs-checklist h4 {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--k-black);
+        margin-bottom: 0.75rem;
+    }
+
+    .k-cs-checklist ul {
+        padding-left: 0.5rem;
+        margin: 0;
+    }
+
+    .k-cs-checklist li {
+        font-size: 0.87rem;
+        color: var(--k-navy-60);
+        margin-bottom: 0.35rem;
+    }
+
+/* CTA Section */
+.k-cs-cta {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+    .k-cs-cta p {
+        font-size: 0.85rem;
+        color: var(--k-muted);
+    }
+
+/* Overlay Message Box (on top of blurred form) */
+.k-cs-overlay {
+    position: relative;
+    background: white;
+    border-radius: var(--r-xl);
+    padding: 1.75rem;
+    margin: -3.5rem 0 1.5rem 0;
+    box-shadow: var(--shadow-lift);
+    border: 1px solid var(--k-border);
+    z-index: 10;
+}
+.k-alert--success {
+    background: #e6f4ea;
+    color: #1a5632;
+    border: 1px solid #b7e0c3;
+}
+
+.k-alert--info {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    color: #1E40AF;
+    padding: 0.75rem 1rem;
+    border-radius: var(--r-md);
+    font-size: 0.87rem;
+    line-height: 1.5;
+}
+
+.k-link-small {
+    font-size: 13px;
+    color: #1a5632;
+    text-decoration: none;
+}
+
+.k-link-small:hover {
+    text-decoration: underline;
+}
+.k-form__row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+    .k-form__row .k-form__group {
+        flex: 1;
+        min-width: 220px;
+    }
+
+.k-form__hint {
+    color: #777;
+    font-size: 12px;
+    display: block;
+    margin-top: 4px;
+}
+
+.k-form--inline {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.k-form__group--grow {
+    flex: 1;
+}
+
+.k-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.k-badge--green {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.k-badge--red {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.k-badge--amber {
+    background: #FEF9C3;
+    color: #854D0E;
+}
+
+.k-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .k-table th, .k-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+    }
+
+.k-btn--sm {
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+.k-btn--danger {
+    background: #DC2626;
+    color: #fff;
+    border: none;
+}
+
+.k-btn--secondary {
+    background: #f2f2f2;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.k-inline-form {
+    display: inline-block;
+}
+
+.k-profile-logo-preview img {
+    max-width: 120px;
+    max-height: 120px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    display: block;
+    margin-bottom: 4px;
+}
+.k-checkbox-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.k-checkbox-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+    .k-checkbox-chip input {
+        margin: 0;
+    }
+
+.k-job-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+    gap: 16px;
+}
+
+.k-job-card {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 16px;
+    background: #fff;
+}
+
+.k-job-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.k-job-card__meta {
+    color: #666;
+    font-size: 13px;
+    margin: 4px 0;
+}
+
+.k-job-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.k-switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}

@@ -1,0 +1,108 @@
+@model Kaarigar.Models.EmployeeApplicationsViewModel
+@{
+    ViewData["Title"] = "My Applications";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">My Applications</h1>
+            <p class="k-dash-subtitle">Track every job you've expressed interest in. The employer will give you an OTP in person &mdash; enter it here to confirm you've started the job, and again when it's finished.</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="k-alert k-alert--success">@ViewBag.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+
+    @if (!Model.Applications.Any())
+    {
+        <div class="k-dash-section" style="text-align:center;color:#888">
+            You haven't expressed interest in any jobs yet.
+            <a href="/jobs/browse">Browse available jobs</a> to get started.
+        </div>
+    }
+    else
+    {
+        <div class="k-job-card-grid">
+            @foreach (var app in Model.Applications)
+            {
+                var badgeClass = app.StatusCd switch
+                {
+                    "PENDING" => "k-badge k-badge--amber",
+                    "EMPLOYER_VIEWED" => "k-badge k-badge--amber",
+                    "EMPLOYER_CONTACTED" => "k-badge k-badge--green",
+                    "JOB_STARTED" => "k-badge k-badge--green",
+                    "COMPLETED" => "k-badge k-badge--green",
+                    _ => "k-badge",
+                };
+
+                <div class="k-job-card">
+                    <div class="k-job-card__header">
+                        <h3>@app.JobTitle</h3>
+                    </div>
+
+                    <p class="k-job-card__meta">@app.EmployerDisplayName</p>
+
+                    @if (!string.IsNullOrEmpty(app.LocationLabel))
+                    {
+                        <p class="k-job-card__meta">
+                            📍 @app.LocationLabel
+                            @if (!string.IsNullOrEmpty(app.MapUrl))
+                            {
+                                <a href="@app.MapUrl" target="_blank" rel="noopener" style="margin-left:6px">(View Map)</a>
+                            }
+                        </p>
+                    }
+
+                    @if (app.HourlyWageAmt.HasValue)
+                    {
+                        <p class="k-job-card__meta">💰 ₹@app.HourlyWageAmt.Value.ToString("N0") / hour</p>
+                    }
+
+                    <p class="k-job-card__meta" style="color:#aaa;font-size:12px">Applied @app.AppliedTs.ToString("dd MMM yyyy")</p>
+
+                    <div class="k-job-card__actions" style="flex-direction:column;align-items:stretch;gap:8px">
+                        <span class="@badgeClass" style="align-self:flex-start">@app.StatusLabel</span>
+
+                        @if (app.StatusCd == "COMPLETED")
+                        {
+                            <div class="k-alert k-alert--success">✅ Job completed. Thank you!</div>
+                        }
+                        else if (app.AwaitingSatisfactionOtp)
+                        {
+                            <div class="k-alert k-alert--info">
+                                🏁 Job started! Ask the employer for the <strong>Satisfaction OTP</strong> once the work is done, and enter it below.
+                            </div>
+                            <form asp-action="VerifyOtp" asp-controller="EmployeeJob" asp-route-id="@app.JobApplicationId"
+                                  method="post" class="k-inline-form" style="gap:8px">
+                                @Html.AntiForgeryToken()
+                                <input type="text" name="otpCd" class="k-input" placeholder="Enter Satisfaction OTP" maxlength="6" style="max-width:180px" />
+                                <button type="submit" class="k-btn k-btn--sm k-btn--primary">Submit</button>
+                            </form>
+                        }
+                        else if (app.AwaitingJobStartOtp)
+                        {
+                            <div class="k-alert k-alert--info">
+                                📍 Ask the employer for the <strong>Job Starting OTP</strong> once you reach the location, and enter it below.
+                            </div>
+                            <form asp-action="VerifyOtp" asp-controller="EmployeeJob" asp-route-id="@app.JobApplicationId"
+                                  method="post" class="k-inline-form" style="gap:8px">
+                                @Html.AntiForgeryToken()
+                                <input type="text" name="otpCd" class="k-input" placeholder="Enter Job Starting OTP" maxlength="6" style="max-width:180px" />
+                                <button type="submit" class="k-btn k-btn--sm k-btn--primary">Submit</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

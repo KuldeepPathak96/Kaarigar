@@ -1,0 +1,87 @@
+@model Kaarigar.Models.LoginModel
+@{
+    ViewData["Title"] = "Login — Kaarigar";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="k-auth-page">
+    <div class="k-auth-card">
+
+        <!-- Brand -->
+        <a class="k-auth-brand" href="/">
+            <img src="~/images/logo.png" alt="Kaarigar" class="k-auth-brand__logo" />
+            <span class="k-auth-brand__name">KAARIGAR</span>
+        </a>
+
+        <h2 class="k-auth-title">Login to Kaarigar</h2>
+        <p class="k-auth-sub">Welcome back! Please enter your credentials.</p>
+
+        @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+        {
+            <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="k-alert k-alert--error">@TempData["ErrorMessage"]</div>
+        }
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="k-alert k-alert--success">@TempData["SuccessMessage"]</div>
+        }
+
+
+        <form asp-action="Login" asp-controller="Account" method="post" class="k-form" id="loginForm">
+            @Html.AntiForgeryToken()
+
+            <div class="k-form__group">
+                <label asp-for="ContactNbr">Mobile Number <span class="k-req">*</span></label>
+                <div class="k-input-prefix-group">
+                    <span class="k-input-prefix">+91</span>
+                    <input asp-for="ContactNbr"
+                           class="k-input k-input--with-prefix"
+                           maxlength="10"
+                           inputmode="numeric"
+                           placeholder="9876543210" />
+                </div>
+                <span asp-validation-for="ContactNbr" class="k-field-error"></span>
+            </div>
+
+            <div class="k-form__group">
+                <label asp-for="Password">Password <span class="k-req">*</span></label>
+                <input asp-for="Password"
+                       type="password"
+                       class="k-input"
+                       placeholder="Enter your password" />
+                <span asp-validation-for="Password" class="k-field-error"></span>
+                <div class="text-end mt-1">
+                    <a href="/Account/ForgotPassword" class="k-link-small">Forgot Password?</a>
+                </div>
+            </div>
+
+
+            <button type="submit" class="k-btn k-btn--primary k-btn--full k-btn--submit" id="loginBtn">
+                <span id="loginBtnText">Login</span>
+                <span id="loginSpinner" class="k-spinner" style="display:none;"></span>
+            </button>
+        </form>
+
+        <p class="k-auth-switch mt-3">
+            Don't have an account? <a href="/Account/Register">Register</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function () {
+            const btn = document.getElementById('loginBtn');
+            const text = document.getElementById('loginBtnText');
+            const spinner = document.getElementById('loginSpinner');
+            btn.disabled = true;
+            text.style.display = 'none';
+            spinner.style.display = 'inline-block';
+        });
+    </script>
+}

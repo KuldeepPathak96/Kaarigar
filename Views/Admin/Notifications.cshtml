@@ -1,0 +1,281 @@
+@model Kaarigar.Models.NotificationLogsViewModel
+@{
+    ViewData["Title"] = "Notification Logs";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">Notification Logs</h1>
+            <p class="k-dash-subtitle">WhatsApp job-alert delivery history and App-OTP verification history.</p>
+        </div>
+    </div>
+
+    <!-- ── KPI CARDS ────────────────────────────────────────────────── -->
+    <div class="k-kpi-grid k-kpi-grid--3">
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#D1FAE5">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value k-kpi-card__value--green">@Model.TotalSentToday</div>
+                <div class="k-kpi-card__label">WhatsApp Sent Today</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#FEE2E2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.TotalFailedToday</div>
+                <div class="k-kpi-card__label">Failed Today</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#DBEAFE">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.OtpsGeneratedToday</div>
+                <div class="k-kpi-card__label">OTPs Generated Today</div>
+            </div>
+        </div>
+    </div><!-- /.k-kpi-grid -->
+
+    <!-- ── SEARCH / FILTER ──────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <form method="get" asp-action="Notifications" asp-controller="Admin" class="k-form k-form--inline" style="flex-wrap:wrap">
+            <div class="k-form__group k-form__group--grow">
+                <input type="text" name="search" value="@Model.SearchTerm" class="k-input"
+                       placeholder="Search by employee name or job title" />
+            </div>
+
+            <div class="k-form__group">
+                <select name="status" class="k-input">
+                    <option value="">All Statuses</option>
+                    <option value="SENT" selected="@(Model.StatusFilter == "SENT")">Sent</option>
+                    <option value="FAILED" selected="@(Model.StatusFilter == "FAILED")">Failed</option>
+                </select>
+            </div>
+
+            <div class="k-form__group">
+                <label style="font-size:12px;color:#888">From</label>
+                <input type="date" name="fromDate" class="k-input"
+                       value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" />
+            </div>
+
+            <div class="k-form__group">
+                <label style="font-size:12px;color:#888">To</label>
+                <input type="date" name="toDate" class="k-input"
+                       value="@(Model.ToDate?.ToString("yyyy-MM-dd"))" />
+            </div>
+
+            <button type="submit" class="k-btn k-btn--primary">Filter</button>
+            <a href="/admin/notifications" class="k-btn k-btn--secondary">Reset</a>
+        </form>
+    </div>
+
+    <!-- ── WHATSAPP NOTIFICATION LOG TABLE ──────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">WhatsApp Notifications (@Model.NotificationLogs.Count)</h2>
+
+        @if (!Model.NotificationLogs.Any())
+        {
+            <div class="k-empty-state">
+                <div class="k-empty-state__icon">📨</div>
+                <p class="k-empty-state__text">No WhatsApp notifications match your search/filters.</p>
+            </div>
+        }
+        else
+        {
+            <div style="overflow-x:auto">
+                <table class="k-table">
+                    <thead>
+                        <tr>
+                            <th>Employee Name</th>
+                            <th>Employer Name</th>
+                            <th>Job Title</th>
+                            <th>Timestamp</th>
+                            <th>Delivery Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in Model.NotificationLogs)
+                        {
+                            var badgeClass = log.StatusCd == "SENT" ? "k-badge k-badge--green" : "k-badge k-badge--red";
+
+                            <tr>
+                                <td>@log.EmployeeName</td>
+                                <td>@(log.EmployerName ?? "—")</td>
+                                <td>@(log.JobTitle ?? "—")</td>
+                                <td>@log.SentTs.ToString("dd MMM yyyy, hh:mm tt")</td>
+                                <td><span class="@badgeClass">@(log.StatusCd == "SENT" ? "Sent" : "Failed")</span></td>
+                                <td>
+                                    <button type="button" class="k-btn k-btn--sm k-btn--secondary"
+                                            data-employee="@log.EmployeeName"
+                                            data-employer="@(log.EmployerName ?? "—")"
+                                            data-job="@(log.JobTitle ?? "—")"
+                                            data-channel="@log.ChannelCd"
+                                            data-status="@(log.StatusCd == "SENT" ? "Sent" : "Failed")"
+                                            data-sentts="@log.SentTs.ToString("dd MMM yyyy, hh:mm tt")"
+                                            data-message="@(log.MessageTxt ?? "(no message recorded)")"
+                                            onclick="kShowNotificationDetail(this)">
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <!-- ── OTP LOG TABLE ────────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">App OTP Log (@Model.OtpLogs.Count)</h2>
+
+        @if (!Model.OtpLogs.Any())
+        {
+            <div class="k-empty-state">
+                <div class="k-empty-state__icon">🔑</div>
+                <p class="k-empty-state__text">No OTPs match your search/filters.</p>
+            </div>
+        }
+        else
+        {
+            <div style="overflow-x:auto">
+                <table class="k-table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Job</th>
+                            <th>Generated At</th>
+                            <th>Used</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var otp in Model.OtpLogs)
+                        {
+                            var badgeClass = otp.IsUsedFl ? "k-badge k-badge--green" : "k-badge k-badge--amber";
+
+                            <tr>
+                                <td>@otp.EmployeeName</td>
+                                <td>@(otp.JobTitle ?? "—")</td>
+                                <td>@otp.GeneratedTs.ToString("dd MMM yyyy, hh:mm tt")</td>
+                                <td><span class="@badgeClass">@(otp.IsUsedFl ? "Yes" : "No")</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- ── NOTIFICATION DETAIL MODAL ────────────────────────────────────────── -->
+<div id="notificationDetailOverlay" class="k-modal-overlay k-hidden" onclick="if(event.target===this) kHideNotificationDetail()">
+    <div class="k-modal">
+        <div class="k-modal__header">
+            <h3>Notification Detail</h3>
+            <button type="button" class="k-modal__close" onclick="kHideNotificationDetail()">&times;</button>
+        </div>
+        <div class="k-modal__body">
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label>Employee</label>
+                    <p id="ndEmployee"></p>
+                </div>
+                <div class="k-form__group">
+                    <label>Employer</label>
+                    <p id="ndEmployer"></p>
+                </div>
+            </div>
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label>Job Title</label>
+                    <p id="ndJob"></p>
+                </div>
+                <div class="k-form__group">
+                    <label>Channel</label>
+                    <p id="ndChannel"></p>
+                </div>
+            </div>
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label>Sent At</label>
+                    <p id="ndSentTs"></p>
+                </div>
+                <div class="k-form__group">
+                    <label>Delivery Status</label>
+                    <p id="ndStatus"></p>
+                </div>
+            </div>
+            <div class="k-form__group">
+                <label>Message Sent</label>
+                <p id="ndMessage" style="white-space:pre-wrap"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .k-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+    .k-modal-overlay.k-hidden {
+        display: none !important;
+    }
+    .k-modal {
+        background: #fff;
+        border-radius: var(--r-md, 8px);
+        width: min(560px, 92vw);
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .k-modal__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--k-border, #eee);
+    }
+    .k-modal__header h3 { margin: 0; }
+    .k-modal__close {
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        line-height: 1;
+        cursor: pointer;
+        color: #888;
+    }
+    .k-modal__body { padding: 1.25rem; }
+</style>
+
+<script>
+    function kShowNotificationDetail(btn) {
+        document.getElementById('ndEmployee').textContent = btn.dataset.employee;
+        document.getElementById('ndEmployer').textContent = btn.dataset.employer;
+        document.getElementById('ndJob').textContent = btn.dataset.job;
+        document.getElementById('ndChannel').textContent = btn.dataset.channel;
+        document.getElementById('ndSentTs').textContent = btn.dataset.sentts;
+        document.getElementById('ndStatus').textContent = btn.dataset.status;
+        document.getElementById('ndMessage').textContent = btn.dataset.message;
+        document.getElementById('notificationDetailOverlay').classList.remove('k-hidden');
+    }
+    function kHideNotificationDetail() {
+        document.getElementById('notificationDetailOverlay').classList.add('k-hidden');
+    }
+</script>

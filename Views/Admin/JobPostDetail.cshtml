@@ -1,0 +1,164 @@
+@model Kaarigar.Models.AdminJobPostDetailViewModel
+@{
+    ViewData["Title"] = "Job Post Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var statusBadgeClass = Model.StatusCd switch
+    {
+        "ACTIVE" => "k-badge k-badge--green",
+        "PAUSED" => "k-badge k-badge--amber",
+        _ => "k-badge k-badge--red",
+    };
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">@Model.JobTitle</h1>
+            <p class="k-dash-subtitle">Posted by @Model.EmployerName</p>
+        </div>
+        <a href="/admin/jobs" class="k-btn k-btn--sm k-btn--secondary">&larr; Back to Job Posts</a>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="k-alert k-alert--success">@ViewBag.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+
+    <!-- ── JOB DETAILS ──────────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <div class="k-dash-section__header">
+            <h2 class="k-dash-section__title">Job Details</h2>
+            <span class="@statusBadgeClass">@Model.StatusCd</span>
+        </div>
+
+        <div class="k-form__row">
+            <div class="k-form__group">
+                <label>Required Workers</label>
+                <p>@Model.RequiredWorkerNbr</p>
+            </div>
+            <div class="k-form__group">
+                <label>Hourly Rate</label>
+                <p>@(Model.HourlyWageAmt.HasValue ? $"₹{Model.HourlyWageAmt.Value:N0} / hour" : "Not specified")</p>
+            </div>
+        </div>
+
+        <div class="k-form__row">
+            <div class="k-form__group">
+                <label>Start Date</label>
+                <p>@(Model.StartDt?.ToString("dd MMM yyyy") ?? "Not specified")</p>
+            </div>
+            <div class="k-form__group">
+                <label>Duration</label>
+                <p>@(Model.DurationHourNbr.HasValue ? $"{Model.DurationHourNbr.Value} hour(s)" : "Not specified")</p>
+            </div>
+        </div>
+
+        <div class="k-form__row">
+            <div class="k-form__group">
+                <label>Location</label>
+                <p>@(Model.LocationAddressTxt ?? "Not specified")</p>
+            </div>
+            <div class="k-form__group">
+                <label>Date Posted</label>
+                <p>@Model.DatePosted.ToString("dd MMM yyyy, hh:mm tt")</p>
+            </div>
+        </div>
+
+        @if (Model.RequiredSkillNames.Any())
+        {
+            <div class="k-form__group">
+                <label>Required Skills</label>
+                <p>@string.Join(", ", Model.RequiredSkillNames)</p>
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.DescriptionTxt))
+        {
+            <div class="k-form__group">
+                <label>Description</label>
+                <p>@Model.DescriptionTxt</p>
+            </div>
+        }
+    </div>
+
+    <!-- ── EMPLOYER ─────────────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Employer</h2>
+        <div class="k-form__row">
+            <div class="k-form__group">
+                <label>Name</label>
+                <p><a href="/admin/employers/@Model.EmployerUserAccountId">@Model.EmployerName</a></p>
+            </div>
+            <div class="k-form__group">
+                <label>Mobile</label>
+                <p>@Model.EmployerContactNbr</p>
+            </div>
+        </div>
+        <div class="k-form__group">
+            <label>City</label>
+            <p>@(Model.EmployerCityName ?? "Not specified")</p>
+        </div>
+    </div>
+
+    <!-- ── APPLICANTS ───────────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Applicants (@Model.Applicants.Count)</h2>
+
+        @if (!Model.Applicants.Any())
+        {
+            <div class="k-empty-state">
+                <div class="k-empty-state__icon">🧑‍🔧</div>
+                <p class="k-empty-state__text">No one has applied to this job yet.</p>
+            </div>
+        }
+        else
+        {
+            <div style="overflow-x:auto">
+                <table class="k-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Applied On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var applicant in Model.Applicants)
+                        {
+                            <tr>
+                                <td>@applicant.Name</td>
+                                <td>@applicant.StatusCd.Replace("_", " ")</td>
+                                <td>@applicant.AppliedTs.ToString("dd MMM yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div class="k-dash-section">
+        <div class="k-job-card__actions">
+            @if (Model.StatusCd != "CLOSED")
+            {
+                <form asp-action="CloseJobPost" asp-controller="Admin" asp-route-id="@Model.JobPostId" method="post" class="k-inline-form"
+                      onsubmit="return confirm('Close this job post? Employer will no longer be able to reopen it.');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="k-btn k-btn--secondary">Close Job</button>
+                </form>
+            }
+
+            <form asp-action="DeleteJobPost" asp-controller="Admin" asp-route-id="@Model.JobPostId" method="post" class="k-inline-form"
+                  onsubmit="return confirm('Delete this job post permanently? This cannot be undone.');">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="k-btn k-btn--danger">Delete Job Post</button>
+            </form>
+        </div>
+    </div>
+</div>

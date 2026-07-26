@@ -1,0 +1,172 @@
+@model Kaarigar.Models.JobBrowseViewModel
+@{
+    ViewData["Title"] = "Browse Jobs";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">Browse Available Jobs</h1>
+            <p class="k-dash-subtitle">
+                Showing all open jobs
+                @if (Model.MatchesMyProfileOnly)
+                {
+                    <text> that match your skills @(Model.HasLocation && Model.PreferredRadiusKm.HasValue ? $"and are within {Model.PreferredRadiusKm} km of you" : "")</text>
+                }
+                else
+                {
+                    <text> — jobs that match your skills are shown first and marked "Matches your skills".</text>
+                }
+            </p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="k-alert k-alert--success">@ViewBag.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+
+    @if (!Model.IsApproved)
+    {
+        <div class="k-alert k-alert--error" style="text-align:center">
+            Your account is pending Admin approval. You can browse jobs below, but you won't be able to
+            express interest / apply until Admin approves your profile.
+        </div>
+    }
+
+    @if (!Model.HasLocation)
+    {
+        <div class="k-alert k-alert--error" style="text-align:center">
+            You haven't set a location on your profile yet, so we can't sort jobs by distance.
+            <a href="/account/profile">Update your profile</a> to see jobs near you first.
+        </div>
+    }
+
+    <!-- ── FILTERS ──────────────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <form method="get" asp-action="Browse" asp-controller="EmployeeJob" class="k-form k-form--inline" style="flex-wrap:wrap">
+            <div class="k-form__group">
+                <select name="skill" class="k-input">
+                    <option value="">All Skills</option>
+                    @foreach (var s in Model.SkillOptions)
+                    {
+                        <option value="@s.SkillId" selected="@(Model.SkillFilter == s.SkillId.ToString())">@s.SkillName</option>
+                    }
+                </select>
+            </div>
+
+            <div class="k-form__group k-form__group--grow">
+                <input type="text" name="city" value="@Model.CityFilter" class="k-input" placeholder="City / Area" />
+            </div>
+
+            <div class="k-form__group">
+                <input type="number" name="minWage" value="@Model.MinWage" class="k-input" placeholder="Min wage (₹/day)" />
+            </div>
+
+            <div class="k-form__group">
+                <input type="number" name="maxWage" value="@Model.MaxWage" class="k-input" placeholder="Max wage (₹/day)" />
+            </div>
+
+            <label class="k-form__group" style="flex-direction:row;align-items:center;gap:6px;white-space:nowrap">
+                <input type="checkbox" name="matchMyProfile" value="true" checked="@Model.MatchesMyProfileOnly" />
+                Match my profile only
+            </label>
+
+            <button type="submit" class="k-btn k-btn--primary">Filter</button>
+            <a href="/jobs/browse" class="k-btn k-btn--secondary">Reset</a>
+        </form>
+    </div>
+
+    <!-- ── JOB LIST ─────────────────────────────────────────────────────── -->
+    @if (!Model.Jobs.Any())
+    {
+        <div class="k-dash-section" style="text-align:center;color:#888">
+            @if (Model.MatchesMyProfileOnly)
+            {
+                <text>No jobs match your skills @(Model.HasLocation ? "and location" : "") right now. Try turning off "Match my profile only" to see all open jobs, or check back soon.</text>
+            }
+            else
+            {
+                <text>No jobs match your current filters. Try widening your search.</text>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="k-job-card-grid">
+            @foreach (var job in Model.Jobs)
+            {
+                <div class="k-job-card">
+                    <div class="k-job-card__header">
+                        <h3>@job.JobTitle</h3>
+                    </div>
+
+                    @if (job.MatchesSkills && job.RequiredSkillNames.Any())
+                    {
+                        <span class="k-badge k-badge--blue" style="align-self:flex-start">✓ Matches your skills</span>
+                    }
+
+                    <p class="k-job-card__meta">@job.EmployerDisplayName</p>
+
+                    <p class="k-job-card__meta">
+                        📍 @(job.LocationLabel ?? "Location not specified")
+                        @if (job.DistanceKm.HasValue)
+                        {
+                            <text> · @job.DistanceKm.Value km away</text>
+                        }
+                    </p>
+
+                    @if (job.RequiredSkillNames.Any())
+                    {
+                        <p class="k-job-card__meta">🛠 @string.Join(", ", job.RequiredSkillNames)</p>
+                    }
+
+                    @if (job.HourlyWageAmt.HasValue)
+                    {
+                        <p class="k-job-card__meta">💰 ₹@job.HourlyWageAmt.Value.ToString("N0") / hour</p>
+                    }
+
+                    @if (job.StartDt.HasValue)
+                    {
+                        <p class="k-job-card__meta">
+                            📅 Starts @job.StartDt.Value.ToString("dd MMM yyyy")
+                            @if (job.DurationHourNbr.HasValue)
+                            {
+                                <text> · @job.DurationHourNbr hour(s)</text>
+                            }
+                        </p>
+                    }
+
+                    <p class="k-job-card__meta" style="color:#aaa;font-size:12px">Posted @job.PostedTs.ToString("dd MMM yyyy")</p>
+
+                    <div class="k-job-card__actions">
+                        @if (job.HasApplied)
+                        {
+                            <span class="k-badge k-badge--amber">Interest Expressed</span>
+                        }
+                        else if (!Model.IsApproved)
+                        {
+                            <span class="k-btn k-btn--sm k-btn--secondary" style="opacity:.6;cursor:not-allowed"
+                                  title="Your account is pending Admin approval">Express Interest</span>
+                        }
+                        else
+                        {
+                            <form asp-action="ExpressInterest" asp-controller="EmployeeJob" asp-route-id="@job.JobPostId"
+                                  method="post" class="k-inline-form"
+                                  onsubmit="return confirm('Express interest in this job? This cannot be undone.');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="k-btn k-btn--sm k-btn--primary">Express Interest</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

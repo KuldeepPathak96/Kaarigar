@@ -1,0 +1,331 @@
+@model Kaarigar.Models.JobDetailViewModel
+@{
+    ViewData["Title"] = "Job Detail & Applicants";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var statusBadgeClass = Model.StatusCd switch
+    {
+        "ACTIVE" => "k-badge k-badge--green",
+        "PAUSED" => "k-badge k-badge--amber",
+        _ => "k-badge k-badge--red",
+    };
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">@Model.JobTitle</h1>
+            <p class="k-dash-subtitle">@(Model.RequiredSkillNames.Any() ? string.Join(", ", Model.RequiredSkillNames) : "No specific skills required")</p>
+        </div>
+        <a href="/job/my-jobs" class="k-btn k-btn--sm k-btn--secondary">&larr; Back to My Job Posts</a>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="k-alert k-alert--success">@ViewBag.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+
+    <!-- ── FULL JOB DETAILS ─────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <div class="k-dash-section__header">
+            <h2 class="k-dash-section__title">Job Details</h2>
+            <span class="@statusBadgeClass">@Model.StatusCd</span>
+        </div>
+
+        <div class="k-form__row">
+            <div class="k-form__group">
+                <label>Required Workers</label>
+                <p>@Model.RequiredWorkerNbr</p>
+            </div>
+            <div class="k-form__group">
+                <label>Hourly Rate</label>
+                <p>@(Model.HourlyWageAmt.HasValue ? $"₹{Model.HourlyWageAmt.Value:N0} / hour" : "Not specified")</p>
+            </div>
+        </div>
+
+        <div class="k-form__row">
+            <div class="k-form__group">
+                <label>Start Date</label>
+                <p>@(Model.StartDt?.ToString("dd MMM yyyy") ?? "Not specified")</p>
+            </div>
+            <div class="k-form__group">
+                <label>Duration</label>
+                <p>@(Model.DurationHourNbr.HasValue ? $"{Model.DurationHourNbr.Value} hour(s)" : "Not specified")</p>
+            </div>
+        </div>
+
+        <div class="k-form__group">
+            <label>Job Timing</label>
+            <p>
+                @(Model.StartDateTime.HasValue
+                    ? Model.StartDateTime.Value.ToString("dd MMM yyyy, hh:mm tt")
+                    : "Not specified")
+                @if (Model.EndDateTime.HasValue)
+                {
+                    @:&rarr; @Model.EndDateTime.Value.ToString("dd MMM yyyy, hh:mm tt")
+                }
+            </p>
+        </div>
+
+        <div class="k-form__group">
+            <label>Location</label>
+            <p>@(Model.LocationAddressTxt ?? "Not specified")</p>
+        </div>
+
+        <div class="k-form__group">
+            <label>Contact Number</label>
+            <p>@(Model.ContactNbr ?? "Not specified")</p>
+        </div>
+
+        @if (Model.RequiredSkillNames.Any())
+        {
+            <div class="k-form__group">
+                <label>Required Skills</label>
+                <p>@string.Join(", ", Model.RequiredSkillNames)</p>
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.DescriptionTxt))
+        {
+            <div class="k-form__group">
+                <label>Description</label>
+                <p>@Model.DescriptionTxt</p>
+            </div>
+        }
+    </div>
+
+    <!-- ── APPLICANTS ───────────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <div class="k-dash-section__header">
+            <h2 class="k-dash-section__title">Applicants</h2>
+        </div>
+
+        @if (!Model.Applicants.Any())
+        {
+            <div class="k-empty-state">
+                <div class="k-empty-state__icon">🧑‍🔧</div>
+                <p class="k-empty-state__text">No one has expressed interest in this job yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="k-responsive-table-wrap">
+                <table class="k-table k-table--responsive">
+                    <thead>
+                        <tr>
+                            <th>Applicant</th>
+                            <th>Skills</th>
+                            <th>Location</th>
+                            <th>Distance</th>
+                            <th>Applied</th>
+                            <th>Status</th>
+                            <th>Job Site OTP</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var applicant in Model.Applicants)
+                        {
+                            var appBadgeClass = applicant.StatusCd switch
+                            {
+                                "PENDING" => "k-badge k-badge--amber",
+                                "EMPLOYER_VIEWED" => "k-badge k-badge--amber",
+                                "EMPLOYER_CONTACTED" => "k-badge k-badge--green",
+                                "JOB_STARTED" => "k-badge k-badge--green",
+                                "COMPLETED" => "k-badge k-badge--green",
+                                _ => "k-badge",
+                            };
+
+                            <tr>
+                                <td data-label="Applicant">
+                                    @applicant.Name
+                                    @if (!string.IsNullOrEmpty(applicant.RevealedContactNbr))
+                                    {
+                                        <div class="k-job-card__meta" style="font-size:12px">📞 @applicant.RevealedContactNbr</div>
+                                    }
+                                </td>
+                                <td data-label="Skills">@(applicant.SkillNames.Any() ? string.Join(", ", applicant.SkillNames) : "Not specified")</td>
+                                <td data-label="Location">@(applicant.Location ?? "Not specified")</td>
+                                <td data-label="Distance">@(applicant.DistanceKm.HasValue ? $"{applicant.DistanceKm.Value} km" : "Unknown")</td>
+                                <td data-label="Applied">@applicant.AppliedTs.ToString("dd MMM yyyy")</td>
+                                <td data-label="Status"><span class="@appBadgeClass">@applicant.StatusCd.Replace("_", " ")</span></td>
+                                <td data-label="Job Site OTP" style="min-width:190px">
+                                    @if (applicant.StatusCd == "COMPLETED")
+                                    {
+                                        <span class="k-badge k-badge--green">✅ Completed</span>
+                                        @if (applicant.RatingNbr.HasValue)
+                                        {
+                                            <div>@(new string('⭐', applicant.RatingNbr.Value))</div>
+                                        }
+                                        else
+                                        {
+                                            <form asp-action="SubmitRating" asp-controller="Job" asp-route-jobApplicationId="@applicant.JobApplicationId" method="post" class="k-inline-form k-rate-form">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="jobPostId" value="@Model.JobPostId" />
+                                                <select name="ratingNbr" class="k-input" required>
+                                                    <option value="">Rate ▾</option>
+                                                    <option value="5">⭐⭐⭐⭐⭐</option>
+                                                    <option value="4">⭐⭐⭐⭐</option>
+                                                    <option value="3">⭐⭐⭐</option>
+                                                    <option value="2">⭐⭐</option>
+                                                    <option value="1">⭐</option>
+                                                </select>
+                                                <button type="submit" class="k-btn k-btn--sm k-btn--primary">Submit</button>
+                                            </form>
+                                        }
+                                    }
+                                    else if (applicant.ActiveSatisfactionOtpCd != null)
+                                    {
+                                        <div class="k-otp-box">
+                                            <span class="k-otp-box__label">Satisfaction OTP</span>
+                                            <span class="k-otp-box__code">@applicant.ActiveSatisfactionOtpCd</span>
+                                            <span class="k-otp-box__timer" data-otp-expires="@(applicant.ActiveSatisfactionOtpExpiresTs!.Value.ToString("yyyy-MM-ddTHH:mm:ss.fff") + "Z")">15:00</span>
+                                        </div>
+                                    }
+                                    else if (applicant.CanGenerateSatisfactionOtp)
+                                    {
+                                        <form asp-action="GenerateOtp" asp-controller="Job" asp-route-jobApplicationId="@applicant.JobApplicationId" method="post" class="k-inline-form">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="jobPostId" value="@Model.JobPostId" />
+                                            <input type="hidden" name="otpTypeCd" value="SATISFACTION" />
+                                            <button type="submit" class="k-btn k-btn--sm k-btn--primary">Generate Satisfaction OTP</button>
+                                        </form>
+                                    }
+                                    else if (applicant.ActiveJobStartOtpCd != null)
+                                    {
+                                        <div class="k-otp-box">
+                                            <span class="k-otp-box__label">Job Starting OTP</span>
+                                            <span class="k-otp-box__code">@applicant.ActiveJobStartOtpCd</span>
+                                            <span class="k-otp-box__timer" data-otp-expires="@(applicant.ActiveJobStartOtpExpiresTs!.Value.ToString("yyyy-MM-ddTHH:mm:ss.fff") + "Z")">15:00</span>
+                                        </div>
+                                    }
+                                    else if (applicant.CanGenerateJobStartOtp)
+                                    {
+                                        <form asp-action="GenerateOtp" asp-controller="Job" asp-route-jobApplicationId="@applicant.JobApplicationId" method="post" class="k-inline-form">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="jobPostId" value="@Model.JobPostId" />
+                                            <input type="hidden" name="otpTypeCd" value="JOB_START" />
+                                            <button type="submit" class="k-btn k-btn--sm k-btn--primary">Generate Job Starting OTP</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="k-job-card__meta" style="color:#aaa;font-size:12px">—</span>
+                                    }
+                                </td>
+                                <td data-label="" style="white-space:nowrap">
+                                    <a href="/job/applicant/@applicant.JobApplicationId" class="k-btn k-btn--sm k-btn--secondary">View Profile</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .k-hidden { display: none; }
+
+    .k-responsive-table-wrap { overflow-x: auto; }
+
+    .k-otp-box {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        background: #f4fff6;
+        border: 1px solid #b7e4c7;
+        border-radius: 6px;
+        padding: 6px 10px;
+    }
+    .k-otp-box__label { font-size: 11px; color: #4a7c59; font-weight: 600; text-transform: uppercase; }
+    .k-otp-box__code { font-size: 20px; font-weight: 700; letter-spacing: 2px; color: #1b4332; }
+    .k-otp-box__timer { font-size: 12px; color: #888; }
+    .k-otp-box__timer--expiring { color: #c0392b; font-weight: 600; }
+
+    /* Responsive applicants table — becomes stacked cards on small screens, no side-scrolling */
+    @@media (max-width: 768px) {
+        .k-responsive-table-wrap { overflow-x: visible; }
+
+        .k-table--responsive thead { display: none; }
+
+        .k-table--responsive, .k-table--responsive tbody, .k-table--responsive tr, .k-table--responsive td {
+            display: block;
+            width: 100%;
+        }
+
+        .k-table--responsive tr {
+            margin-bottom: 14px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 10px 12px;
+            background: #fff;
+        }
+
+        .k-table--responsive td {
+            border: none;
+            padding: 6px 0;
+            text-align: left;
+            white-space: normal !important;
+            min-width: 0 !important;
+        }
+
+        .k-table--responsive td[data-label]:not([data-label=""])::before {
+            content: attr(data-label);
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 2px;
+        }
+
+        .k-rate-form { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .k-rate-form select.k-input { width: auto; flex: 1 1 auto; min-width: 110px; }
+        .k-otp-box { width: 100%; box-sizing: border-box; }
+    }
+</style>
+
+<script>
+    (function () {
+        function tick() {
+            var expired = false;
+            document.querySelectorAll('[data-otp-expires]').forEach(function (el) {
+                var expires = new Date(el.getAttribute('data-otp-expires')).getTime();
+                var remainingMs = expires - Date.now();
+
+                if (remainingMs <= 0) {
+                    el.textContent = 'Expired';
+                    el.classList.add('k-otp-box__timer--expiring');
+                    expired = true;
+                    return;
+                }
+
+                var totalSeconds = Math.floor(remainingMs / 1000);
+                var minutes = Math.floor(totalSeconds / 60);
+                var seconds = totalSeconds % 60;
+                el.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+                if (totalSeconds <= 60) {
+                    el.classList.add('k-otp-box__timer--expiring');
+                }
+            });
+
+            if (expired) {
+                setTimeout(function () { window.location.reload(); }, 1500);
+            }
+        }
+
+        if (document.querySelectorAll('[data-otp-expires]').length > 0) {
+            tick();
+            setInterval(tick, 1000);
+        }
+    })();
+</script>

@@ -1,0 +1,248 @@
+@model Kaarigar.Models.PostJobViewModel
+@{
+    var isEdit = ViewBag.IsEdit == true;
+    ViewData["Title"] = isEdit ? "Edit Job" : "Post a Job";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">@(isEdit ? "Edit Job" : "Post a Job")</h1>
+            <p class="k-dash-subtitle">
+                @(isEdit ? "Update the details below." : "Fill in the details to find matching workers nearby.")
+            </p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+
+    <form asp-action="@(isEdit ? "EditJob" : "PostJob")" asp-controller="Job" method="post" class="k-form" id="postJobForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="JobPostId" />
+        <input type="hidden" asp-for="StatusCd" />
+
+        <div class="k-dash-section">
+            <h2 class="k-dash-section__title">Job Details</h2>
+
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label asp-for="JobTitle">Job Title <span class="k-req">*</span></label>
+                    <select asp-for="JobTitle" asp-items="Model.JobTitleOptions" class="k-input">
+                        <option value="">-- Select a job title --</option>
+                    </select>
+                    <span asp-validation-for="JobTitle" class="k-field-error"></span>
+                </div>
+
+                <div class="k-form__group">
+                    <label asp-for="RequiredWorkerNbr">Number of Workers Required <span class="k-req">*</span></label>
+                    <input asp-for="RequiredWorkerNbr" type="number" min="1" max="500" class="k-input" />
+                    <span asp-validation-for="RequiredWorkerNbr" class="k-field-error"></span>
+                </div>
+            </div>
+
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label asp-for="HourlyWageAmt">Hourly Rate (optional)</label>
+                    <select asp-for="HourlyWageAmt" asp-items="Model.HourlyRateOptionsList" class="k-input">
+                        <option value="">-- Select an hourly rate --</option>
+                    </select>
+                    <span asp-validation-for="HourlyWageAmt" class="k-field-error"></span>
+                </div>
+            </div>
+
+            <div class="k-form__group">
+                <label asp-for="DescriptionTxt">Job Description</label>
+                <textarea asp-for="DescriptionTxt" class="k-input" rows="4" placeholder="Describe the job responsibilities, timings, etc."></textarea>
+                <span asp-validation-for="DescriptionTxt" class="k-field-error"></span>
+            </div>
+
+            <div class="k-form__group">
+                <label>Required Skills</label>
+                <div class="k-checkbox-grid">
+                    @for (int i = 0; i < Model.SkillOptions.Count; i++)
+                    {
+                        var skill = Model.SkillOptions[i];
+                        var isChecked = Model.SelectedSkillIds.Contains(int.Parse(skill.Value));
+                        <label class="k-checkbox-chip">
+                            <input type="checkbox" name="SelectedSkillIds" value="@skill.Value" checked="@isChecked" />
+                            <span>@skill.Text</span>
+                        </label>
+                    }
+                </div>
+                <small class="k-form__hint">Select any additional skills relevant to this job (optional).</small>
+            </div>
+        </div>
+
+        <div class="k-dash-section">
+            <h2 class="k-dash-section__title">Schedule</h2>
+
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label asp-for="StartDt">Job Start Date <span class="k-req">*</span></label>
+                    <input asp-for="StartDt" type="date" class="k-input" value="@(Model.StartDt?.ToString("yyyy-MM-dd"))" />
+                    <span asp-validation-for="StartDt" class="k-field-error"></span>
+                </div>
+
+                <div class="k-form__group">
+                    <label asp-for="StartTime">Job Start Time <span class="k-req">*</span></label>
+                    <input asp-for="StartTime" type="time" class="k-input" value="@(Model.StartTime?.ToString(@"hh\:mm"))" />
+                    <span asp-validation-for="StartTime" class="k-field-error"></span>
+                </div>
+            </div>
+
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label asp-for="DurationHourNbr">Job Duration (hours) <span class="k-req">*</span></label>
+                    <input asp-for="DurationHourNbr" type="number" min="1" max="720" class="k-input" placeholder="e.g. 8" />
+                    <span asp-validation-for="DurationHourNbr" class="k-field-error"></span>
+                </div>
+
+                <div class="k-form__group">
+                    <label>Job Ends</label>
+                    <p class="k-input" style="background:#F9FAFB;display:flex;align-items:center;color:#555">
+                        @(Model.EndDateTime.HasValue ? Model.EndDateTime.Value.ToString("dd MMM yyyy, h:mm tt") : "Fill in start date/time and duration")
+                    </p>
+                </div>
+            </div>
+            <small class="k-form__hint">
+                Calculated automatically: Start Date + Start Time + Duration (hours).
+            </small>
+        </div>
+
+        <div class="k-dash-section">
+            <h2 class="k-dash-section__title">Location &amp; Contact</h2>
+
+            <div class="k-form__group">
+                <button type="button" id="useMyLocationBtn" class="k-btn k-btn--secondary k-btn--sm">
+                    <span>📍</span>
+                    <span id="gpsBtnText">Use My Current Location</span>
+                    <span id="gpsSpinner" class="k-spinner" style="display:none;"></span>
+                </button>
+                <small class="k-form__hint">Pins your exact location for accurate worker-proximity matching. This doesn't change the address text below — edit that separately if needed.</small>
+            </div>
+
+            <div id="gpsCoordsPreview" class="k-form__hint" style="display:none;"></div>
+
+            <div class="k-form__group">
+                <label asp-for="LocationAddressTxt">Job Location / Address <span class="k-req">*</span></label>
+                <textarea asp-for="LocationAddressTxt" class="k-input" rows="2" placeholder="Full address including area and city"></textarea>
+                <span asp-validation-for="LocationAddressTxt" class="k-field-error"></span>
+                <small class="k-form__hint">Prefilled from your Profile address — edit if this job is at a different site.</small>
+            </div>
+
+            <input type="hidden" asp-for="LatitudeNbr" id="latitudeInput" />
+            <input type="hidden" asp-for="LongitudeNbr" id="longitudeInput" />
+
+            <div class="k-form__group">
+                <label asp-for="ContactNbr">Contact Number <span class="k-req">*</span></label>
+                <div class="k-input-prefix-group">
+                    <span class="k-input-prefix">+91</span>
+                    <input asp-for="ContactNbr" class="k-input k-input--with-prefix" maxlength="10" inputmode="numeric" />
+                </div>
+                <span asp-validation-for="ContactNbr" class="k-field-error"></span>
+            </div>
+        </div>
+
+        @if (isEdit)
+        {
+            <div class="k-dash-section">
+                <h2 class="k-dash-section__title">Status</h2>
+                <div class="k-form__group">
+                    <label class="k-switch">
+                        <input type="checkbox" id="statusToggle" checked="@(Model.StatusCd == "ACTIVE")" />
+                        <span class="k-switch__track"></span>
+                        <span id="statusLabel">@(Model.StatusCd == "ACTIVE" ? "Active" : "Paused")</span>
+                    </label>
+                    <small class="k-form__hint">Toggle to Active or Paused. Save to apply the change.</small>
+                </div>
+            </div>
+        }
+
+        <button type="submit" class="k-btn k-btn--primary k-btn--lg" id="saveBtn">
+            <span id="saveBtnText">@(isEdit ? "Save Changes" : "Post Job")</span>
+            <span id="saveSpinner" class="k-spinner" style="display:none;"></span>
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('postJobForm').addEventListener('submit', function () {
+            const btn = document.getElementById('saveBtn');
+            document.getElementById('saveBtnText').style.display = 'none';
+            document.getElementById('saveSpinner').style.display = 'inline-block';
+            btn.disabled = true;
+        });
+
+        // Status toggle (Edit page only) — reflects into the hidden StatusCd field.
+        const statusToggle = document.getElementById('statusToggle');
+        if (statusToggle) {
+            statusToggle.addEventListener('change', function () {
+                const statusCdField = document.querySelector('input[name="StatusCd"]');
+                const label = document.getElementById('statusLabel');
+                if (this.checked) {
+                    statusCdField.value = 'ACTIVE';
+                    label.textContent = 'Active';
+                } else {
+                    statusCdField.value = 'PAUSED';
+                    label.textContent = 'Paused';
+                }
+            });
+        }
+
+        // ── "Use My Current Location" — captures GPS pin only (no address auto-fill) ──
+        (function () {
+            const btn = document.getElementById('useMyLocationBtn');
+            const btnText = document.getElementById('gpsBtnText');
+            const spinner = document.getElementById('gpsSpinner');
+            const coordsPreview = document.getElementById('gpsCoordsPreview');
+
+            btn.addEventListener('click', function () {
+                if (!navigator.geolocation) {
+                    alert('Your browser does not support location detection. Please enter the address manually.');
+                    return;
+                }
+
+                btn.disabled = true;
+                btnText.style.display = 'none';
+                spinner.style.display = 'inline-block';
+
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        document.getElementById('latitudeInput').value = lat;
+                        document.getElementById('longitudeInput').value = lng;
+                        coordsPreview.textContent = 'Location pinned: ' + lat.toFixed(6) + ', ' + lng.toFixed(6);
+                        coordsPreview.style.display = 'block';
+
+                        btn.disabled = false;
+                        btnText.style.display = 'inline';
+                        spinner.style.display = 'none';
+                    },
+                    function (error) {
+                        btn.disabled = false;
+                        btnText.style.display = 'inline';
+                        spinner.style.display = 'none';
+
+                        let msg = 'Could not access your location.';
+                        if (error.code === error.PERMISSION_DENIED) {
+                            msg = 'Location permission was denied. Please enter the address manually.';
+                        } else if (error.code === error.TIMEOUT) {
+                            msg = 'Location request timed out. Please try again.';
+                        }
+                        alert(msg);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            });
+        })();
+    </script>
+}

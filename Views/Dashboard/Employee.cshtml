@@ -1,0 +1,155 @@
+@model Kaarigar.Models.EmployeeDashboardViewModel
+@{
+    ViewData["Title"] = "My Dashboard";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <!-- ── PAGE HEADER ──────────────────────────────────────────────── -->
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">
+                Welcome back, @Model.EmployeeName 👷
+            </h1>
+            <p class="k-dash-subtitle">Find your next job and track your applications.</p>
+        </div>
+        @if (Model.IsApproved)
+        {
+            <a href="/jobs/browse" class="k-btn k-btn--green k-btn--lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Browse Jobs
+            </a>
+        }
+        else
+        {
+            <span class="k-btn k-btn--green k-btn--lg" style="opacity:.6;cursor:not-allowed" title="Your account is pending Admin approval">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Browse Jobs
+            </span>
+        }
+    </div>
+
+    @if (!Model.IsApproved)
+    {
+        <div class="k-alert k-alert--error" style="text-align:center">
+            Your account is pending Admin approval. Please make sure your profile is complete — you'll be able to browse and apply to jobs once approved.
+        </div>
+    }
+
+    <!-- ── NOTIFICATION BELL BANNER ─────────────────────────────────── -->
+    @if (Model.UnreadNotifications > 0)
+    {
+        <div class="k-notif-banner">
+            <div class="k-notif-banner__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+            </div>
+            <div class="k-notif-banner__body">
+                <strong>@Model.UnreadNotifications new WhatsApp alert@(Model.UnreadNotifications > 1 ? "s" : "")</strong>
+                @if (Model.NotificationSummary.Any())
+                {
+                    <span class="k-notif-banner__preview">— @Model.NotificationSummary.First()</span>
+                }
+            </div>
+            <a href="/notifications" class="k-btn k-btn--sm k-btn--green">View</a>
+        </div>
+    }
+
+    <!-- ── KPI CARDS ────────────────────────────────────────────────── -->
+    <div class="k-kpi-grid k-kpi-grid--3">
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#EDE9FE">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.ApplicationsSent</div>
+                <div class="k-kpi-card__label">Applications Sent</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#D1FAE5">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67 2 2 0 0 1 2-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8a16 16 0 0 0 6 6l.27-.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value k-kpi-card__value--green">@Model.ContactsReceived</div>
+                <div class="k-kpi-card__label">Contacts Received</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#FFF7CC">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.JobsCompleted</div>
+                <div class="k-kpi-card__label">Jobs Completed</div>
+            </div>
+            @if (Model.JobsCompleted > 0)
+            {
+                <div class="k-kpi-card__badge k-kpi-card__badge--yellow">⭐ Great work!</div>
+            }
+        </div>
+
+    </div><!-- /.k-kpi-grid -->
+
+    <!-- ── QUICK ACTIONS ─────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Quick Actions</h2>
+        <div class="k-quick-actions">
+            @if (Model.IsApproved)
+            {
+                <a href="/jobs/browse" class="k-quick-action-card">
+                    <div class="k-quick-action-card__icon" style="background:#D1FAE5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </div>
+                    <div>
+                        <div class="k-quick-action-card__title">Browse Jobs</div>
+                        <div class="k-quick-action-card__sub">Find work near you</div>
+                    </div>
+            </a>
+            }
+            else
+            {
+                <span class="k-quick-action-card" style="opacity:.6;cursor:not-allowed" title="Your account is pending Admin approval">
+                    <div class="k-quick-action-card__icon" style="background:#D1FAE5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </div>
+                    <div>
+                        <div class="k-quick-action-card__title">Browse Jobs</div>
+                        <div class="k-quick-action-card__sub">Pending Admin approval</div>
+                    </div>
+                </span>
+            }
+            <a href="/applications" class="k-quick-action-card">
+                <div class="k-quick-action-card__icon" style="background:#EDE9FE">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div>
+                    <div class="k-quick-action-card__title">My Applications</div>
+                    <div class="k-quick-action-card__sub">Track your status</div>
+                </div>
+            </a>
+            <a href="/applications" class="k-quick-action-card">
+                <div class="k-quick-action-card__icon" style="background:#FFF7CC">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div>
+                    <div class="k-quick-action-card__title">Enter OTP</div>
+                    <div class="k-quick-action-card__sub">Confirm with employer's code</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+</div><!-- /.k-dash-page -->

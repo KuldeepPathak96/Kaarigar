@@ -1,0 +1,58 @@
+@model Kaarigar.Models.EmployeeNotificationsViewModel
+@{
+    ViewData["Title"] = "Notifications";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">Notifications</h1>
+            <p class="k-dash-subtitle">WhatsApp alerts sent to your registered number.</p>
+        </div>
+    </div>
+
+    <div class="k-dash-section">
+        @if (!Model.Notifications.Any())
+        {
+            <div class="k-empty-state">
+                <div class="k-empty-state__icon">📨</div>
+                <p class="k-empty-state__text">No notifications yet. We'll alert you here (and on WhatsApp) when a matching job is posted.</p>
+            </div>
+        }
+        else
+        {
+            <div style="overflow-x:auto">
+                <table class="k-table">
+                    <thead>
+                        <tr>
+                            <th>Job</th>
+                            <th>Message</th>
+                            <th>Received</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var n in Model.Notifications)
+                        {
+                            <tr>
+                                <td>@(n.JobTitle ?? "—")</td>
+                                <td>@n.MessageTxt</td>
+                                <td>@n.SentTs.ToString("dd MMM yyyy, hh:mm tt")</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(n.MapUrl))
+                                    {
+                                        <a href="@n.MapUrl" target="_blank" rel="noopener" class="k-btn k-btn--sm k-btn--secondary">
+                                            📍 View Map
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

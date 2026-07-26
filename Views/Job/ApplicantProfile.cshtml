@@ -1,0 +1,80 @@
+@model Kaarigar.Models.ApplicantProfileViewModel
+@{
+    ViewData["Title"] = "Employee Profile";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var badgeClass = Model.StatusCd switch
+    {
+        "PENDING" => "k-badge k-badge--amber",
+        "EMPLOYER_VIEWED" => "k-badge k-badge--amber",
+        "EMPLOYER_CONTACTED" => "k-badge k-badge--green",
+        "JOB_STARTED" => "k-badge k-badge--green",
+        "COMPLETED" => "k-badge k-badge--green",
+        _ => "k-badge",
+    };
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">@Model.Name</h1>
+            <p class="k-dash-subtitle">Applicant for "@Model.JobTitle"</p>
+        </div>
+        <a href="/job/applicants/@Model.JobPostId" class="k-btn k-btn--sm k-btn--secondary">&larr; Back to Applicants</a>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="k-alert k-alert--success">@ViewBag.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+
+    <div class="k-dash-section">
+        <div class="k-dash-section__header">
+            <h2 class="k-dash-section__title">Profile</h2>
+            <span class="@badgeClass">@Model.StatusCd.Replace("_", " ")</span>
+        </div>
+
+        <div class="k-form__group">
+            <label>Name</label>
+            <p>@Model.Name</p>
+        </div>
+
+        <div class="k-form__group">
+            <label>Skills</label>
+            <p>@(Model.SkillNames.Any() ? string.Join(", ", Model.SkillNames) : "Not specified")</p>
+        </div>
+
+        <div class="k-form__group">
+            <label>Location</label>
+            <p>@(Model.Location ?? "Not specified")</p>
+        </div>
+
+        <div class="k-form__group">
+            <label>Experience Note</label>
+            <p>@(Model.ExperienceNoteTxt ?? "Not provided")</p>
+        </div>
+    </div>
+
+    <!-- ── JOB SITE OTP ─────────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Job Site OTP</h2>
+
+        @if (Model.StatusCd == "COMPLETED")
+        {
+            <p class="k-empty-state__text">✅ Job Starting OTP and Satisfaction OTP have both been confirmed for this Kaarigar.</p>
+        }
+        else if (Model.StatusCd == "JOB_STARTED")
+        {
+            <p class="k-empty-state__text">✅ Job Starting OTP confirmed. Generate the Satisfaction OTP from the <a href="/job/applicants/@Model.JobPostId">Applicants</a> table once the job is done.</p>
+        }
+        else
+        {
+            <p class="k-dash-subtitle">Generate the Job Starting OTP from the <a href="/job/applicants/@Model.JobPostId">Applicants</a> table once this Kaarigar reaches the job site.</p>
+        }
+    </div>
+</div>

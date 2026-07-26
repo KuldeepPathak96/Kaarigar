@@ -1,0 +1,91 @@
+@model Kaarigar.Models.LearningVideoAdminViewModel
+@{
+    ViewData["Title"] = "Learning Videos";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">Learning Videos</h1>
+            <p class="k-dash-subtitle">Upload skill-based training videos, visible to employees on that skill.</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="k-alert k-alert--success">@ViewBag.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Upload New Video</h2>
+        <form asp-action="UploadLearningVideo" asp-controller="Admin" method="post" enctype="multipart/form-data" class="k-form">
+            @Html.AntiForgeryToken()
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label>Skill <span class="k-req">*</span></label>
+                    <select name="skillId" class="k-input" asp-items="Model.SkillOptions" required>
+                        <option value="">-- Select skill --</option>
+                    </select>
+                </div>
+                <div class="k-form__group">
+                    <label>Title <span class="k-req">*</span></label>
+                    <input name="title" class="k-input" maxlength="200" required />
+                </div>
+            </div>
+            <div class="k-form__group">
+                <label>Description (optional)</label>
+                <textarea name="descriptionTxt" class="k-input" rows="2" maxlength="1000"></textarea>
+            </div>
+            <div class="k-form__group">
+                <label>Video File <span class="k-req">*</span> (MP4/WEBM/OGG, up to 200MB)</label>
+                <input type="file" name="videoFile" accept="video/mp4,video/webm,video/ogg" class="k-input" required />
+            </div>
+            <button type="submit" class="k-btn k-btn--primary">Upload</button>
+        </form>
+    </div>
+
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Existing Videos (@Model.Videos.Count)</h2>
+        <table class="k-table">
+            <thead>
+                <tr><th>Title</th><th>Skill</th><th>Status</th><th style="text-align:right">Actions</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model.Videos)
+                {
+                    <tr>
+                        <td>@v.Title</td>
+                        <td>@v.SkillName</td>
+                        <td>
+                            @if (v.IsActiveFl) { <span class="k-badge k-badge--green">Active</span> }
+                            else { <span class="k-badge k-badge--red">Hidden</span> }
+                        </td>
+                        <td style="text-align:right">
+                            <a href="@v.VideoUrl" target="_blank" class="k-btn k-btn--sm k-btn--secondary">Preview</a>
+                            <form asp-action="ToggleLearningVideo" asp-controller="Admin" method="post" class="k-inline-form">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="learningVideoId" value="@v.LearningVideoId" />
+                                <input type="hidden" name="isActive" value="@(!v.IsActiveFl)" />
+                                <button type="submit" class="k-btn k-btn--sm k-btn--secondary">@(v.IsActiveFl ? "Hide" : "Show")</button>
+                            </form>
+                            <form asp-action="DeleteLearningVideo" asp-controller="Admin" method="post" class="k-inline-form" onsubmit="return confirm('Delete this video?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="learningVideoId" value="@v.LearningVideoId" />
+                                <button type="submit" class="k-btn k-btn--sm k-btn--danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Videos.Any())
+                {
+                    <tr><td colspan="4" style="text-align:center;color:#888">No videos yet. Upload the first one above.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,274 @@
+@model Kaarigar.Models.EmployerProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">Employer Profile</h1>
+            <p class="k-dash-subtitle">View and update your company details, logo, and business proof.</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="k-alert k-alert--success">@success</div>
+    }
+
+    <div id="gpsMessage" class="k-alert k-alert--info" style="display:none;"></div>
+
+    <form asp-action="Profile" asp-controller="Account" method="post" enctype="multipart/form-data" class="k-form" id="profileForm">
+        @Html.AntiForgeryToken()
+
+        <!-- ── COMPANY & CONTACT DETAILS ─────────────────────────────────── -->
+        <div class="k-dash-section">
+            <h2 class="k-dash-section__title">Company &amp; Contact Details</h2>
+
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label asp-for="CompanyName">Company Name <span class="k-req">*</span></label>
+                    <input asp-for="CompanyName" class="k-input" placeholder="e.g. Sunrise Facility Services Pvt Ltd" />
+                    <span asp-validation-for="CompanyName" class="k-field-error"></span>
+                </div>
+
+                <div class="k-form__group">
+                    <label asp-for="ContactPersonName">Contact Person <span class="k-req">*</span></label>
+                    <input asp-for="ContactPersonName" class="k-input" placeholder="Full name" />
+                    <span asp-validation-for="ContactPersonName" class="k-field-error"></span>
+                </div>
+            </div>
+
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label asp-for="ContactNbr">Mobile Number <span class="k-req">*</span></label>
+                    <div class="k-input-prefix-group">
+                        <span class="k-input-prefix">+91</span>
+                        <input asp-for="ContactNbr" class="k-input k-input--with-prefix" maxlength="10" inputmode="numeric" />
+                    </div>
+                    <span asp-validation-for="ContactNbr" class="k-field-error"></span>
+                </div>
+
+                <div class="k-form__group">
+                    <label asp-for="EmailId">Email</label>
+                    <input asp-for="EmailId" type="email" class="k-input" placeholder="you@example.com" />
+                    <span asp-validation-for="EmailId" class="k-field-error"></span>
+                </div>
+            </div>
+
+            <!-- ── GPS LOCATION ─────────────────────────────────────────── -->
+            <div class="k-form__group">
+                <button type="button" id="useMyLocationBtn" class="k-btn k-btn--secondary k-btn--sm">
+                    <span id="gpsBtnIcon">📍</span>
+                    <span id="gpsBtnText">Use My Current Location</span>
+                    <span id="gpsSpinner" class="k-spinner" style="display:none;"></span>
+                </button>
+                <small class="k-form__hint">
+                    Detects your location and auto-fills City and Address below. You can still edit them manually.
+                </small>
+            </div>
+
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label asp-for="CityName">City <span class="k-req">*</span></label>
+                    <select asp-for="CityName" class="k-input" id="cityNameInput"
+                            data-city-picker data-area-target="areaAddressInput"
+                            data-initial-value="@Model.CityName"></select>
+                    <span asp-validation-for="CityName" class="k-field-error"></span>
+                </div>
+
+                <div class="k-form__group">
+                    <label asp-for="BusinessCategoryId">Business Category <span class="k-req">*</span></label>
+                    <select asp-for="BusinessCategoryId" asp-items="Model.BusinessCategoryOptions" class="k-input">
+                        <option value="">-- Select a category --</option>
+                    </select>
+                    <span asp-validation-for="BusinessCategoryId" class="k-field-error"></span>
+                    <small class="k-form__hint">Don't see your category? Ask an Admin to add it.</small>
+                </div>
+            </div>
+
+            <div class="k-form__group">
+                <label asp-for="AreaAddressTxt">Area / Address</label>
+                <textarea asp-for="AreaAddressTxt" class="k-input" rows="2" placeholder="Street, area, landmark" id="areaAddressInput"
+                          autocomplete="off" data-area-picker data-city-source="cityNameInput"></textarea>
+                <span asp-validation-for="AreaAddressTxt" class="k-field-error"></span>
+            </div>
+
+            <div class="k-form__group">
+                <label asp-for="AddressTxt">Address</label>
+                <textarea asp-for="AddressTxt" class="k-input" rows="2" placeholder="Flat / Shop / Office No., Building, Street"></textarea>
+                <span asp-validation-for="AddressTxt" class="k-field-error"></span>
+            </div>
+
+            <input type="hidden" asp-for="LatitudeNbr" id="latitudeInput" />
+            <input type="hidden" asp-for="LongitudeNbr" id="longitudeInput" />
+            <div id="gpsCoordsPreview" class="k-form__hint" style="display:none;"></div>
+        </div>
+
+        <!-- ── LOGO ──────────────────────────────────────────────────────── -->
+        <div class="k-dash-section">
+            <h2 class="k-dash-section__title">Company Logo</h2>
+
+            @if (!string.IsNullOrEmpty(Model.ExistingLogoPath))
+            {
+                <div class="k-profile-logo-preview">
+                    <img src="@Model.ExistingLogoPath" alt="Current logo" />
+                    <span class="k-form__hint">Current logo</span>
+                </div>
+            }
+
+            <div class="k-form__group">
+                <label asp-for="LogoFile">Upload New Logo</label>
+                <input asp-for="LogoFile" type="file" class="k-input" accept=".jpg,.jpeg,.png,.webp" />
+                <small class="k-form__hint">JPG, PNG or WebP, up to 2 MB. Leave empty to keep your current logo.</small>
+            </div>
+        </div>
+
+        <!-- ── BUSINESS PROOF ────────────────────────────────────────────── -->
+        <div class="k-dash-section">
+            <h2 class="k-dash-section__title">Business Proof (GST / Gumasthadhara)</h2>
+
+            @if (!string.IsNullOrEmpty(Model.ExistingProofFileName))
+            {
+                var badgeClass = Model.ProofReviewStatusCd switch
+                {
+                    "APPROVED" => "k-badge k-badge--green",
+                    "REJECTED" => "k-badge k-badge--red",
+                    _ => "k-badge k-badge--amber",
+                };
+                <p>
+                    Current file: <strong>@Model.ExistingProofFileName</strong>
+                    <span class="@badgeClass">@(Model.ProofReviewStatusCd ?? "PENDING")</span>
+                </p>
+            }
+
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label asp-for="BusinessProofTypeCd">Proof Type <span class="k-req">*</span></label>
+                    <select asp-for="BusinessProofTypeCd" class="k-input">
+                        <option value="">-- Select --</option>
+                        <option value="GST">GST Certificate</option>
+                        <option value="GUMASTHA">Gumasthadhara (Shop &amp; Establishment)</option>
+                    </select>
+                    <span asp-validation-for="BusinessProofTypeCd" class="k-field-error"></span>
+                </div>
+
+                <div class="k-form__group">
+                    <label asp-for="BusinessProofNumberTxt">GST / Gumasthadhara Number <span class="k-req">*</span></label>
+                    <input asp-for="BusinessProofNumberTxt" class="k-input" placeholder="Registration / certificate number" />
+                    <span asp-validation-for="BusinessProofNumberTxt" class="k-field-error"></span>
+                </div>
+            </div>
+
+            <div class="k-form__group">
+                <label asp-for="ProofFile">Upload Certificate</label>
+                <input asp-for="ProofFile" type="file" class="k-input" accept=".jpg,.jpeg,.png,.pdf" />
+                <small class="k-form__hint">
+                    JPG, PNG or PDF, up to 5 MB.
+                    @(string.IsNullOrEmpty(Model.ExistingProofFileName) ? "Required for first-time submission." : "Uploading a new file will send it for Admin re-review.")
+                </small>
+            </div>
+        </div>
+
+        <button type="submit" class="k-btn k-btn--primary k-btn--lg" id="saveBtn">
+            <span id="saveBtnText">Save Changes</span>
+            <span id="saveSpinner" class="k-spinner" style="display:none;"></span>
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/city-area-picker.js"></script>
+    <script>
+        document.getElementById('profileForm').addEventListener('submit', function () {
+            const btn = document.getElementById('saveBtn');
+            const text = document.getElementById('saveBtnText');
+            const spinner = document.getElementById('saveSpinner');
+            btn.disabled = true;
+            text.style.display = 'none';
+            spinner.style.display = 'inline-block';
+        });
+
+        // ── "Use My Current Location" (Google reverse geocoding) ──────────────
+            (function () {
+            const btn = document.getElementById('useMyLocationBtn');
+            const btnText = document.getElementById('gpsBtnText');
+            const spinner = document.getElementById('gpsSpinner');
+            const messageBox = document.getElementById('gpsMessage');
+            const coordsPreview = document.getElementById('gpsCoordsPreview');
+
+            function setBusy(isBusy) {
+                btn.disabled = isBusy;
+                spinner.style.display = isBusy ? 'inline-block' : 'none';
+                btnText.style.display = isBusy ? 'none' : 'inline';
+            }
+
+            function showMessage(text, isError) {
+                messageBox.textContent = text;
+                messageBox.className = 'k-alert ' + (isError ? 'k-alert--error' : 'k-alert--info');
+                messageBox.style.display = 'block';
+            }
+
+            btn.addEventListener('click', function () {
+                if (!navigator.geolocation) {
+                    showMessage('Your browser does not support location detection.', true);
+                    return;
+                }
+
+                setBusy(true);
+                messageBox.style.display = 'none';
+
+                navigator.geolocation.getCurrentPosition(
+                    async function (position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        // Store coordinates immediately — this is saved with the
+                        // profile regardless of whether the city lookup below
+                        // succeeds, so the location is never lost.
+                        document.getElementById('latitudeInput').value = lat;
+                        document.getElementById('longitudeInput').value = lng;
+                        coordsPreview.textContent = 'Location captured: ' + lat.toFixed(6) + ', ' + lng.toFixed(6);
+                        coordsPreview.style.display = 'block';
+
+                        try {
+                            const response = await fetch('/account/profile/reverse-geocode?lat=' + lat + '&lng=' + lng);
+                            const data = response.ok ? await response.json() : null;
+
+                            if (data && data.cityName) {
+                                const cityDropdown = document.getElementById('cityNameInput');
+                                cityDropdown.value = data.cityName;
+                                cityDropdown.dispatchEvent(new Event('change'));
+                                showMessage('Location captured and City updated to "' + data.cityName + '".', false);
+                            } else {
+                                showMessage('Location captured and saved. City could not be auto-detected — please enter it manually if needed.', false);
+                            }
+                        } catch (err) {
+                            showMessage('Location captured and saved. City could not be auto-detected — please enter it manually if needed.', false);
+                        } finally {
+                            setBusy(false);
+                        }
+                    },
+                    function (error) {
+                        setBusy(false);
+                        let msg = 'Could not access your location.';
+                        if (error.code === error.PERMISSION_DENIED) {
+                            msg = 'Location permission was denied. Please allow location access to use this feature.';
+                        } else if (error.code === error.TIMEOUT) {
+                            msg = 'Location request timed out. Please try again.';
+                        }
+                        showMessage(msg, true);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            });
+        })();
+    </script>
+}

@@ -1,0 +1,250 @@
+@model Kaarigar.Models.RegisterModel
+@{
+    ViewData["Title"] = "Register — Kaarigar";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+
+    // Determine active role from query string or ViewBag (set by controller)
+    var currentRole = ViewBag.CurrentRole as string ?? "EMPLOYER";
+    var submittedPhone = ViewBag.SubmittedPhone as string;
+    var registered = ViewBag.Registered == true;
+}
+
+<div class="k-auth-page">
+    <div class="k-auth-card">
+
+        <!-- Brand -->
+        <a class="k-auth-brand" href="/">
+            <img src="~/images/logo.png" alt="Kaarigar" class="k-auth-brand__logo" />
+            <span class="k-auth-brand__name">KAARIGAR</span>
+        </a>
+
+        @if (registered)
+        {
+            <!-- SUCCESS STATE -->
+            <div class="k-auth-success">
+                <div class="k-success-icon">✅</div>
+                <h2>Registration Submitted!</h2>
+                <p>
+                    Your account is pending <strong>Admin approval</strong>.
+                    You will receive an SMS / WhatsApp notification on
+                    <strong>+91 @submittedPhone</strong> once approved.
+                </p>
+                <a class="k-btn k-btn--primary" href="/">Back to Home</a>
+            </div>
+        }
+        else
+        {
+            <h2 class="k-auth-title">Create Your Account</h2>
+            <p class="k-auth-sub">Free registration. Admin-approved before going live.</p>
+
+            <!-- ROLE TOGGLE -->
+            <div class="k-role-toggle">
+                <button type="button"
+                        class="k-role-toggle__btn @(currentRole == "EMPLOYER" ? "active" : "")"
+                        onclick="setRole('EMPLOYER')">
+                    🏗️ I'm an Employer
+                </button>
+                <button type="button"
+                        class="k-role-toggle__btn @(currentRole == "EMPLOYEE" ? "active" : "")"
+                        onclick="setRole('EMPLOYEE')">
+                    👷 I'm a Worker
+                </button>
+            </div>
+
+            <form asp-action="Register" asp-controller="Account" method="post" class="k-form" id="registerForm">
+                @Html.AntiForgeryToken()
+
+                <!-- Hidden role field (updated by JS toggle) -->
+                <input type="hidden" asp-for="RoleCd" id="roleCdInput" value="@currentRole" />
+
+                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage as string) || !ViewData.ModelState.IsValid)
+                {
+                    <div class="k-alert k-alert--error">
+                        ⚠️
+                        @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage as string))
+                        {
+                            @ViewBag.ErrorMessage
+                        }
+                        else
+                        {
+                            @:Please fix the errors below and try again.
+                        }
+                    </div>
+                }
+
+                <!-- BASIC INFO -->
+                <div class="k-form__section-label">Basic Information</div>
+
+                <div class="k-form__row">
+                    <div class="k-form__group">
+                        <label asp-for="FirstName">First Name <span class="k-req">*</span></label>
+                        <input asp-for="FirstName" class="k-input" placeholder="Rahul" />
+                        <span asp-validation-for="FirstName" class="k-field-error"></span>
+                    </div>
+                    <div class="k-form__group">
+                        <label asp-for="LastName">Last Name</label>
+                        <input asp-for="LastName" class="k-input" placeholder="Patel" />
+                    </div>
+                </div>
+
+                <div class="k-form__group">
+                    <label asp-for="ContactNbr">Mobile Number <span class="k-req">*</span></label>
+                    <div class="k-input-prefix-group">
+                        <span class="k-input-prefix">+91</span>
+                        <input asp-for="ContactNbr"
+                               class="k-input k-input--with-prefix"
+                               placeholder="9876543210"
+                               maxlength="10"
+                               inputmode="numeric" />
+                    </div>
+                    <span asp-validation-for="ContactNbr" class="k-field-error"></span>
+                    <span class="k-field-hint">Used for OTP &amp; job notifications</span>
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="k-form__section-label">Set Password</div>
+
+                <div class="k-form__row">
+                    <div class="k-form__group">
+                        <label asp-for="Password">Password <span class="k-req">*</span></label>
+                        <input asp-for="Password"
+                               type="password"
+                               class="k-input"
+                               placeholder="Min. 8 characters" />
+                        <span asp-validation-for="Password" class="k-field-error"></span>
+                    </div>
+                    <div class="k-form__group">
+                        <label asp-for="ConfirmPassword">Confirm Password <span class="k-req">*</span></label>
+                        <input asp-for="ConfirmPassword"
+                               type="password"
+                               class="k-input"
+                               placeholder="Re-enter password" />
+                        <span asp-validation-for="ConfirmPassword" class="k-field-error"></span>
+                    </div>
+                </div>
+
+                <!-- EMPLOYER FIELDS -->
+                <div id="employerSection" style="display: @(currentRole == "EMPLOYER" ? "block" : "none");">
+                    <div class="k-form__section-label">Company Details</div>
+
+                    <div class="k-form__group">
+                        <label asp-for="CompanyName">Company / Business Name</label>
+                        <input asp-for="CompanyName"
+                               class="k-input"
+                               placeholder="e.g. Patel Construction Works" />
+                    </div>
+
+                    <div class="k-form__row">
+                        <div class="k-form__group">
+                            <label asp-for="CityName">City <span class="k-req">*</span></label>
+                            <select asp-for="CityName" id="employerCityName" class="k-input"
+                                    data-city-picker data-area-target="employerAreaAddressTxt"
+                                    disabled="@(currentRole != "EMPLOYER")"></select>
+                            <span asp-validation-for="CityName" class="k-field-error"></span>
+                        </div>
+                        <div class="k-form__group">
+                            <label asp-for="AreaAddressTxt">Area / Address</label>
+                            <input asp-for="AreaAddressTxt" id="employerAreaAddressTxt"
+                                   class="k-input" autocomplete="off"
+                                   data-area-picker data-city-source="employerCityName"
+                                   placeholder="Alkapuri, Vadodara" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMPLOYEE FIELDS -->
+                <div id="employeeSection" style="display: @(currentRole == "EMPLOYEE" ? "block" : "none");">
+                    <div class="k-form__section-label">Work Preferences</div>
+
+                    <div class="k-form__row">
+                        <div class="k-form__group">
+                            <label asp-for="CityName">City <span class="k-req">*</span></label>
+                            <select asp-for="CityName" id="employeeCityName" class="k-input"
+                                    data-city-picker data-area-target="employeeAreaAddressTxt"
+                                    disabled="@(currentRole != "EMPLOYEE")"></select>
+                            <span asp-validation-for="CityName" class="k-field-error"></span>
+                        </div>
+                        <div class="k-form__group">
+                            <label asp-for="PreferredRadiusNbr">Preferred Work Radius</label>
+                            <select asp-for="PreferredRadiusNbr" class="k-input k-select">
+                                <option value="">Any Distance</option>
+                                <option value="5">Within 5 km</option>
+                                <option value="10">Within 10 km</option>
+                                <option value="25">Within 25 km</option>
+                                <option value="50">Within 50 km</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="k-form__group">
+                        <label asp-for="AreaAddressTxt">Area / Address</label>
+                        <input asp-for="AreaAddressTxt" id="employeeAreaAddressTxt"
+                               class="k-input" autocomplete="off"
+                               data-area-picker data-city-source="employeeCityName"
+                               placeholder="Karelibaug, Vadodara" />
+                    </div>
+                </div>
+
+                <!-- TERMS -->
+                <div class="k-form__group k-form__group--checkbox">
+                    <label class="k-checkbox-label">
+                        <input asp-for="AgreeToTerms" type="checkbox" />
+                        I agree to the <a href="#" target="_blank">Terms of Use</a> and understand
+                        my account requires Admin approval before I can log in.
+                    </label>
+                    <span asp-validation-for="AgreeToTerms" class="k-field-error"></span>
+                </div>
+
+                <!-- SUBMIT -->
+                <button type="submit"
+                        class="k-btn k-btn--primary k-btn--full k-btn--submit"
+                        id="submitBtn">
+                    <span id="submitBtnText">Create Account →</span>
+                    <span id="submitSpinner" class="k-spinner" style="display:none;"></span>
+                </button>
+
+                <p class="k-auth-switch">
+                    Already have an account? <a href="/Account/Login">Log In</a>
+                </p>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/city-area-picker.js"></script>
+    <script>
+                function setRole(role) {
+            document.getElementById('roleCdInput').value = role;
+            document.querySelectorAll('.k-role-toggle__btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            const employerSection = document.getElementById('employerSection');
+            const employeeSection = document.getElementById('employeeSection');
+            const showEmployer = role === 'EMPLOYER';
+
+            employerSection.style.display = showEmployer ? 'block' : 'none';
+            employeeSection.style.display = showEmployer ? 'none' : 'block';
+
+            // Disable inactive section's inputs so they aren't submitted / don't collide
+            employerSection.querySelectorAll('input, select').forEach(el => el.disabled = !showEmployer);
+            employeeSection.querySelectorAll('input, select').forEach(el => el.disabled = showEmployer);
+
+            if (showEmployer) {
+                document.getElementById('PreferredRadiusNbr') && (document.getElementById('PreferredRadiusNbr').value = '');
+            } else {
+                document.getElementById('CompanyName') && (document.getElementById('CompanyName').value = '');
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function () {
+            const btn = document.getElementById('submitBtn');
+            const text = document.getElementById('submitBtnText');
+            const spinner = document.getElementById('submitSpinner');
+            btn.disabled = true;
+            text.textContent = 'Submitting...';
+            spinner.style.display = 'inline-block';
+        });
+    </script>
+}

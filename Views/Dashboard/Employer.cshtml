@@ -1,0 +1,145 @@
+@model Kaarigar.Models.EmployerDashboardViewModel
+@{
+    ViewData["Title"] = "Employer Dashboard";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <!-- ── PAGE HEADER ──────────────────────────────────────────────── -->
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">
+                Good @(DateTime.Now.Hour < 12 ? "morning" : DateTime.Now.Hour < 17 ? "afternoon" : "evening"),
+                @(Model.CompanyName ?? Model.EmployerName) 👋
+            </h1>
+            <p class="k-dash-subtitle">Here's what's happening with your job posts today.</p>
+        </div>
+        @if (Model.IsApproved)
+        {
+            <a href="/job/post" class="k-btn k-btn--primary k-btn--lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Post New Job
+            </a>
+        }
+        else
+        {
+            <span class="k-btn k-btn--primary k-btn--lg" style="opacity:.6;cursor:not-allowed" title="Your account is pending Admin approval">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Post New Job
+            </span>
+        }
+    </div>
+
+    @if (!Model.IsApproved)
+    {
+        <div class="k-alert k-alert--error" style="text-align:center">
+            Your account is pending Admin approval. You'll be able to post jobs once approved.
+        </div>
+    }
+
+    <!-- ── KPI CARDS ────────────────────────────────────────────────── -->
+    <div class="k-kpi-grid k-kpi-grid--4">
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#FFF7CC">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.TotalJobsPosted</div>
+                <div class="k-kpi-card__label">Total Jobs Posted</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#D1FAE5">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value k-kpi-card__value--green">@Model.ActiveJobs</div>
+                <div class="k-kpi-card__label">Active Jobs</div>
+            </div>
+            <div class="k-kpi-card__badge k-kpi-card__badge--green">Live</div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#EDE9FE">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4C1D95" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.TotalApplications</div>
+                <div class="k-kpi-card__label">Applications Received</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#FEF9C3">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#854D0E" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.JobsFilled</div>
+                <div class="k-kpi-card__label">Jobs Filled</div>
+            </div>
+        </div>
+
+    </div><!-- /.k-kpi-grid -->
+
+    <!-- ── ACTIVITY FEED ─────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <div class="k-dash-section__header">
+            <h2 class="k-dash-section__title">Recent Applicant Activity</h2>
+            <a href="/job/my-jobs" class="k-dash-section__link">View all →</a>
+        </div>
+
+        @if (!Model.RecentActivity.Any())
+        {
+            <div class="k-empty-state">
+                <div class="k-empty-state__icon">📋</div>
+                @if (Model.TotalJobsPosted > 0)
+                {
+                    <p class="k-empty-state__text">No applicant activity yet. Workers matching your job(s) are being notified — check back soon.</p>
+                    <a href="/job/my-jobs" class="k-btn k-btn--secondary">View My Job Posts</a>
+                }
+                else
+                {
+                    <p class="k-empty-state__text">No applicant activity yet. Post a job to get started.</p>
+                    @if (Model.IsApproved)
+                    {
+                        <a href="/job/post" class="k-btn k-btn--primary">Post Your First Job</a>
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            <div class="k-activity-feed">
+                @foreach (var item in Model.RecentActivity)
+                {
+                    <div class="k-activity-item">
+                        <div class="k-activity-item__avatar">@item.AvatarInitial</div>
+                        <div class="k-activity-item__body">
+                            <div class="k-activity-item__text">
+                                <strong>@item.EmployeeName</strong> @item.Action
+                                <span class="k-activity-item__job">— @item.JobTitle</span>
+                            </div>
+                            <div class="k-activity-item__time">
+                                @item.Timestamp.ToLocalTime().ToString("dd MMM, hh:mm tt")
+                            </div>
+                        </div>
+                        <span class="k-status-pill k-status-pill--@item.StatusCd.ToLower()">@item.StatusCd</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+</div><!-- /.k-dash-page -->

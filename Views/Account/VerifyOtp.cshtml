@@ -1,0 +1,71 @@
+@model Kaarigar.Models.VerifyOtpModel
+@{
+    ViewData["Title"] = "Verify OTP — Kaarigar";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="k-auth-page">
+    <div class="k-auth-card">
+
+        <!-- Brand -->
+        <a class="k-auth-brand" href="/">
+            <img src="~/images/logo.png" alt="Kaarigar" class="k-auth-brand__logo" />
+            <span class="k-auth-brand__name">KAARIGAR</span>
+        </a>
+
+        <h2 class="k-auth-title">Verify OTP</h2>
+        <p class="k-auth-sub">
+            Enter the 6-digit OTP sent to <strong>@Model.EmailId</strong>. It is valid for 10 minutes.
+        </p>
+
+        @if (!string.IsNullOrEmpty(ViewBag.InfoMessage))
+        {
+            <div class="k-alert k-alert--info">@ViewBag.InfoMessage</div>
+        }
+
+        @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+        {
+            <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+        }
+
+        <form asp-action="VerifyOtp" asp-controller="Account" method="post" class="k-form" id="verifyOtpForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="EmailId" />
+
+            <div class="k-form__group">
+                <label asp-for="OtpCd">OTP <span class="k-req">*</span></label>
+                <input asp-for="OtpCd"
+                       class="k-input"
+                       maxlength="6"
+                       inputmode="numeric"
+                       autocomplete="one-time-code"
+                       placeholder="123456"
+                       autofocus />
+                <span asp-validation-for="OtpCd" class="k-field-error"></span>
+            </div>
+
+            <button type="submit" class="k-btn k-btn--primary k-btn--full k-btn--submit" id="verifyBtn">
+                <span id="verifyBtnText">Verify OTP</span>
+                <span id="verifySpinner" class="k-spinner" style="display:none;"></span>
+            </button>
+        </form>
+
+        <p class="k-auth-switch mt-3">
+            Didn't get the OTP? <a href="/Account/ForgotPassword">Resend</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('verifyOtpForm').addEventListener('submit', function () {
+            const btn = document.getElementById('verifyBtn');
+            const text = document.getElementById('verifyBtnText');
+            const spinner = document.getElementById('verifySpinner');
+            btn.disabled = true;
+            text.style.display = 'none';
+            spinner.style.display = 'inline-block';
+        });
+    </script>
+}

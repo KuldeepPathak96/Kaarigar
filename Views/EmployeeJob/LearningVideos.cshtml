@@ -1,0 +1,52 @@
+@model Kaarigar.Models.EmployeeLearningViewModel
+@{
+    ViewData["Title"] = "Learning Videos";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">Learning Videos</h1>
+            <p class="k-dash-subtitle">Pick a skill to watch training videos uploaded by the admin.</p>
+        </div>
+    </div>
+
+    <div class="k-dash-section">
+        <form method="get" asp-action="LearningVideos" asp-controller="EmployeeJob" class="k-form k-form--inline">
+            <div class="k-form__group k-form__group--grow">
+                <label>Skill</label>
+                <select name="skillId" class="k-input" asp-items="Model.SkillOptions" onchange="this.form.submit()">
+                    <option value="">-- Select a skill --</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    @if (Model.SelectedSkillId.HasValue)
+    {
+        <div class="k-dash-section">
+            <h2 class="k-dash-section__title">Videos (@Model.Videos.Count)</h2>
+
+            @if (!Model.Videos.Any())
+            {
+                <p style="color:#888">No videos uploaded yet for this skill.</p>
+            }
+            else
+            {
+                <div class="k-form__row" style="flex-wrap:wrap;gap:20px">
+                    @foreach (var v in Model.Videos)
+                    {
+                        <div style="flex:1 1 320px;max-width:400px">
+                            <video controls preload="metadata" style="width:100%;border-radius:8px;background:#000">
+                                <source src="@v.VideoUrl" />
+                                Your browser does not support video playback.
+                            </video>
+                            <p style="font-weight:600;margin:6px 0 2px">@v.Title</p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

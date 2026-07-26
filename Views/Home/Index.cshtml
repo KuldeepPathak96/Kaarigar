@@ -1,0 +1,384 @@
+@{
+    ViewData["Title"] = "Kaarigar — Skilled Workers On Demand";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+
+    var industries = new[]
+    {
+        "🛍️ Retail", "🍽️ Restaurants", "📦 Warehousing", "🏨 Hotels",
+        "🏥 Hospitals", "🛒 E-commerce", "🚚 Logistics", "🏦 Banking", "🎉 Events"
+    };
+}
+
+<!-- NAV -->
+<nav class="k-nav">
+    <div class="k-nav__inner">
+        <a class="k-nav__brand" href="/">
+            <img src="~/images/logo.png" alt="Kaarigar Logo" class="k-nav__logo" />
+            <span class="k-nav__brand-text">KAARIGAR</span>
+        </a>
+        <div class="k-nav__actions">
+            <a class="k-btn k-btn--ghost" href="/Account/Login">Log In</a>
+            <a class="k-btn k-btn--primary" href="/Account/Register">Register Free</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="k-hero">
+    <div class="k-hero__bg"></div>
+    <div class="k-container">
+        <div class="k-hero__content">
+            <div class="k-hero__badge">🇮🇳 Trusted across India</div>
+
+            <h1 class="k-hero__title">
+                Workforce On Demand.<br />
+                <span class="highlight">Get Verified Staff Within Hours.</span>
+            </h1>
+
+            <p class="k-hero__subtitle">
+                India's trusted B2B platform connecting businesses with verified,
+                on-demand skilled workforce — electricians, plumbers, drivers,
+                masons, cooks, housekeeping &amp; more — staffed up in hours, not days.
+            </p>
+
+            <div class="k-hero__cta">
+                <a class="k-btn k-btn--primary k-btn--lg" href="/Account/Register?role=employer">
+                    I Need Workers
+                </a>
+                <a class="k-btn k-btn--white k-btn--lg" href="/Account/Register?role=employee">
+                    I'm Looking for Work
+                </a>
+            </div>
+
+            <div class="k-hero__stats">
+                <div class="k-stat">
+                    <strong>50,000+</strong>
+                    <span>Verified Workers</span>
+                </div>
+                <div class="k-stat">
+                    <strong>1.2L+</strong>
+                    <span>Jobs Completed</span>
+                </div>
+                <div class="k-stat">
+                    <strong>4.8★</strong>
+                    <span>Average Rating</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="k-hero__illustration">
+            <div class="k-hero-card">
+                <div class="k-hero-card__header">
+                    <div class="k-hero-card__badge">LIVE</div>
+                </div>
+                <div class="k-hero-card__title">Electrician Needed</div>
+                <div class="k-hero-card__meta">📍 Ahmedabad • ₹750/day • 2 openings</div>
+
+                <div style="margin-top: 1.25rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <span style="background:#F3F4F6; padding:0.2rem 0.75rem; border-radius:9999px; font-size:0.8rem;">Wiring</span>
+                    <span style="background:#F3F4F6; padding:0.2rem 0.75rem; border-radius:9999px; font-size:0.8rem;">Panel Work</span>
+                    <span style="background:#F3F4F6; padding:0.2rem 0.75rem; border-radius:9999px; font-size:0.8rem;">3-Phase</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ROLES SECTION -->
+<section class="k-roles">
+    <div class="k-container">
+        <h2 class="k-section-title">Who is Kaarigar for?</h2>
+        <p class="k-section-subtitle">Built for both sides of the workforce equation</p>
+
+        <div class="k-roles__grid">
+            <!-- Employer Card -->
+            <div class="k-role-card k-role-card--employer">
+                <div class="k-role-card__icon">🏗️</div>
+                <h3>For Employers</h3>
+                <p>Construction companies, factories, hotels, households — anyone needing reliable skilled workers fast.</p>
+
+                <ul>
+                    <li>Post job requirements in under 2 minutes</li>
+                    <li>Browse verified worker profiles with ratings</li>
+                    <li>Generate on-site OTPs to verify start &amp; completion</li>
+                    <li>Instant WhatsApp &amp; SMS notifications</li>
+                </ul>
+
+                <a href="/Account/Register?role=employer" class="k-btn k-btn--primary k-btn--full">Register as Employer</a>
+            </div>
+
+            <!-- Worker Card -->
+            <div class="k-role-card k-role-card--employee">
+                <div class="k-role-card__icon">👷</div>
+                <h3>For Workers</h3>
+                <p>Electricians, plumbers, drivers, masons, cooks, security guards — get matched to jobs near you.</p>
+
+                <ul>
+                    <li>Free verified profile in 5 minutes</li>
+                    <li>Set your preferred work radius (5–50 km)</li>
+                    <li>Get notified of matching jobs instantly</li>
+                    <li>Safe OTP-verified job-site check-in &amp; check-out</li>
+                </ul>
+
+                <a href="/Account/Register?role=employee" class="k-btn k-btn--green k-btn--full">Register as Worker</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="k-how">
+    <div class="k-container">
+        <h2 class="k-section-title">How Kaarigar Works</h2>
+        <p class="k-section-subtitle">Simple. Fast. Transparent.</p>
+
+        <div class="k-how__grid">
+            <!-- Employer Flow -->
+            <div>
+                <div class="k-flow-label">FOR EMPLOYERS</div>
+                <div class="k-flow">
+                    <div class="k-step">
+                        <div class="k-step__num">1</div>
+                        <div class="k-step__content">
+                            <h4>Register &amp; Get Verified</h4>
+                            <p>Sign up with your mobile number. Admin verifies your business in under 24 hours.</p>
+                        </div>
+                    </div>
+                    <div class="k-step">
+                        <div class="k-step__num">2</div>
+                        <div class="k-step__content">
+                            <h4>Post a Job</h4>
+                            <p>Specify skill, location, wage, date &amp; number of workers required.</p>
+                        </div>
+                    </div>
+                    <div class="k-step">
+                        <div class="k-step__num">3</div>
+                        <div class="k-step__content">
+                            <h4>Review &amp; Confirm</h4>
+                            <p>Browse applicants, shortlist, and generate OTPs to confirm attendance at site.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Worker Flow -->
+            <div>
+                <div class="k-flow-label">FOR WORKERS</div>
+                <div class="k-flow">
+                    <div class="k-step">
+                        <div class="k-step__num">1</div>
+                        <div class="k-step__content">
+                            <h4>Create Verified Profile</h4>
+                            <p>Upload Aadhaar/PAN/Voter ID + photo. Admin approves within 24 hours.</p>
+                        </div>
+                    </div>
+                    <div class="k-step">
+                        <div class="k-step__num">2</div>
+                        <div class="k-step__content">
+                            <h4>Add Skills &amp; Location</h4>
+                            <p>Select your skills and set preferred work radius (5km to anywhere).</p>
+                        </div>
+                    </div>
+                    <div class="k-step">
+                        <div class="k-step__num">3</div>
+                        <div class="k-step__content">
+                            <h4>Get Hired</h4>
+                            <p>Receive job alerts, apply instantly, and enter the employer's OTP at the site.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SHIFT LIFECYCLE -->
+<section class="k-how" style="background:#F9FAFB">
+    <div class="k-container">
+        <h2 class="k-section-title">From Shift Posted to Payment Released</h2>
+        <p class="k-section-subtitle">One seamless flow, start to finish</p>
+
+        <div class="k-lifecycle">
+            <div class="k-lifecycle__step">
+                <div class="k-lifecycle__icon">📝</div>
+                <h4>Employer Posts Shift</h4>
+                <p>Skill, location, timing &amp; rate — posted in under 2 minutes.</p>
+            </div>
+            <div class="k-lifecycle__arrow">→</div>
+
+            <div class="k-lifecycle__step">
+                <div class="k-lifecycle__icon">🔔</div>
+                <h4>Verified Workers Receive Alert</h4>
+                <p>Matching, nearby workers are notified instantly via WhatsApp.</p>
+            </div>
+            <div class="k-lifecycle__arrow">→</div>
+
+            <div class="k-lifecycle__step">
+                <div class="k-lifecycle__icon">🙋</div>
+                <h4>Worker Accepts Shift</h4>
+                <p>First verified worker to accept locks in the shift.</p>
+            </div>
+            <div class="k-lifecycle__arrow">→</div>
+
+            <div class="k-lifecycle__step">
+                <div class="k-lifecycle__icon">✅</div>
+                <h4>Employer Confirms</h4>
+                <p>Employer reviews and confirms the assigned worker.</p>
+            </div>
+            <div class="k-lifecycle__arrow">→</div>
+
+            <div class="k-lifecycle__step">
+                <div class="k-lifecycle__icon">🔐</div>
+                <h4>Job Starting OTP</h4>
+                <p>Employer generates an OTP once the worker reaches the site; worker enters it to confirm start.</p>
+            </div>
+            <div class="k-lifecycle__arrow">→</div>
+
+            <div class="k-lifecycle__step">
+                <div class="k-lifecycle__icon">🏁</div>
+                <h4>Satisfaction OTP</h4>
+                <p>Employer generates a second OTP when the work is done; the worker enters it to confirm completion.</p>
+            </div>
+            <div class="k-lifecycle__arrow">→</div>
+
+            <div class="k-lifecycle__step">
+                <div class="k-lifecycle__icon">💸</div>
+                <h4>Payment Released</h4>
+                <p>Payout is released to the worker automatically.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PAIN -->
+<section class="k-pain">
+    <div class="k-container">
+        <h2 class="k-section-title">The Problem Right Now</h2>
+        <p class="k-section-subtitle">Real staffing gaps, happening today — and how Kaarigar closes them in hours</p>
+
+        <div class="k-pain__tabs" role="tablist">
+            <button type="button" class="k-pain__tab active" data-pain="restaurant" role="tab" aria-selected="true">🍽️ Restaurants</button>
+            <button type="button" class="k-pain__tab" data-pain="warehouse" role="tab" aria-selected="false">📦 Warehouses</button>
+            <button type="button" class="k-pain__tab" data-pain="retail" role="tab" aria-selected="false">🛍️ Retail</button>
+        </div>
+
+        <div class="k-pain__panels">
+            <div class="k-pain__panel active" data-pain-panel="restaurant">
+                <div class="k-pain__icon">🍽️</div>
+                <p class="k-pain__statement">Restaurants lose revenue because staff don't show up.</p>
+                <p class="k-pain__resolve">✅ Kaarigar solves this in hours — verified waiters, kitchen &amp; cleaning staff, alerted and on-site the same day.</p>
+            </div>
+            <div class="k-pain__panel" data-pain-panel="warehouse">
+                <div class="k-pain__icon">📦</div>
+                <p class="k-pain__statement">Warehouses suffer when manpower is unavailable.</p>
+                <p class="k-pain__resolve">✅ Kaarigar solves this in hours — loaders, packers &amp; sorters staffed up the moment order volume spikes.</p>
+            </div>
+            <div class="k-pain__panel" data-pain-panel="retail">
+                <div class="k-pain__icon">🛍️</div>
+                <p class="k-pain__statement">Retail stores struggle during festivals.</p>
+                <p class="k-pain__resolve">✅ Kaarigar solves this in hours — extra floor staff for festival footfall, without a single long-term hire.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INDUSTRIES TICKER -->
+<section class="k-skills">
+    <div class="k-container">
+        <div class="k-skills-track">
+            @foreach (var industry in industries)
+            {
+                <span class="k-skill-pill">@industry</span>
+            }
+            @foreach (var industry in industries)
+            {
+                <span class="k-skill-pill">@industry</span>
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll('.k-pain__tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            var target = tab.getAttribute('data-pain');
+
+            document.querySelectorAll('.k-pain__tab').forEach(function (t) {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+
+            document.querySelectorAll('.k-pain__panel').forEach(function (panel) {
+                panel.classList.toggle('active', panel.getAttribute('data-pain-panel') === target);
+            });
+        });
+    });
+</script>
+
+<!-- TRUST & SAFETY -->
+<section class="k-trust">
+    <div class="k-container">
+        <h2 class="k-section-title">Built for Trust &amp; Safety</h2>
+        <p class="k-section-subtitle">Every worker and employer goes through strict verification</p>
+
+        <div class="k-trust__grid">
+            <div class="k-trust-card">
+                <div class="k-trust-card__icon">📱</div>
+                <h4>Mobile OTP Verification</h4>
+                <p>Every account is linked to a verified mobile number.</p>
+            </div>
+            <div class="k-trust-card">
+                <div class="k-trust-card__icon">📋</div>
+                <h4>Document Verification</h4>
+                <p>Aadhaar, PAN, Voter ID &amp; Driving License verified by Admin.</p>
+            </div>
+            <div class="k-trust-card">
+                <div class="k-trust-card__icon">📍</div>
+                <h4>Location and Skill Based Matching</h4>
+                <p>Workers only receive relevant jobs within their chosen radius.</p>
+            </div>
+            <div class="k-trust-card">
+                <div class="k-trust-card__icon">✅</div>
+                <h4>Admin Approval Gate</h4>
+                <p>All accounts require manual admin approval before going live.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="k-cta">
+    <div class="k-container">
+        <div class="k-cta__box">
+            <h2>Ready to Get Started?</h2>
+            <p>Registration is free. Approval is fast. Jobs are real.</p>
+
+            <div class="k-cta__buttons">
+                <a href="/Account/Register?role=employer" class="k-btn k-btn--primary k-btn--lg">Register as Employer</a>
+                <a href="/Account/Register?role=employee" class="k-btn k-btn--green k-btn--lg">Register as Worker</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="k-footer">
+    <div class="k-container">
+        <div class="k-footer__inner">
+            <div>
+                <div class="k-footer__brand">KAARIGAR</div>
+                <p>India's Trusted Skilled Workforce Platform</p>
+            </div>
+            <div class="k-footer__links">
+                <a href="/Account/Login">Login</a>
+                <a href="/Account/Register">Register</a>
+                <a href="#">Help</a>
+            </div>
+        </div>
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; text-align: center;">
+            &copy; @DateTime.Now.Year Kaarigar. All rights reserved.
+        </div>
+    </div>
+</footer>

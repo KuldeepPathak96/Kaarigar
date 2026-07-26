@@ -1,0 +1,139 @@
+@model Kaarigar.Models.ManageJobPostsViewModel
+@{
+    ViewData["Title"] = "Manage Job Posts";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">Manage Job Posts</h1>
+            <p class="k-dash-subtitle">Search, filter, and moderate job posts.</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="k-alert k-alert--success">@ViewBag.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+
+    <!-- ── SEARCH / FILTER ──────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <form method="get" asp-action="JobPosts" asp-controller="Admin" class="k-form k-form--inline" style="flex-wrap:wrap">
+            <div class="k-form__group k-form__group--grow">
+                <input type="text" name="search" value="@Model.SearchTerm" class="k-input"
+                       placeholder="Search by job title or employer name" />
+            </div>
+
+            <div class="k-form__group">
+                <select name="city" class="k-input">
+                    <option value="">All Cities</option>
+                    @foreach (var c in Model.CityOptions)
+                    {
+                        <option value="@c" selected="@(c == Model.CityFilter)">@c</option>
+                    }
+                </select>
+            </div>
+
+            <div class="k-form__group">
+                <select name="status" class="k-input">
+                    <option value="">All Statuses</option>
+                    <option value="ACTIVE" selected="@(Model.StatusFilter == "ACTIVE")">Active</option>
+                    <option value="PAUSED" selected="@(Model.StatusFilter == "PAUSED")">Paused</option>
+                    <option value="CLOSED" selected="@(Model.StatusFilter == "CLOSED")">Closed</option>
+                </select>
+            </div>
+
+            <div class="k-form__group">
+                <label style="font-size:12px;color:#888">From</label>
+                <input type="date" name="fromDate" class="k-input"
+                       value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" />
+            </div>
+
+            <div class="k-form__group">
+                <label style="font-size:12px;color:#888">To</label>
+                <input type="date" name="toDate" class="k-input"
+                       value="@(Model.ToDate?.ToString("yyyy-MM-dd"))" />
+            </div>
+
+            <button type="submit" class="k-btn k-btn--primary">Filter</button>
+            <a href="/admin/jobs" class="k-btn k-btn--secondary">Reset</a>
+        </form>
+    </div>
+
+    <!-- ── JOB POSTS TABLE ──────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Job Posts (@Model.JobPosts.Count)</h2>
+
+        @if (!Model.JobPosts.Any())
+        {
+            <div class="k-empty-state">
+                <div class="k-empty-state__icon">📋</div>
+                <p class="k-empty-state__text">No job posts match your search/filters.</p>
+            </div>
+        }
+        else
+        {
+            <div style="overflow-x:auto">
+                <table class="k-table">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Employer Name</th>
+                            <th>City</th>
+                            <th>Status</th>
+                            <th>Date Posted</th>
+                            <th>Applicants</th>
+                            <th style="text-align:right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var job in Model.JobPosts)
+                        {
+                            var badgeClass = job.StatusCd switch
+                            {
+                                "ACTIVE" => "k-badge k-badge--green",
+                                "PAUSED" => "k-badge k-badge--amber",
+                                _ => "k-badge k-badge--red",
+                            };
+
+                            <tr>
+                                <td>@job.JobTitle</td>
+                                <td>@job.EmployerName</td>
+                                <td>@(job.CityName ?? "—")</td>
+                                <td><span class="@badgeClass">@job.StatusCd</span></td>
+                                <td>@job.DatePosted.ToString("dd MMM yyyy")</td>
+                                <td>@job.ApplicantsCount</td>
+                                <td>
+                                    <div class="k-job-card__actions" style="justify-content:flex-end">
+                                        <a href="/admin/jobs/@job.JobPostId" class="k-btn k-btn--sm k-btn--secondary">View Details</a>
+
+                                        @if (job.StatusCd != "CLOSED")
+                                        {
+                                            <form asp-action="CloseJobPost" asp-controller="Admin" asp-route-id="@job.JobPostId" method="post" class="k-inline-form"
+                                                  onsubmit="return confirm('Close this job post? Employer will no longer be able to reopen it.');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="k-btn k-btn--sm k-btn--secondary">Close Job</button>
+                                            </form>
+                                        }
+
+                                        <form asp-action="DeleteJobPost" asp-controller="Admin" asp-route-id="@job.JobPostId" method="post" class="k-inline-form"
+                                              onsubmit="return confirm('Delete this job post permanently? This cannot be undone.');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="k-btn k-btn--sm k-btn--danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

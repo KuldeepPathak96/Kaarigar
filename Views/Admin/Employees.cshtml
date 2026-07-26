@@ -1,0 +1,151 @@
+@model Kaarigar.Models.ManageEmployeesViewModel
+@{
+    ViewData["Title"] = "Manage Employees";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">Manage Employees</h1>
+            <p class="k-dash-subtitle">Search, filter, and moderate job-seeker accounts.</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="k-alert k-alert--success">@ViewBag.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+
+    <!-- ── SEARCH / FILTER ──────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <form method="get" asp-action="Employees" asp-controller="Admin" class="k-form k-form--inline" style="flex-wrap:wrap">
+            <div class="k-form__group k-form__group--grow">
+                <input type="text" name="search" value="@Model.SearchTerm" class="k-input"
+                       placeholder="Search by name, mobile, or email" />
+            </div>
+
+            <div class="k-form__group">
+                <select name="skill" class="k-input">
+                    <option value="">All Skills</option>
+                    @foreach (var s in Model.SkillOptions)
+                    {
+                        <option value="@s" selected="@(s == Model.SkillFilter)">@s</option>
+                    }
+                </select>
+            </div>
+
+            <div class="k-form__group">
+                <select name="city" class="k-input">
+                    <option value="">All Cities</option>
+                    @foreach (var c in Model.CityOptions)
+                    {
+                        <option value="@c" selected="@(c == Model.CityFilter)">@c</option>
+                    }
+                </select>
+            </div>
+
+            <div class="k-form__group">
+                <select name="status" class="k-input">
+                    <option value="">All Statuses</option>
+                    <option value="ACTIVE" selected="@(Model.StatusFilter == "ACTIVE")">Active</option>
+                    <option value="BLOCKED" selected="@(Model.StatusFilter == "BLOCKED")">Blocked</option>
+                </select>
+            </div>
+
+            <button type="submit" class="k-btn k-btn--primary">Filter</button>
+            <a href="/admin/employees" class="k-btn k-btn--secondary">Reset</a>
+        </form>
+    </div>
+
+    <!-- ── EMPLOYEES TABLE ──────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Employees (@Model.Employees.Count)</h2>
+
+        @if (!Model.Employees.Any())
+        {
+            <div class="k-empty-state">
+                <div class="k-empty-state__icon">🧑‍🔧</div>
+                <p class="k-empty-state__text">No employees match your search/filters.</p>
+            </div>
+        }
+        else
+        {
+            <div style="overflow-x:auto">
+                <table class="k-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>Skills</th>
+                            <th>City</th>
+                            <th>Date Registered</th>
+                            <th>Status</th>
+                            <th style="text-align:right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var emp in Model.Employees)
+                        {
+                            <tr>
+                                <td>
+                                    @emp.Name
+                                    @if (!emp.IsApprovedFl)
+                                    {
+                                        <span class="k-badge k-badge--amber" style="margin-left:6px">Pending Approval</span>
+                                    }
+                                </td>
+                                <td>@emp.ContactNbr</td>
+                                <td>@(emp.EmailId ?? "—")</td>
+                                <td>@(emp.SkillNames.Any() ? string.Join(", ", emp.SkillNames) : "—")</td>
+                                <td>@(emp.CityName ?? "—")</td>
+                                <td>@emp.DateRegistered.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    @if (emp.IsActiveFl)
+                                    {
+                                        <span class="k-badge k-badge--green">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="k-badge k-badge--red">Blocked</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="k-job-card__actions" style="justify-content:flex-end">
+                                        <a href="/admin/employees/@emp.UserAccountId" class="k-btn k-btn--sm k-btn--secondary">View Details</a>
+
+                                        <form asp-action="ToggleEmployeeApproval" asp-controller="Admin" asp-route-id="@emp.UserAccountId" method="post" class="k-inline-form">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="k-btn k-btn--sm @(emp.IsApprovedFl ? "k-btn--secondary" : "k-btn--primary")">
+                                                @(emp.IsApprovedFl ? "Revoke Approval" : "Approve")
+                                            </button>
+                                        </form>
+
+                                        <form asp-action="ToggleEmployeeActive" asp-controller="Admin" asp-route-id="@emp.UserAccountId" method="post" class="k-inline-form">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="k-btn k-btn--sm k-btn--secondary">
+                                                @(emp.IsActiveFl ? "Block" : "Unblock")
+                                            </button>
+                                        </form>
+
+                                        <form asp-action="DeleteEmployee" asp-controller="Admin" asp-route-id="@emp.UserAccountId" method="post" class="k-inline-form"
+                                              onsubmit="return confirm('Delete this employee permanently? This cannot be undone.');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="k-btn k-btn--sm k-btn--danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,153 @@
+@model Kaarigar.Models.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var maxJobs = Model.WeeklyJobChart.Any() ? Model.WeeklyJobChart.Max(w => w.JobsPosted) : 1;
+}
+
+<div class="k-dash-page">
+
+    <!-- ── PAGE HEADER ──────────────────────────────────────────────── -->
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">Platform Overview</h1>
+            <p class="k-dash-subtitle">Live stats across the entire Kaarigar network.</p>
+        </div>
+        <div class="k-dash-header__badges">
+            <span class="k-status-pill k-status-pill--active">
+                <span class="k-pulse"></span> Live
+            </span>
+            <span class="k-dash-date">@DateTime.Now.ToString("dd MMM yyyy, hh:mm tt")</span>
+        </div>
+    </div>
+
+    <!-- ── KPI CARDS ────────────────────────────────────────────────── -->
+    <div class="k-kpi-grid k-kpi-grid--5">
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#FFF7CC">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.TotalEmployers</div>
+                <div class="k-kpi-card__label">Total Employers</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#EDE9FE">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.TotalEmployees</div>
+                <div class="k-kpi-card__label">Total Job Seekers</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#DBEAFE">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E40AF" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.TotalJobsPosted</div>
+                <div class="k-kpi-card__label">Total Jobs Posted</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#D1FAE5">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value k-kpi-card__value--green">@Model.ActiveJobs</div>
+                <div class="k-kpi-card__label">Active Jobs</div>
+            </div>
+            <div class="k-kpi-card__badge k-kpi-card__badge--green">Live</div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#FEE2E2">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.OtpsGeneratedToday</div>
+                <div class="k-kpi-card__label">OTPs Today</div>
+            </div>
+        </div>
+
+    </div><!-- /.k-kpi-grid -->
+
+    <!-- ── BAR CHART: Jobs posted per week ──────────────────────────── -->
+    <div class="k-dash-section">
+        <div class="k-dash-section__header">
+            <h2 class="k-dash-section__title">Jobs Posted — Last 4 Weeks</h2>
+        </div>
+        <div class="k-bar-chart">
+            @foreach (var week in Model.WeeklyJobChart)
+            {
+                var pct = maxJobs > 0 ? (week.JobsPosted * 100 / maxJobs) : 0;
+                <div class="k-bar-chart__col">
+                    <div class="k-bar-chart__value">@week.JobsPosted</div>
+                    <div class="k-bar-chart__bar-wrap">
+                        <div class="k-bar-chart__bar" style="height:@(Math.Max(pct, 4))%"></div>
+                    </div>
+                    <div class="k-bar-chart__label">@week.WeekLabel</div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- ── ADMIN QUICK LINKS ──────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Manage</h2>
+        <div class="k-quick-actions">
+            <a href="/admin/employers" class="k-quick-action-card">
+                <div class="k-quick-action-card__icon" style="background:#FFF7CC">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                </div>
+                <div>
+                    <div class="k-quick-action-card__title">Employers</div>
+                    <div class="k-quick-action-card__sub">@Model.TotalEmployers total</div>
+                </div>
+            </a>
+            <a href="/admin/employees" class="k-quick-action-card">
+                <div class="k-quick-action-card__icon" style="background:#D1FAE5">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                </div>
+                <div>
+                    <div class="k-quick-action-card__title">Job Seekers</div>
+                    <div class="k-quick-action-card__sub">@Model.TotalEmployees total</div>
+                </div>
+            </a>
+            <a href="/admin/jobs" class="k-quick-action-card">
+                <div class="k-quick-action-card__icon" style="background:#DBEAFE">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1E40AF" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div>
+                    <div class="k-quick-action-card__title">Job Posts</div>
+                    <div class="k-quick-action-card__sub">@Model.ActiveJobs active</div>
+                </div>
+            </a>
+            <a href="/admin/notifications" class="k-quick-action-card">
+                <div class="k-quick-action-card__icon" style="background:#FEE2E2">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </div>
+                <div>
+                    <div class="k-quick-action-card__title">Notif Logs</div>
+                    <div class="k-quick-action-card__sub">WhatsApp & OTP</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+</div><!-- /.k-dash-page -->
