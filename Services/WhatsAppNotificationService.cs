@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Kaarigar.Data;
 using Kaarigar.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace Kaarigar.Services;
@@ -157,6 +158,59 @@ public class WhatsAppNotificationService : IWhatsAppNotificationService
 
         _logger.LogInformation(
             "Sent WhatsApp contact notifications — EmployeeUserAccountId={EmployeeId} ({EmployeeStatus}), EmployerUserAccountId={EmployerId} ({EmployerStatus}), JobPostId={JobPostId}",
+            employee.UserAccountId, employeeStatusCd, jobPost.EmployerUserAccountId, employerStatusCd, jobPost.JobPostId);
+
+        return employeeStatusCd == "SENT";
+    }
+
+    public async Task<bool> SendCancellationNotificationAsync(
+        JobPost jobPost, UserAccount employee, string cancelReasonLabel, string? cancelReasonTxt)
+    {
+        var employeeName = $"{employee.FirstName} {employee.LastName}".Trim();
+        var reasonSuffixTxt = string.IsNullOrWhiteSpace(cancelReasonTxt) ? string.Empty : $" ({cancelReasonTxt})";
+
+        var employeeMessageTxt =
+            $"You have been cancelled by the employer for \"{jobPost.JobTitle}\". " +
+            $"Reason: {cancelReasonLabel}{reasonSuffixTxt}. You can browse other jobs on Kaarigar anytime.";
+
+        var employerMessageTxt =
+            $"You cancelled {employeeName} for \"{jobPost.JobTitle}\". " +
+            $"Reason: {cancelReasonLabel}{reasonSuffixTxt}. The position is open again if it isn't fully filled.";
+
+        var employeeStatusCd = await SendViaProviderAsync(employee.ContactNbr, employeeMessageTxt);
+        var employerAccount = await _db.UserAccounts.AsNoTracking()
+            .FirstOrDefaultAsync(u => u.UserAccountId == jobPost.EmployerUserAccountId);
+        var employerStatusCd = employerAccount != null
+            ? await SendViaProviderAsync(employerAccount.ContactNbr, employerMessageTxt)
+            : "FAILED";
+
+        _db.NotificationLogs.Add(new NotificationLog
+        {
+            EmployeeUserAccountId = employee.UserAccountId,
+            EmployerUserAccountId = jobPost.EmployerUserAccountId,
+            JobPostId = jobPost.JobPostId,
+            ChannelCd = "WHATSAPP",
+            MessageTxt = employeeMessageTxt,
+            SentTs = DateTime.UtcNow,
+            StatusCd = employeeStatusCd,
+            CreatedBy = "EMPLOYER_CANCEL_APPLICANT",
+        });
+
+        _db.NotificationLogs.Add(new NotificationLog
+        {
+            EmployerUserAccountId = jobPost.EmployerUserAccountId,
+            JobPostId = jobPost.JobPostId,
+            ChannelCd = "WHATSAPP",
+            MessageTxt = employerMessageTxt,
+            SentTs = DateTime.UtcNow,
+            StatusCd = employerStatusCd,
+            CreatedBy = "EMPLOYER_CANCEL_APPLICANT_CONFIRMATION",
+        });
+
+        await _db.SaveChangesAsync();
+
+        _logger.LogInformation(
+            "Sent WhatsApp cancellation notifications — EmployeeUserAccountId={EmployeeId} ({EmployeeStatus}), EmployerUserAccountId={EmployerId} ({EmployerStatus}), JobPostId={JobPostId}",
             employee.UserAccountId, employeeStatusCd, jobPost.EmployerUserAccountId, employerStatusCd, jobPost.JobPostId);
 
         return employeeStatusCd == "SENT";

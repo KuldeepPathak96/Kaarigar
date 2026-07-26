@@ -250,7 +250,18 @@ public class JobApplicantService : IJobApplicantService
 
         await _dao.CancelApplicationAsync(jobApplicationId, cancelReasonCd, cancelReasonTxt?.Trim());
 
-        return new ServiceResult(true, "Kaarigar has been cancelled for this job.");
+        try
+        {
+            await _whatsAppService.SendCancellationNotificationAsync(
+                application.JobPost, application.EmployeeUserAccount,
+                CancelReasonOptions.Label(cancelReasonCd), cancelReasonTxt?.Trim());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send cancellation WhatsApp notification for JobApplicationId={Id}", jobApplicationId);
+        }
+
+        return new ServiceResult(true, "Kaarigar has been cancelled for this job. Both parties have been notified.");
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

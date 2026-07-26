@@ -28,4 +28,8 @@ public interface IWhatsAppNotificationService
     Task<bool> SendContactNotificationAsync(
         JobPost jobPost, UserAccount employee, UserAccount employer,
         string? businessName, string? employerContactPersonName);
+
+    /// <summary>Notifies both the Kaarigar and the employer (confirmation) that the employer cancelled this applicant.</summary>
+    Task<bool> SendCancellationNotificationAsync(
+        JobPost jobPost, UserAccount employee, string cancelReasonLabel, string? cancelReasonTxt);
 }
