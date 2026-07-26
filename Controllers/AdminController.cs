@@ -15,6 +15,8 @@ public class AdminController : Controller
 {
     private readonly IBusinessCategoryService _businessCategoryService;
     private readonly IHourlyRateOptionService _hourlyRateOptionService;
+    private readonly IAdminSkillService _adminSkillService;
+    private readonly IAdminLocationService _adminLocationService;
     private readonly IAdminEmployerService _adminEmployerService;
     private readonly IAdminEmployeeService _adminEmployeeService;
     private readonly IAdminJobPostService _adminJobPostService;
@@ -24,6 +26,8 @@ public class AdminController : Controller
     public AdminController(
         IBusinessCategoryService businessCategoryService,
         IHourlyRateOptionService hourlyRateOptionService,
+        IAdminSkillService adminSkillService,
+        IAdminLocationService adminLocationService,
         IAdminEmployerService adminEmployerService,
         IAdminEmployeeService adminEmployeeService,
         IAdminJobPostService adminJobPostService,
@@ -32,6 +36,8 @@ public class AdminController : Controller
     {
         _businessCategoryService = businessCategoryService;
         _hourlyRateOptionService = hourlyRateOptionService;
+        _adminSkillService = adminSkillService;
+        _adminLocationService = adminLocationService;
         _adminEmployerService = adminEmployerService;
         _adminEmployeeService = adminEmployeeService;
         _adminJobPostService = adminJobPostService;
@@ -182,6 +188,143 @@ public class AdminController : Controller
         var result = await _hourlyRateOptionService.ReactivateAsync(rateOptionId);
         TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
         return RedirectToAction(nameof(HourlyRates));
+    }
+
+    // ── SKILLS (Employee "My Skills" / Job Post "Required Skills" & Job Title) ──
+
+    [HttpGet("/admin/skills")]
+    public async Task<IActionResult> Skills()
+    {
+        var vm = new SkillAdminViewModel
+        {
+            Skills = await _adminSkillService.GetAllAsync(),
+        };
+
+        if (TempData["SuccessMessage"] is string success)
+            ViewBag.SuccessMessage = success;
+        if (TempData["ErrorMessage"] is string error)
+            ViewBag.ErrorMessage = error;
+
+        return View(vm);
+    }
+
+    [HttpPost("/admin/skills/add")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddSkill(string newSkillName, string? newSkillCategory)
+    {
+        var session = UserSession.FromContext(HttpContext);
+        var result = await _adminSkillService.AddAsync(
+            newSkillName,
+            newSkillCategory,
+            adminUser: session.FullName ?? "ADMIN",
+            ipAddress: HttpContext.Connection.RemoteIpAddress?.ToString());
+
+        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
+        return RedirectToAction(nameof(Skills));
+    }
+
+    [HttpPost("/admin/skills/remove")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveSkill(int skillId)
+    {
+        var result = await _adminSkillService.RemoveAsync(skillId);
+        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
+        return RedirectToAction(nameof(Skills));
+    }
+
+    [HttpPost("/admin/skills/reactivate")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ReactivateSkill(int skillId)
+    {
+        var result = await _adminSkillService.ReactivateAsync(skillId);
+        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
+        return RedirectToAction(nameof(Skills));
+    }
+
+    // ── CITIES & AREAS (Register / Profile / Post a Job location dropdowns) ──
+
+    [HttpGet("/admin/locations")]
+    public async Task<IActionResult> Locations()
+    {
+        var vm = new LocationAdminViewModel
+        {
+            Cities = await _adminLocationService.GetAllCitiesAsync(),
+            Areas = await _adminLocationService.GetAllAreasAsync(),
+        };
+
+        if (TempData["SuccessMessage"] is string success)
+            ViewBag.SuccessMessage = success;
+        if (TempData["ErrorMessage"] is string error)
+            ViewBag.ErrorMessage = error;
+
+        return View(vm);
+    }
+
+    [HttpPost("/admin/locations/cities/add")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddCity(string newCityName, string? newStateName)
+    {
+        var session = UserSession.FromContext(HttpContext);
+        var result = await _adminLocationService.AddCityAsync(
+            newCityName,
+            newStateName,
+            adminUser: session.FullName ?? "ADMIN",
+            ipAddress: HttpContext.Connection.RemoteIpAddress?.ToString());
+
+        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
+        return RedirectToAction(nameof(Locations));
+    }
+
+    [HttpPost("/admin/locations/cities/remove")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveCity(int cityId)
+    {
+        var result = await _adminLocationService.RemoveCityAsync(cityId);
+        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
+        return RedirectToAction(nameof(Locations));
+    }
+
+    [HttpPost("/admin/locations/cities/reactivate")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ReactivateCity(int cityId)
+    {
+        var result = await _adminLocationService.ReactivateCityAsync(cityId);
+        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
+        return RedirectToAction(nameof(Locations));
+    }
+
+    [HttpPost("/admin/locations/areas/add")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddArea(int newAreaCityId, string newAreaName, string? newAreaPincode)
+    {
+        var session = UserSession.FromContext(HttpContext);
+        var result = await _adminLocationService.AddAreaAsync(
+            newAreaCityId,
+            newAreaName,
+            newAreaPincode,
+            adminUser: session.FullName ?? "ADMIN",
+            ipAddress: HttpContext.Connection.RemoteIpAddress?.ToString());
+
+        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
+        return RedirectToAction(nameof(Locations));
+    }
+
+    [HttpPost("/admin/locations/areas/remove")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveArea(int areaId)
+    {
+        var result = await _adminLocationService.RemoveAreaAsync(areaId);
+        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
+        return RedirectToAction(nameof(Locations));
+    }
+
+    [HttpPost("/admin/locations/areas/reactivate")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ReactivateArea(int areaId)
+    {
+        var result = await _adminLocationService.ReactivateAreaAsync(areaId);
+        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
+        return RedirectToAction(nameof(Locations));
     }
 
     // ── A-03: MANAGE EMPLOYERS ───────────────────────────────────────────────

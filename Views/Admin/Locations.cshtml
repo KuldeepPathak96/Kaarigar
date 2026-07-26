@@ -1,0 +1,181 @@
+@model Kaarigar.Models.LocationAdminViewModel
+@{
+    ViewData["Title"] = "Cities & Areas";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">Cities &amp; Areas</h1>
+            <p class="k-dash-subtitle">Manage the City dropdown and Area type-ahead used on Register, Profile and Post a Job.</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="k-alert k-alert--success">@ViewBag.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
+    }
+
+    <!-- ── ADD NEW CITY ─────────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Add New City</h2>
+        <form asp-action="AddCity" asp-controller="Admin" method="post" class="k-form k-form--inline">
+            @Html.AntiForgeryToken()
+            <div class="k-form__group k-form__group--grow">
+                <input name="newCityName" class="k-input" placeholder="e.g. Surat" required maxlength="100" />
+            </div>
+            <div class="k-form__group k-form__group--grow">
+                <input name="newStateName" class="k-input" placeholder="State (optional), e.g. Gujarat" maxlength="100" />
+            </div>
+            <button type="submit" class="k-btn k-btn--primary">Add City</button>
+        </form>
+    </div>
+
+    <!-- ── EXISTING CITIES ──────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Existing Cities (@Model.Cities.Count)</h2>
+
+        <table class="k-table">
+            <thead>
+                <tr>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Status</th>
+                    <th style="text-align:right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var city in Model.Cities)
+                {
+                    <tr>
+                        <td>@city.CityName</td>
+                        <td>@(city.StateName ?? "—")</td>
+                        <td>
+                            @if (city.IsActiveFl)
+                            {
+                                <span class="k-badge k-badge--green">Active</span>
+                            }
+                            else
+                            {
+                                <span class="k-badge k-badge--red">Hidden</span>
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @if (city.IsActiveFl)
+                            {
+                                <form asp-action="RemoveCity" asp-controller="Admin" method="post" class="k-inline-form" style="justify-content:flex-end"
+                                      onsubmit="return confirm('Remove &quot;@city.CityName&quot;? If it has areas or profiles using it, it will be hidden instead of deleted.');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="cityId" value="@city.CityId" />
+                                    <button type="submit" class="k-btn k-btn--sm k-btn--danger">Remove</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="ReactivateCity" asp-controller="Admin" method="post" class="k-inline-form" style="justify-content:flex-end">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="cityId" value="@city.CityId" />
+                                    <button type="submit" class="k-btn k-btn--sm k-btn--secondary">Restore</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Cities.Any())
+                {
+                    <tr><td colspan="4" style="text-align:center;color:#888">No cities yet. Add the first one above.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── ADD NEW AREA ─────────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Add New Area</h2>
+        <form asp-action="AddArea" asp-controller="Admin" method="post" class="k-form k-form--inline">
+            @Html.AntiForgeryToken()
+            <div class="k-form__group">
+                <select name="newAreaCityId" class="k-input" required>
+                    <option value="">-- Select City --</option>
+                    @foreach (var city in Model.Cities.Where(c => c.IsActiveFl))
+                    {
+                        <option value="@city.CityId">@city.CityName</option>
+                    }
+                </select>
+            </div>
+            <div class="k-form__group k-form__group--grow">
+                <input name="newAreaName" class="k-input" placeholder="e.g. Alkapuri" required maxlength="150" />
+            </div>
+            <div class="k-form__group">
+                <input name="newAreaPincode" class="k-input" placeholder="Pincode (optional)" maxlength="10" style="max-width:140px" />
+            </div>
+            <button type="submit" class="k-btn k-btn--primary">Add Area</button>
+        </form>
+    </div>
+
+    <!-- ── EXISTING AREAS ───────────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Existing Areas (@Model.Areas.Count)</h2>
+
+        <table class="k-table">
+            <thead>
+                <tr>
+                    <th>Area</th>
+                    <th>City</th>
+                    <th>Pincode</th>
+                    <th>Status</th>
+                    <th style="text-align:right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var area in Model.Areas)
+                {
+                    <tr>
+                        <td>@area.AreaName</td>
+                        <td>@(area.City?.CityName ?? "—")</td>
+                        <td>@(area.PincodeTxt ?? "—")</td>
+                        <td>
+                            @if (area.IsActiveFl)
+                            {
+                                <span class="k-badge k-badge--green">Active</span>
+                            }
+                            else
+                            {
+                                <span class="k-badge k-badge--red">Hidden</span>
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @if (area.IsActiveFl)
+                            {
+                                <form asp-action="RemoveArea" asp-controller="Admin" method="post" class="k-inline-form" style="justify-content:flex-end"
+                                      onsubmit="return confirm('Remove &quot;@area.AreaName&quot;? If it\'s in use by profiles, it will be hidden instead of deleted.');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="areaId" value="@area.AreaId" />
+                                    <button type="submit" class="k-btn k-btn--sm k-btn--danger">Remove</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="ReactivateArea" asp-controller="Admin" method="post" class="k-inline-form" style="justify-content:flex-end">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="areaId" value="@area.AreaId" />
+                                    <button type="submit" class="k-btn k-btn--sm k-btn--secondary">Restore</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Areas.Any())
+                {
+                    <tr><td colspan="5" style="text-align:center;color:#888">No areas yet. Add the first one above.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

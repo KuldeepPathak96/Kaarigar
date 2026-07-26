@@ -107,3 +107,23 @@ public class HourlyRateOptionAdminViewModel
 {
     public List<HourlyRateOption> RateOptions { get; set; } = new();
 }
+
+/// <summary>
+/// Admin-only screen: manage the SKILL master list that feeds Employee's
+/// "My Skills" and Job Post's "Required Skills" / Job Title dropdown.
+/// </summary>
+public class SkillAdminViewModel
+{
+    public List<Skill> Skills { get; set; } = new();
+}
+
+/// <summary>
+/// Admin-only screen: manage the CITY and AREA master lists that feed the
+/// City dropdown / Area type-ahead on Register, Employee Profile, Employer
+/// Profile and Post a Job.
+/// </summary>
+public class LocationAdminViewModel
+{
+    public List<City> Cities { get; set; } = new();
+    public List<Area> Areas { get; set; } = new();
+}
