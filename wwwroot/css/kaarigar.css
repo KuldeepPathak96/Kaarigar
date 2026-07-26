@@ -1516,6 +1516,19 @@ img {
         text-align: left;
     }
 
+/* Applies to every .k-table across the app (Admin lists, My Applications,
+   Job Detail applicants, etc.) so no individual page has to remember to
+   wrap its table — narrow tables just scroll horizontally within their own
+   box instead of overflowing the page or squishing columns unreadably. */
+@media (max-width: 900px) {
+    .k-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+}
+
 .k-btn--sm {
     padding: 6px 12px;
     font-size: 13px;
