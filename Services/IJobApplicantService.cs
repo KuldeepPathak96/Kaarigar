@@ -29,4 +29,7 @@ public interface IJobApplicantService
     /// <summary>Employer rates the Kaarigar. Available once StatusCd = COMPLETED (Satisfaction OTP done). One rating per application.</summary>
     Task<ServiceResult> SubmitRatingAsync(int jobApplicationId, int employerUserAccountId, byte ratingNbr, string? reviewTxt);
     Task<KaarigarRating?> GetRatingForApplicationAsync(int jobApplicationId, int employerUserAccountId);
+
+    /// <summary>Employer cancels a Kaarigar before the job has started (Job Start OTP not yet completed), with a reason.</summary>
+    Task<ServiceResult> CancelApplicantAsync(int jobApplicationId, int employerUserAccountId, string cancelReasonCd, string? cancelReasonTxt);
 }

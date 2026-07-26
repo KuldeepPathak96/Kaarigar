@@ -149,4 +149,18 @@ public class JobApplicantDao : IJobApplicantDao
         await _db.SaveChangesAsync();
         return rating;
     }
+
+    public async Task CancelApplicationAsync(int jobApplicationId, string cancelReasonCd, string? cancelReasonTxt)
+    {
+        var application = await _db.JobApplications.FirstOrDefaultAsync(a => a.JobApplicationId == jobApplicationId);
+        if (application == null) return;
+
+        application.StatusCd = "CANCELLED";
+        application.CancelReasonCd = cancelReasonCd;
+        application.CancelReasonTxt = cancelReasonTxt;
+        application.CancelledTs = DateTime.UtcNow;
+        application.UpdatedBy = "EMPLOYER_CANCEL_APPLICANT";
+        application.UpdatedTs = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+    }
 }

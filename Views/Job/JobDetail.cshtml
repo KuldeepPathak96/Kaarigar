@@ -138,6 +138,7 @@
                                 "EMPLOYER_CONTACTED" => "k-badge k-badge--green",
                                 "JOB_STARTED" => "k-badge k-badge--green",
                                 "COMPLETED" => "k-badge k-badge--green",
+                                "CANCELLED" => "k-badge k-badge--red",
                                 _ => "k-badge",
                             };
 
@@ -153,7 +154,13 @@
                                 <td data-label="Location">@(applicant.Location ?? "Not specified")</td>
                                 <td data-label="Distance">@(applicant.DistanceKm.HasValue ? $"{applicant.DistanceKm.Value} km" : "Unknown")</td>
                                 <td data-label="Applied">@applicant.AppliedTs.ToString("dd MMM yyyy")</td>
-                                <td data-label="Status"><span class="@appBadgeClass">@applicant.StatusCd.Replace("_", " ")</span></td>
+                                <td data-label="Status">
+                                    <span class="@appBadgeClass">@applicant.StatusCd.Replace("_", " ")</span>
+                                    @if (applicant.StatusCd == "CANCELLED")
+                                    {
+                                        <div class="k-job-card__meta" style="font-size:12px">@Kaarigar.Models.CancelReasonOptions.Label(applicant.CancelReasonCd)</div>
+                                    }
+                                </td>
                                 <td data-label="Job Site OTP" style="min-width:190px">
                                     @if (applicant.StatusCd == "COMPLETED")
                                     {
@@ -220,6 +227,39 @@
                                 </td>
                                 <td data-label="" style="white-space:nowrap">
                                     <a href="/job/applicant/@applicant.JobApplicationId" class="k-btn k-btn--sm k-btn--secondary">View Profile</a>
+
+                                    @if (applicant.CanCancel)
+                                    {
+                                        <button type="button" class="k-btn k-btn--sm k-btn--danger" onclick="document.getElementById('cancel-modal-@applicant.JobApplicationId').classList.remove('k-hidden')">Cancel</button>
+
+                                        <div id="cancel-modal-@applicant.JobApplicationId" class="k-hidden k-cancel-modal">
+                                            <div class="k-cancel-modal__box">
+                                                <h3>Cancel @applicant.Name?</h3>
+                                                <form asp-action="CancelApplicant" asp-controller="Job" asp-route-jobApplicationId="@applicant.JobApplicationId" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="jobPostId" value="@Model.JobPostId" />
+                                                    <div class="k-form__group">
+                                                        <label>Reason for cancelling <span class="k-req">*</span></label>
+                                                        <select name="cancelReasonCd" class="k-input" required>
+                                                            <option value="">-- Select reason --</option>
+                                                            @foreach (var r in Kaarigar.Models.CancelReasonOptions.All)
+                                                            {
+                                                                <option value="@r.Key">@r.Value</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                    <div class="k-form__group">
+                                                        <label>Additional notes (optional)</label>
+                                                        <textarea name="cancelReasonTxt" class="k-input" rows="2" maxlength="500"></textarea>
+                                                    </div>
+                                                    <div style="display:flex;gap:8px;justify-content:flex-end">
+                                                        <button type="button" class="k-btn k-btn--sm k-btn--secondary" onclick="document.getElementById('cancel-modal-@applicant.JobApplicationId').classList.add('k-hidden')">Close</button>
+                                                        <button type="submit" class="k-btn k-btn--sm k-btn--danger">Confirm Cancel</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -231,7 +271,7 @@
 </div>
 
 <style>
-    .k-hidden { display: none; }
+    .k-hidden { display: none !important; }
 
     .k-responsive-table-wrap { overflow-x: auto; }
 
@@ -249,6 +289,18 @@
     .k-otp-box__code { font-size: 20px; font-weight: 700; letter-spacing: 2px; color: #1b4332; }
     .k-otp-box__timer { font-size: 12px; color: #888; }
     .k-otp-box__timer--expiring { color: #c0392b; font-weight: 600; }
+
+    .k-cancel-modal {
+        position: fixed; inset: 0; z-index: 1000;
+        background: rgba(0,0,0,0.45);
+        display: flex; align-items: center; justify-content: center;
+        padding: 16px;
+    }
+    .k-cancel-modal__box {
+        background: #fff; border-radius: 10px; padding: 20px;
+        width: 100%; max-width: 420px;
+    }
+    .k-cancel-modal__box h3 { margin: 0 0 12px; font-size: 16px; }
 
     /* Responsive applicants table — becomes stacked cards on small screens, no side-scrolling */
     @@media (max-width: 768px) {

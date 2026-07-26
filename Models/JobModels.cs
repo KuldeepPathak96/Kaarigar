@@ -189,7 +189,7 @@ public class JobApplication
     [Column("EMPLOYEE_USER_ACCOUNT_ID")]
     public int EmployeeUserAccountId { get; set; }
 
-    /// <summary>PENDING | EMPLOYER_VIEWED | EMPLOYER_CONTACTED | JOB_STARTED | COMPLETED</summary>
+    /// <summary>PENDING | EMPLOYER_VIEWED | EMPLOYER_CONTACTED | JOB_STARTED | COMPLETED | CANCELLED</summary>
     [Required]
     [Column("STATUS_CD")]
     [StringLength(30)]
@@ -197,6 +197,10 @@ public class JobApplication
 
     [Column("APPLIED_TS")]
     public DateTime AppliedTs { get; set; } = DateTime.UtcNow;
+
+    [Column("CANCEL_REASON_CD")] [StringLength(30)] public string? CancelReasonCd { get; set; }
+    [Column("CANCEL_REASON_TXT")] [StringLength(500)] public string? CancelReasonTxt { get; set; }
+    [Column("CANCELLED_TS")] public DateTime? CancelledTs { get; set; }
 
     // Audit
     [Column("CREATED_BY")] public string CreatedBy { get; set; } = "SYSTEM";

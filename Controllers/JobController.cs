@@ -238,6 +238,17 @@ public class JobController : Controller
         return RedirectToAction(nameof(JobDetail), new { id = jobPostId });
     }
 
+    [HttpPost("/job/applicant/{jobApplicationId:int}/cancel")]
+    public async Task<IActionResult> CancelApplicant(int jobApplicationId, int jobPostId, string cancelReasonCd, string? cancelReasonTxt)
+    {
+        var session = UserSession.FromContext(HttpContext);
+
+        var result = await _jobApplicantService.CancelApplicantAsync(jobApplicationId, session.UserAccountId, cancelReasonCd, cancelReasonTxt);
+
+        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;
+        return RedirectToAction(nameof(JobDetail), new { id = jobPostId });
+    }
+
     // ── E-06: EMPLOYEE PROFILE VIEW (read-only) ─────────────────────────────
 
     [HttpGet("/job/applicant/{jobApplicationId:int}")]

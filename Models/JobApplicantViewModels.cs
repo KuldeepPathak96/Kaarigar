@@ -67,6 +67,28 @@ public class ApplicantListItemViewModel
 
     /// <summary>Show the rating form — job completed and not yet rated.</summary>
     public bool CanRate => StatusCd == "COMPLETED" && RatingNbr == null;
+
+    /// <summary>Show the "Cancel" button — only before the job has actually started (Job Start OTP not yet used).</summary>
+    public bool CanCancel => StatusCd is "PENDING" or "EMPLOYER_VIEWED" or "EMPLOYER_CONTACTED";
+
+    public string? CancelReasonCd { get; set; }
+    public string? CancelReasonTxt { get; set; }
+}
+
+/// <summary>Preset reasons an employer can pick when cancelling a Kaarigar before the job starts.</summary>
+public static class CancelReasonOptions
+{
+    public static readonly Dictionary<string, string> All = new()
+    {
+        { "FOUND_ANOTHER", "Found another member" },
+        { "KAARIGAR_ASKED", "Kaarigar asked to cancel" },
+        { "NOT_NEEDED", "Kaarigar not needed" },
+        { "LOW_RATING", "Rating for the Kaarigar is not good" },
+        { "PROFILE_MISMATCH", "Kaarigar profile not match with Job Post" },
+        { "OTHER", "Other" },
+    };
+
+    public static string Label(string? code) => code != null && All.TryGetValue(code, out var label) ? label : code ?? string.Empty;
 }
 
 /// <summary>

@@ -60,6 +60,8 @@ public class JobApplicantService : IJobApplicantService
                 ActiveSatisfactionOtpCd = activeSatisfactionOtp?.OtpCd,
                 ActiveSatisfactionOtpExpiresTs = activeSatisfactionOtp?.ExpiresTs,
                 RatingNbr = rating?.RatingNbr,
+                CancelReasonCd = a.CancelReasonCd,
+                CancelReasonTxt = a.CancelReasonTxt,
             });
         }
 
@@ -232,6 +234,22 @@ public class JobApplicantService : IJobApplicantService
         var application = await _dao.GetApplicationForEmployerAsync(jobApplicationId, employerUserAccountId);
         if (application == null) return null;
         return await _dao.GetRatingForApplicationAsync(jobApplicationId);
+    }
+
+    public async Task<ServiceResult> CancelApplicantAsync(int jobApplicationId, int employerUserAccountId, string cancelReasonCd, string? cancelReasonTxt)
+    {
+        if (!CancelReasonOptions.All.ContainsKey(cancelReasonCd))
+            return new ServiceResult(false, "Please select a valid cancellation reason.");
+
+        var application = await _dao.GetApplicationForEmployerAsync(jobApplicationId, employerUserAccountId);
+        if (application == null) return new ServiceResult(false, "Applicant not found.");
+
+        if (application.StatusCd is not ("PENDING" or "EMPLOYER_VIEWED" or "EMPLOYER_CONTACTED"))
+            return new ServiceResult(false, "This Kaarigar can no longer be cancelled — the job has already started (or is completed/cancelled).");
+
+        await _dao.CancelApplicationAsync(jobApplicationId, cancelReasonCd, cancelReasonTxt?.Trim());
+
+        return new ServiceResult(true, "Kaarigar has been cancelled for this job.");
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

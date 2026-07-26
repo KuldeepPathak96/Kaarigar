@@ -46,4 +46,7 @@ public interface IJobApplicantDao
 
     Task<KaarigarRating?> GetRatingForApplicationAsync(int jobApplicationId);
     Task<KaarigarRating> CreateRatingAsync(KaarigarRating rating);
+
+    /// <summary>Cancels an application before the job has started, recording the reason.</summary>
+    Task CancelApplicationAsync(int jobApplicationId, string cancelReasonCd, string? cancelReasonTxt);
 }
