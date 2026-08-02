@@ -27,8 +27,11 @@ public interface IEmployeeJobDao
     /// <summary>Count of applications not CANCELLED for this job — used to guard against exceeding RequiredWorkerNbr.</summary>
     Task<int> GetActiveApplicantCountAsync(int jobPostId);
 
-    /// <summary>Inserts the JOB_APPLICATION row representing "Express Interest" (Screen W-04). One-click, cannot be undone.</summary>
+    /// <summary>Inserts the JOB_APPLICATION row representing "Take Work" (Screen W-04). One-click, cannot be undone.</summary>
     Task InsertApplicationAsync(int employeeUserAccountId, int jobPostId, string? ipAddress);
+
+    /// <summary>Freshly-applied application with JobPost, JobPost.EmployerUserAccount and EmployeeUserAccount all loaded — used to build the "Take Work" WhatsApp notification right after InsertApplicationAsync.</summary>
+    Task<JobApplication?> GetApplicationWithDetailsAsync(int employeeUserAccountId, int jobPostId);
 
     // ── W-05: MY APPLICATIONS ────────────────────────────────────────────────
 

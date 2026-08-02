@@ -8,7 +8,8 @@ public interface IEmployeeJobService
         int employeeUserAccountId, string? skillFilter, string? cityFilter, decimal? minWage, decimal? maxWage,
         bool matchesMyProfileOnly = false);
 
-    Task<ServiceResult> ExpressInterestAsync(int employeeUserAccountId, int jobPostId, string? ipAddress);
+    /// <summary>"Take Work" — employee applies for the job (one click, cannot be undone). Inserts the JOB_APPLICATION row.</summary>
+    Task<ServiceResult> TakeWorkAsync(int employeeUserAccountId, int jobPostId, string? ipAddress);
 
     // ── W-05: MY APPLICATIONS ────────────────────────────────────────────────
 

@@ -70,34 +70,7 @@ public class WhatsAppNotificationService : IWhatsAppNotificationService
             matchingEmployees.Count, jobPost.JobPostId);
     }
 
-    public async Task<bool> SendOtpAsync(JobPost jobPost, UserAccount employee, string otpCd)
-    {
-        var messageTxt = $"Your Kaarigar job-site verification code for \"{jobPost.JobTitle}\" is {otpCd}. " +
-                          "Share this with the employer only when you're at the job site. Valid for 10 minutes.";
-
-        var statusCd = await SendViaProviderAsync(employee.ContactNbr, messageTxt);
-
-        _db.NotificationLogs.Add(new NotificationLog
-        {
-            EmployeeUserAccountId = employee.UserAccountId,
-            EmployerUserAccountId = jobPost.EmployerUserAccountId,
-            JobPostId = jobPost.JobPostId,
-            ChannelCd = "WHATSAPP",
-            MessageTxt = messageTxt,
-            SentTs = DateTime.UtcNow,
-            StatusCd = statusCd,
-            CreatedBy = "EMPLOYEE_GENERATE_OTP",
-        });
-
-        await _db.SaveChangesAsync();
-
-        _logger.LogInformation("Queued WhatsApp OTP push to EmployeeUserAccountId={EmployeeId} for JobPostId={JobPostId}",
-            employee.UserAccountId, jobPost.JobPostId);
-
-        return statusCd == "SENT";
-    }
-
-    public async Task<bool> SendContactNotificationAsync(
+    public async Task<bool> SendTakeWorkNotificationAsync(
         JobPost jobPost, UserAccount employee, UserAccount employer,
         string? businessName, string? employerContactPersonName)
     {
@@ -109,22 +82,21 @@ public class WhatsAppNotificationService : IWhatsAppNotificationService
             ? $"{employer.FirstName} {employer.LastName}".Trim()
             : employerContactPersonName;
 
-        // To the employee: business name, job timing, amount and location,
-        // plus a tap-to-open Google Maps link and the reminder to generate
-        // their job-site OTP once they arrive.
+        // To the employee: confirmation that they've taken this job, with
+        // business name, job timing, amount and location, plus a tap-to-open
+        // Google Maps link. Sent the moment they click "Take Work".
         var mapLineTxt = string.IsNullOrWhiteSpace(jobPost.GoogleMapsUrl)
             ? string.Empty
             : $" View map: {jobPost.GoogleMapsUrl}.";
 
         var employeeMessageTxt =
-            $"{displayBusinessName} has contacted you for \"{jobPost.JobTitle}\". " +
+            $"You've taken the job \"{jobPost.JobTitle}\" with {displayBusinessName}. " +
             $"Timing: {timingTxt}. Amount: {wageTxt}. Location: {jobPost.LocationAddressTxt}.{mapLineTxt} " +
-            "Click \"Generate OTP\" on Kaarigar when you reach the location and share the code with the employer.";
+            "The employer will share a Job Starting OTP with you in person once you reach the location.";
 
-        // To the employer: their own contact/name, timing and job details —
-        // a confirmation that the outreach to this employee was recorded.
+        // To the employer: a notification that this Kaarigar has taken the job.
         var employerMessageTxt =
-            $"You contacted {employeeName} for \"{jobPost.JobTitle}\". " +
+            $"{employeeName} has taken your job \"{jobPost.JobTitle}\". " +
             $"Timing: {timingTxt}. Location: {jobPost.LocationAddressTxt}. " +
             $"Your contact on file: {employerDisplayName}, {employer.ContactNbr}.";
 
@@ -140,7 +112,7 @@ public class WhatsAppNotificationService : IWhatsAppNotificationService
             MessageTxt = employeeMessageTxt,
             SentTs = DateTime.UtcNow,
             StatusCd = employeeStatusCd,
-            CreatedBy = "EMPLOYER_CONTACT_EMPLOYEE",
+            CreatedBy = "EMPLOYEE_TAKE_WORK",
         });
 
         _db.NotificationLogs.Add(new NotificationLog
@@ -151,13 +123,13 @@ public class WhatsAppNotificationService : IWhatsAppNotificationService
             MessageTxt = employerMessageTxt,
             SentTs = DateTime.UtcNow,
             StatusCd = employerStatusCd,
-            CreatedBy = "EMPLOYER_CONTACT_EMPLOYEE_CONFIRMATION",
+            CreatedBy = "EMPLOYEE_TAKE_WORK_CONFIRMATION",
         });
 
         await _db.SaveChangesAsync();
 
         _logger.LogInformation(
-            "Sent WhatsApp contact notifications — EmployeeUserAccountId={EmployeeId} ({EmployeeStatus}), EmployerUserAccountId={EmployerId} ({EmployerStatus}), JobPostId={JobPostId}",
+            "Sent WhatsApp Take Work notifications — EmployeeUserAccountId={EmployeeId} ({EmployeeStatus}), EmployerUserAccountId={EmployerId} ({EmployerStatus}), JobPostId={JobPostId}",
             employee.UserAccountId, employeeStatusCd, jobPost.EmployerUserAccountId, employerStatusCd, jobPost.JobPostId);
 
         return employeeStatusCd == "SENT";

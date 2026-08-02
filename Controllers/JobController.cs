@@ -198,20 +198,6 @@ public class JobController : Controller
         return View(vm);
     }
 
-    [HttpPost("/job/applicant/{jobApplicationId:int}/contact")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ContactEmployee(int jobApplicationId, int jobPostId)
-    {
-        var session = UserSession.FromContext(HttpContext);
-
-        var result = await _jobApplicantService.ContactEmployeeAsync(jobApplicationId, session.UserAccountId);
-
-        TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] =
-            result.Success ? $"Employee's contact number: {result.PhoneNbr}" : result.Message;
-
-        return RedirectToAction(nameof(JobDetail), new { id = jobPostId });
-    }
-
     // ── EMPLOYER-GENERATED OTP (Job Starting / Satisfaction) ────────────────
 
     [HttpPost("/job/applicant/{jobApplicationId:int}/generate-otp")]

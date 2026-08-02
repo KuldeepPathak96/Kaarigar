@@ -2,12 +2,10 @@ namespace Kaarigar.Models;
 
 /// <summary>
 /// Screen W-03 job card. Deliberately limited fields — an employee browsing
-/// jobs should only see enough to decide whether to express interest:
-/// job title, category, required skills, wage, start date/duration, a
-/// distance/location label, and the employer's business category (masked —
-/// never the company name or any contact number). Full employer identity and
-/// phone number are only revealed later, employer-side, after the employer
-/// chooses to contact the applicant (see JobApplicantService.ContactEmployeeAsync).
+/// jobs should only see enough to decide whether to take the job: job title,
+/// required skills, wage, start date/duration, and a distance/location
+/// label. Full employer identity and phone number are only revealed
+/// employer-side, in the applicants list (see JobApplicantService.GetJobDetailAsync).
 /// </summary>
 public class JobBrowseListItemViewModel
 {
@@ -58,6 +56,6 @@ public class JobBrowseViewModel
     /// <summary>False when the employee hasn't set a location yet — proximity filtering can't run, so we show all matching-skill jobs instead and prompt them to update their profile.</summary>
     public bool HasLocation { get; set; }
 
-    /// <summary>Admin-approval gate (Screen W-02/Admin A-04). While false, jobs are visible but "Express Interest" is disabled everywhere.</summary>
+    /// <summary>Admin-approval gate (Screen W-02/Admin A-04). While false, jobs are visible but "Take Work" is disabled everywhere.</summary>
     public bool IsApproved { get; set; }
 }

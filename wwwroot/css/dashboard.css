@@ -679,7 +679,7 @@
 
     .k-quick-action-card:hover {
         border-color: var(--k-yellow);
-        box-shadow: 0 4px 16px rgba(255,204,0,0.15);
+        box-shadow: 0 4px 16px rgba(255,224,46,0.15);
         transform: translateY(-2px);
         text-decoration: none;
         color: var(--k-black);

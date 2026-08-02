@@ -31,7 +31,7 @@ public class EmployeeApplicationListItemViewModel
     public string StatusLabel =>
         StatusCd switch
         {
-            "PENDING" => "Waiting for employer",
+            "PENDING" => "Work Taken",
             "EMPLOYER_VIEWED" => "Profile viewed",
             "EMPLOYER_CONTACTED" => "Employer contacted you",
             "JOB_STARTED" => "Job started",

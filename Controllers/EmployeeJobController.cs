@@ -10,7 +10,7 @@ namespace Kaarigar.Controllers;
 /// W-01 Employee Dashboard that previously had no controller behind them:
 /// "/jobs/browse" (Screen W-03) and "/notifications".
 ///
-/// Every action here requires the EMPLOYEE role. Express Interest additionally
+/// Every action here requires the EMPLOYEE role. Take Work additionally
 /// requires the employee's USER_ACCOUNT to be Admin-approved
 /// (UserAccount.IsApprovedFl) — until then the employee can browse and see
 /// job cards, but cannot apply. This mirrors the existing employer-side gate
@@ -51,15 +51,15 @@ public class EmployeeJobController : Controller
         return View(vm);
     }
 
-    // ── W-03/W-04: EXPRESS INTEREST (one click, cannot be undone) ───────────
+    // ── W-03/W-04: TAKE WORK (one click, cannot be undone) ───────────────────
 
-    [HttpPost("/jobs/{id:int}/express-interest")]
+    [HttpPost("/jobs/{id:int}/take-work")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ExpressInterest(int id)
+    public async Task<IActionResult> TakeWork(int id)
     {
         var session = UserSession.FromContext(HttpContext);
 
-        var result = await _jobService.ExpressInterestAsync(
+        var result = await _jobService.TakeWorkAsync(
             session.UserAccountId, id, HttpContext.Connection.RemoteIpAddress?.ToString());
 
         TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Message;

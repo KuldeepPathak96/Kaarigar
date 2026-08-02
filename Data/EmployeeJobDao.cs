@@ -74,6 +74,16 @@ public class EmployeeJobDao : IEmployeeJobDao
         _db.JobApplications.AsNoTracking()
            .CountAsync(a => a.JobPostId == jobPostId && a.StatusCd != "CANCELLED");
 
+    public Task<JobApplication?> GetApplicationWithDetailsAsync(int employeeUserAccountId, int jobPostId) =>
+        _db.JobApplications
+           .AsNoTracking()
+           .Include(a => a.JobPost)
+           .ThenInclude(jp => jp.EmployerUserAccount)
+           .Include(a => a.EmployeeUserAccount)
+           .Where(a => a.EmployeeUserAccountId == employeeUserAccountId && a.JobPostId == jobPostId)
+           .OrderByDescending(a => a.AppliedTs)
+           .FirstOrDefaultAsync();
+
     public async Task InsertApplicationAsync(int employeeUserAccountId, int jobPostId, string? ipAddress)
     {
         var application = new JobApplication

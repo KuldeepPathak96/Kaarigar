@@ -195,7 +195,7 @@ public class DashboardDao : IDashboardDao
 
     private static string MapStatusToAction(string statusCd) => statusCd switch
     {
-        "PENDING" => "expressed interest",
+        "PENDING" => "took work",
         "EMPLOYER_VIEWED" => "profile viewed by employer",
         "EMPLOYER_CONTACTED" => "contacted by employer",
         "JOB_STARTED" => "job started (OTP verified)",

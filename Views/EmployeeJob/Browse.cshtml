@@ -148,20 +148,20 @@
                     <div class="k-job-card__actions">
                         @if (job.HasApplied)
                         {
-                            <span class="k-badge k-badge--amber">Interest Expressed</span>
+                            <span class="k-badge k-badge--amber">Work Taken</span>
                         }
                         else if (!Model.IsApproved)
                         {
                             <span class="k-btn k-btn--sm k-btn--secondary" style="opacity:.6;cursor:not-allowed"
-                                  title="Your account is pending Admin approval">Express Interest</span>
+                                  title="Your account is pending Admin approval">Take Work</span>
                         }
                         else
                         {
-                            <form asp-action="ExpressInterest" asp-controller="EmployeeJob" asp-route-id="@job.JobPostId"
+                            <form asp-action="TakeWork" asp-controller="EmployeeJob" asp-route-id="@job.JobPostId"
                                   method="post" class="k-inline-form"
-                                  onsubmit="return confirm('Express interest in this job? This cannot be undone.');">
+                                  onsubmit="return confirm('Take this job? This cannot be undone.');">
                                 @Html.AntiForgeryToken()
-                                <button type="submit" class="k-btn k-btn--sm k-btn--primary">Express Interest</button>
+                                <button type="submit" class="k-btn k-btn--sm k-btn--primary">Take Work</button>
                             </form>
                         }
                     </div>

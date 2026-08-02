@@ -6,13 +6,16 @@ namespace Kaarigar.Services;
 public class EmployeeJobService : IEmployeeJobService
 {
     private readonly IEmployeeJobDao _dao;
+    private readonly IEmployerProfileDao _employerProfileDao;
     private readonly IWhatsAppNotificationService _whatsAppService;
     private readonly ILogger<EmployeeJobService> _logger;
 
     public EmployeeJobService(
-        IEmployeeJobDao dao, IWhatsAppNotificationService whatsAppService, ILogger<EmployeeJobService> logger)
+        IEmployeeJobDao dao, IEmployerProfileDao employerProfileDao,
+        IWhatsAppNotificationService whatsAppService, ILogger<EmployeeJobService> logger)
     {
         _dao = dao;
+        _employerProfileDao = employerProfileDao;
         _whatsAppService = whatsAppService;
         _logger = logger;
     }
@@ -118,7 +121,7 @@ public class EmployeeJobService : IEmployeeJobService
         };
     }
 
-    public async Task<ServiceResult> ExpressInterestAsync(int employeeUserAccountId, int jobPostId, string? ipAddress)
+    public async Task<ServiceResult> TakeWorkAsync(int employeeUserAccountId, int jobPostId, string? ipAddress)
     {
         if (!await _dao.IsEmployeeApprovedAsync(employeeUserAccountId))
             return new ServiceResult(false, "Your account is pending Admin approval. You'll be able to apply to jobs once approved.");
@@ -128,17 +131,45 @@ public class EmployeeJobService : IEmployeeJobService
             return new ServiceResult(false, "This job is no longer available.");
 
         if (await _dao.HasAppliedAsync(employeeUserAccountId, jobPostId))
-            return new ServiceResult(false, "You've already expressed interest in this job.");
+            return new ServiceResult(false, "You've already applied for this job.");
 
         if (await _dao.GetActiveApplicantCountAsync(jobPostId) >= job.RequiredWorkerNbr)
             return new ServiceResult(false, "All positions for this job have already been filled.");
 
         await _dao.InsertApplicationAsync(employeeUserAccountId, jobPostId, ipAddress);
 
-        _logger.LogInformation("Employee {EmployeeId} expressed interest in JobPostId={JobPostId}",
+        _logger.LogInformation("Employee {EmployeeId} took work for JobPostId={JobPostId}",
             employeeUserAccountId, jobPostId);
 
-        return new ServiceResult(true, "Interest expressed! The employer can now see your profile.");
+        // Notify the employee over WhatsApp with the business name, job
+        // timing, amount, location and a map link — and send the employer a
+        // confirmation notification too. Fires immediately on Take Work,
+        // before the employer has done anything.
+        try
+        {
+            var application = await _dao.GetApplicationWithDetailsAsync(employeeUserAccountId, jobPostId);
+            var employerUser = application?.JobPost.EmployerUserAccount;
+
+            if (application != null && employerUser != null)
+            {
+                var employerProfile = await _employerProfileDao.GetProfileAsync(employerUser.UserAccountId);
+
+                await _whatsAppService.SendTakeWorkNotificationAsync(
+                    application.JobPost,
+                    application.EmployeeUserAccount,
+                    employerUser,
+                    employerProfile?.Profile?.CompanyName,
+                    employerProfile?.Profile?.ContactPersonName);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                "Failed to send Take Work WhatsApp notifications for EmployeeId={EmployeeId}, JobPostId={JobPostId}",
+                employeeUserAccountId, jobPostId);
+        }
+
+        return new ServiceResult(true, "Applied! The employer can now see your profile.");
     }
 
     // ── W-05: MY APPLICATIONS ────────────────────────────────────────────────

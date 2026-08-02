@@ -5,18 +5,7 @@
 }
 
 <!-- NAV -->
-<nav class="k-nav">
-    <div class="k-nav__inner">
-        <a class="k-nav__brand" href="/">
-            <img src="~/images/logo.png" alt="Kaarigar Logo" class="k-nav__logo" />
-            <span class="k-nav__brand-text">KAARIGAR</span>
-        </a>
-        <div class="k-nav__actions">
-            <a class="k-btn k-btn--ghost" href="/Account/Login">Log In</a>
-            <a class="k-btn k-btn--primary" href="/Account/Register">Register Free</a>
-        </div>
-    </div>
-</nav>
+<partial name="_MarketingNav" />
 
 <section class="k-legal">
     <div class="k-container k-legal__container">
@@ -153,21 +142,4 @@
 </section>
 
 <!-- FOOTER -->
-<footer class="k-footer">
-    <div class="k-container">
-        <div class="k-footer__inner">
-            <div>
-                <div class="k-footer__brand">KAARIGAR</div>
-                <p>India's Trusted Skilled Workforce Platform</p>
-            </div>
-            <div class="k-footer__links">
-                <a href="/Account/Login">Login</a>
-                <a href="/Account/Register">Register</a>
-                <a href="/terms">Terms of Use</a>
-            </div>
-        </div>
-        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; text-align: center;">
-            &copy; @DateTime.Now.Year Kaarigar. All rights reserved.
-        </div>
-    </div>
-</footer>
+<partial name="_MarketingFooter" />

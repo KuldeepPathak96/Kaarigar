@@ -112,7 +112,7 @@
         {
             <div class="k-empty-state">
                 <div class="k-empty-state__icon">🧑‍🔧</div>
-                <p class="k-empty-state__text">No one has expressed interest in this job yet.</p>
+                <p class="k-empty-state__text">No one has taken this job yet.</p>
             </div>
         }
         else
@@ -158,7 +158,7 @@
                                 <td data-label="Distance">@(applicant.DistanceKm.HasValue ? $"{applicant.DistanceKm.Value} km" : "Unknown")</td>
                                 <td data-label="Applied">@applicant.AppliedTs.ToString("dd MMM yyyy")</td>
                                 <td data-label="Status">
-                                    <span class="@appBadgeClass">@applicant.StatusCd.Replace("_", " ")</span>
+                                    <span class="@appBadgeClass">@applicant.StatusLabel</span>
                                     @if (applicant.StatusCd == "CANCELLED")
                                     {
                                         <div class="k-job-card__meta" style="font-size:12px">@Kaarigar.Models.CancelReasonOptions.Label(applicant.CancelReasonCd)</div>
@@ -230,15 +230,6 @@
                                 </td>
                                 <td data-label="" style="white-space:nowrap">
                                     <a href="/job/applicant/@applicant.JobApplicationId" class="k-btn k-btn--sm k-btn--secondary">View Profile</a>
-
-                                    @if (string.IsNullOrEmpty(applicant.RevealedContactNbr))
-                                    {
-                                        <form asp-action="ContactEmployee" asp-controller="Job" asp-route-jobApplicationId="@applicant.JobApplicationId" method="post" class="k-inline-form">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="jobPostId" value="@Model.JobPostId" />
-                                            <button type="submit" class="k-btn k-btn--sm k-btn--secondary">Contact</button>
-                                        </form>
-                                    }
 
                                     @if (applicant.CanCancel)
                                     {

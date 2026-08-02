@@ -59,4 +59,17 @@ public class AdminApplicantSummaryViewModel
     public string Name { get; set; } = string.Empty;
     public string StatusCd { get; set; } = "PENDING";
     public DateTime AppliedTs { get; set; }
+
+    /// <summary>Human-friendly label for StatusCd, shown as a badge (matches the wording shown to the Kaarigar).</summary>
+    public string StatusLabel =>
+        StatusCd switch
+        {
+            "PENDING" => "Work Taken",
+            "EMPLOYER_VIEWED" => "Profile Viewed",
+            "EMPLOYER_CONTACTED" => "Employer Contacted",
+            "JOB_STARTED" => "Job Started",
+            "COMPLETED" => "Completed",
+            "CANCELLED" => "Cancelled",
+            _ => StatusCd.Replace("_", " "),
+        };
 }

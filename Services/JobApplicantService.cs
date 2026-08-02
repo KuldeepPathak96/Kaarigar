@@ -117,47 +117,6 @@ public class JobApplicantService : IJobApplicantService
         };
     }
 
-    public async Task<ContactRevealResult> ContactEmployeeAsync(int jobApplicationId, int employerUserAccountId)
-    {
-        var application = await _dao.GetApplicationForEmployerAsync(jobApplicationId, employerUserAccountId);
-        if (application == null)
-            return new ContactRevealResult(false, "Applicant not found.");
-
-        // The employee has already "expressed interest" simply by applying —
-        // that's what the JOB_APPLICATION row represents — so contact is allowed
-        // for any existing application.
-        await _dao.AdvanceStatusAsync(jobApplicationId, "EMPLOYER_CONTACTED");
-
-        // Notify the employee over WhatsApp with the business name, job
-        // timing, amount and location — and send the employer a confirmation
-        // notification with their own contact/name, timing and job details.
-        try
-        {
-            var employerProfile = await _employerProfileDao.GetProfileAsync(employerUserAccountId);
-            var employerUser = employerProfile?.User ?? application.JobPost.EmployerUserAccount;
-
-            if (employerUser != null)
-            {
-                await _whatsAppService.SendContactNotificationAsync(
-                    application.JobPost,
-                    application.EmployeeUserAccount,
-                    employerUser,
-                    employerProfile?.Profile?.CompanyName,
-                    employerProfile?.Profile?.ContactPersonName);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex,
-                "Failed to send Contact Employee WhatsApp notifications for JobApplicationId={Id}", jobApplicationId);
-        }
-
-        _logger.LogInformation("Employer {EmployerId} revealed contact for JobApplicationId={Id}",
-            employerUserAccountId, jobApplicationId);
-
-        return new ContactRevealResult(true, "Contact number revealed.", application.EmployeeUserAccount.ContactNbr);
-    }
-
     public async Task<ServiceResult> GenerateOtpAsync(int jobApplicationId, int employerUserAccountId, string otpTypeCd, string? ipAddress)
     {
         if (otpTypeCd is not (OtpType.JobStart or OtpType.Satisfaction))

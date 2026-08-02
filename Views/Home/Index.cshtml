@@ -4,24 +4,13 @@
 
     var industries = new[]
     {
-        "🛍️ Retail", "🍽️ Restaurants", "📦 Warehousing", "🏨 Hotels",
-        "🏥 Hospitals", "🛒 E-commerce", "🚚 Logistics", "🏦 Banking", "🎉 Events"
+        ("shopping-bag", "Retail"), ("utensils", "Restaurants"), ("package", "Warehousing"), ("hotel", "Hotels"),
+        ("heart-pulse", "Hospitals"), ("building-2", "Offices"), ("factory", "Facility Management"), ("party-popper", "Events")
     };
 }
 
 <!-- NAV -->
-<nav class="k-nav">
-    <div class="k-nav__inner">
-        <a class="k-nav__brand" href="/">
-            <img src="~/images/logo.png" alt="Kaarigar Logo" class="k-nav__logo" />
-            <span class="k-nav__brand-text">KAARIGAR</span>
-        </a>
-        <div class="k-nav__actions">
-            <a class="k-btn k-btn--ghost" href="/Account/Login">Log In</a>
-            <a class="k-btn k-btn--primary" href="/Account/Register">Register Free</a>
-        </div>
-    </div>
-</nav>
+<partial name="_MarketingNav" />
 
 <!-- HERO -->
 <section class="k-hero">
@@ -30,55 +19,52 @@
         <div class="k-hero__content">
             <div class="k-hero__badge">🇮🇳 Trusted across India</div>
 
-            <h1 class="k-hero__title">
-                Workforce On Demand.<br />
-                <span class="highlight">Get Verified Staff Within Hours.</span>
-            </h1>
+            <h2 class="k-hero__title">India's On-Demand B2B Workforce Platform.</h2>
+
+            <p class="k-hero__subheadline">Hire Verified Skilled Workers. Within Hours, Not Days.</p>
 
             <p class="k-hero__subtitle">
-                India's trusted B2B platform connecting businesses with verified,
-                on-demand skilled workforce — electricians, plumbers, drivers,
-                masons, cooks, housekeeping &amp; more — staffed up in hours, not days.
+                Hire verified workers on demand for hourly jobs, shifts, projects, and permanent staffing across restaurants, retail, warehouses, hotels, hospitals, offices, and more.
             </p>
 
             <div class="k-hero__cta">
                 <a class="k-btn k-btn--primary k-btn--lg" href="/Account/Register?role=employer">
-                    I Need Workers
+                    Hire Workers
                 </a>
-                <a class="k-btn k-btn--white k-btn--lg" href="/Account/Register?role=employee">
-                    I'm Looking for Work
+                <a class="k-btn k-btn--green k-btn--lg" href="/Account/Register?role=employee">
+                    Find Work
                 </a>
-            </div>
-
-            <div class="k-hero__stats">
-                <div class="k-stat">
-                    <strong>50,000+</strong>
-                    <span>Verified Workers</span>
-                </div>
-                <div class="k-stat">
-                    <strong>1.2L+</strong>
-                    <span>Jobs Completed</span>
-                </div>
-                <div class="k-stat">
-                    <strong>4.8★</strong>
-                    <span>Average Rating</span>
-                </div>
             </div>
         </div>
 
         <div class="k-hero__illustration">
             <div class="k-hero-card">
                 <div class="k-hero-card__header">
-                    <div class="k-hero-card__badge">LIVE</div>
+                    <div class="k-hero-card__badge">LIVE REQUEST</div>
                 </div>
-                <div class="k-hero-card__title">Electrician Needed</div>
-                <div class="k-hero-card__meta">📍 Ahmedabad • ₹750/day • 2 openings</div>
+                <div class="k-hero-card__title">2 Stewards Required</div>
+                <div class="k-hero-card__meta"><i data-lucide="map-pin"></i> Vadodara • ₹80/hour </div>
 
                 <div style="margin-top: 1.25rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    <span style="background:#F3F4F6; padding:0.2rem 0.75rem; border-radius:9999px; font-size:0.8rem;">Wiring</span>
-                    <span style="background:#F3F4F6; padding:0.2rem 0.75rem; border-radius:9999px; font-size:0.8rem;">Panel Work</span>
-                    <span style="background:#F3F4F6; padding:0.2rem 0.75rem; border-radius:9999px; font-size:0.8rem;">3-Phase</span>
+                    <span style="background:#F3F4F6; padding:0.2rem 0.75rem; border-radius:9999px; font-size:0.8rem;"><i data-lucide="clock" style="width:14px;height:14px;vertical-align:-2px;"></i> Today • Evening Shift</span>
+                    <span style="background:#F3F4F6; padding:0.2rem 0.75rem; border-radius:9999px; font-size:0.8rem;"><i data-lucide="zap" style="width:14px;height:14px;vertical-align:-2px;"></i> First Match in 12 Minutes</span>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="k-hero__industries">
+        <div class="k-container">
+            <p class="k-hero__industries-label">Industries We Serve</p>
+            <div class="k-skills-track">
+                @foreach (var industry in industries)
+                {
+                    <span class="k-skill-pill"><i data-lucide="@industry.Item1"></i> @industry.Item2</span>
+                }
+                @foreach (var industry in industries)
+                {
+                    <span class="k-skill-pill"><i data-lucide="@industry.Item1"></i> @industry.Item2</span>
+                }
             </div>
         </div>
     </div>
@@ -87,47 +73,47 @@
 <!-- ROLES SECTION -->
 <section class="k-roles">
     <div class="k-container">
-        <h2 class="k-section-title">Who is Kaarigar for?</h2>
-        <p class="k-section-subtitle">Built for both sides of the workforce equation</p>
+        <h2 class="k-section-title">How Kaarigar works?</h2>
+        <p class="k-section-subtitle">Simple. Fast. Transparent.</p>
 
         <div class="k-roles__grid">
             <!-- Employer Card -->
             <div class="k-role-card k-role-card--employer">
-                <div class="k-role-card__icon">🏗️</div>
-                <h3>For Employers</h3>
-                <p>Construction companies, factories, hotels, households — anyone needing reliable skilled workers fast.</p>
-
-                <ul>
-                    <li>Post job requirements in under 2 minutes</li>
-                    <li>Browse verified worker profiles with ratings</li>
-                    <li>Generate on-site OTPs to verify start &amp; completion</li>
-                    <li>Instant WhatsApp &amp; SMS notifications</li>
+                <div class="k-role-card__head">
+                    <div class="k-role-card__icon"><i data-lucide="briefcase"></i></div>
+                    <h3>Employers</h3>
+                </div>
+                <h4><i data-lucide="circle" style="width:12px;height:12px;fill:#F5B400;color:#F5B400;"></i> Need Staff?</h4>
+                <ul class="k-role-card__steps">
+                    <li>Post a Shift</li>
+                    <li>Get Verified Workers</li>
+                    <li>Start Work</li>
+                    <li>Release Payment</li>
                 </ul>
-
-                <a href="/Account/Register?role=employer" class="k-btn k-btn--primary k-btn--full">Register as Employer</a>
+                <a href="/Account/Register?role=employer" class="k-btn k-btn--primary k-btn--full">Hire Workers</a>
             </div>
 
             <!-- Worker Card -->
             <div class="k-role-card k-role-card--employee">
-                <div class="k-role-card__icon">👷</div>
-                <h3>For Workers</h3>
-                <p>Electricians, plumbers, drivers, masons, cooks, security guards — get matched to jobs near you.</p>
-
-                <ul>
-                    <li>Free verified profile in 5 minutes</li>
-                    <li>Set your preferred work radius (5–50 km)</li>
-                    <li>Get notified of matching jobs instantly</li>
-                    <li>Safe OTP-verified job-site check-in &amp; check-out</li>
+                <div class="k-role-card__head">
+                    <div class="k-role-card__icon"><i data-lucide="user-check"></i></div>
+                    <h3>Workers</h3>
+                </div>
+                <h4><i data-lucide="circle" style="width:12px;height:12px;fill:#16A34A;color:#16A34A;"></i> Looking for Work?</h4>
+                <ul class="k-role-card__steps">
+                    <li>Create Profile</li>
+                    <li>Receive Job Alerts</li>
+                    <li>Accept Shift</li>
+                    <li>Get Paid</li>
                 </ul>
-
-                <a href="/Account/Register?role=employee" class="k-btn k-btn--green k-btn--full">Register as Worker</a>
+                <a href="/Account/Register?role=employee" class="k-btn k-btn--green k-btn--full">Find Work</a>
             </div>
         </div>
     </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="k-how">
+@* <section class="k-how">
     <div class="k-container">
         <h2 class="k-section-title">How Kaarigar Works</h2>
         <p class="k-section-subtitle">Simple. Fast. Transparent.</p>
@@ -190,100 +176,275 @@
             </div>
         </div>
     </div>
+</section> *@
+
+<!-- PAIN -->
+<section class="k-pain">
+    <div class="k-container">
+        <h2 class="k-section-title">Staffing Challenges We Solve</h2>
+        <p class="k-section-subtitle">From last-minute absenteeism to urgent hiring, Kaarigar fills staffing gaps within hours.</p>
+
+        <div class="k-pain-accordion">
+            <div class="k-pain-item" data-pain-item="restaurant">
+                <button type="button" class="k-pain-item__head" aria-expanded="false">
+                    <span class="k-pain-item__icon"><i data-lucide="utensils"></i></span>
+                    <span class="k-pain-item__title">Restaurants</span>
+                    <span class="k-pain-item__chevron">▾</span>
+                </button>
+                <div class="k-pain-item__body">
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--problem">Problem</span>
+                        <p class="k-pain__statement">Peak-hour absenteeism impacts customer service and revenue.</p>
+                    </div>
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--solution">Solution</span>
+                        <p class="k-pain__resolve">Get verified stewards, kitchen staff and cleaners within hours.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-pain-item" data-pain-item="warehouse">
+                <button type="button" class="k-pain-item__head" aria-expanded="false">
+                    <span class="k-pain-item__icon"><i data-lucide="package"></i></span>
+                    <span class="k-pain-item__title">Warehouses</span>
+                    <span class="k-pain-item__chevron">▾</span>
+                </button>
+                <div class="k-pain-item__body">
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--problem">Problem</span>
+                        <p class="k-pain__statement">Labour shortages delay dispatches and order fulfilment.</p>
+                    </div>
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--solution">Solution</span>
+                        <p class="k-pain__resolve">Hire verified pickers, packers and loaders for same-day shifts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-pain-item" data-pain-item="retail">
+                <button type="button" class="k-pain-item__head" aria-expanded="false">
+                    <span class="k-pain-item__icon"><i data-lucide="shopping-bag"></i></span>
+                    <span class="k-pain-item__title">Retail</span>
+                    <span class="k-pain-item__chevron">▾</span>
+                </button>
+                <div class="k-pain-item__body">
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--problem">Problem</span>
+                        <p class="k-pain__statement">Weekend rush requires additional billing and sales staff.</p>
+                    </div>
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--solution">Solution</span>
+                        <p class="k-pain__resolve">Deploy trained retail associates on demand.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-pain-item" data-pain-item="hospitals">
+                <button type="button" class="k-pain-item__head" aria-expanded="false">
+                    <span class="k-pain-item__icon"><i data-lucide="heart-pulse"></i></span>
+                    <span class="k-pain-item__title">Hospitals</span>
+                    <span class="k-pain-item__chevron">▾</span>
+                </button>
+                <div class="k-pain-item__body">
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--problem">Problem</span>
+                        <p class="k-pain__statement">Emergency staffing gaps affect patient care.</p>
+                    </div>
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--solution">Solution</span>
+                        <p class="k-pain__resolve">Find verified housekeeping staff, ward assistants and attendants quickly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-pain-item" data-pain-item="hotels">
+                <button type="button" class="k-pain-item__head" aria-expanded="false">
+                    <span class="k-pain-item__icon"><i data-lucide="hotel"></i></span>
+                    <span class="k-pain-item__title">Hotels</span>
+                    <span class="k-pain-item__chevron">▾</span>
+                </button>
+                <div class="k-pain-item__body">
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--problem">Problem</span>
+                        <p class="k-pain__statement">Unexpected occupancy spikes create staffing shortages.</p>
+                    </div>
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--solution">Solution</span>
+                        <p class="k-pain__resolve">Hire trained housekeeping, F&amp;B and front-office support staff.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-pain-item" data-pain-item="manufacturing">
+                <button type="button" class="k-pain-item__head" aria-expanded="false">
+                    <span class="k-pain-item__icon"><i data-lucide="factory"></i></span>
+                    <span class="k-pain-item__title">Manufacturing</span>
+                    <span class="k-pain-item__chevron">▾</span>
+                </button>
+                <div class="k-pain-item__body">
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--problem">Problem</span>
+                        <p class="k-pain__statement">Production stops because operators or helpers are absent.</p>
+                    </div>
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--solution">Solution</span>
+                        <p class="k-pain__resolve">Get verified machine operators, helpers and technicians quickly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-pain-item" data-pain-item="logistics">
+                <button type="button" class="k-pain-item__head" aria-expanded="false">
+                    <span class="k-pain-item__icon"><i data-lucide="truck"></i></span>
+                    <span class="k-pain-item__title">Logistics</span>
+                    <span class="k-pain-item__chevron">▾</span>
+                </button>
+                <div class="k-pain-item__body">
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--problem">Problem</span>
+                        <p class="k-pain__statement">Delivery delays caused by manpower shortages.</p>
+                    </div>
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--solution">Solution</span>
+                        <p class="k-pain__resolve">Find loaders, drivers and warehouse staff on demand.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-pain-item" data-pain-item="events">
+                <button type="button" class="k-pain-item__head" aria-expanded="false">
+                    <span class="k-pain-item__icon"><i data-lucide="party-popper"></i></span>
+                    <span class="k-pain-item__title">Events</span>
+                    <span class="k-pain-item__chevron">▾</span>
+                </button>
+                <div class="k-pain-item__body">
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--problem">Problem</span>
+                        <p class="k-pain__statement">Need temporary staff for short-duration events.</p>
+                    </div>
+                    <div class="k-pain__block">
+                        <span class="k-pain__label k-pain__label--solution">Solution</span>
+                        <p class="k-pain__resolve">Book verified promoters, helpers and support staff instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!-- SHIFT LIFECYCLE -->
 <section class="k-how" style="background:#F9FAFB">
     <div class="k-container">
-        <h2 class="k-section-title">From Shift Posted to Payment Released</h2>
+        <h2 class="k-section-title">How Kaarigar Ensures Every Shift is Successful</h2>
         <p class="k-section-subtitle">One seamless flow, start to finish</p>
 
         <div class="k-lifecycle">
             <div class="k-lifecycle__step">
-                <div class="k-lifecycle__icon">📝</div>
-                <h4>Employer Posts Shift</h4>
-                <p>Skill, location, timing &amp; rate — posted in under 2 minutes.</p>
+                <div class="k-lifecycle__icon"><i data-lucide="clipboard-edit"></i></div>
+                <h4>Post Shift</h4>
+                <p>Location, timing and pay in under 2 minutes.</p>
             </div>
-            <div class="k-lifecycle__arrow">→</div>
+            <div class="k-lifecycle__arrow"><i data-lucide="arrow-right"></i></div>
 
             <div class="k-lifecycle__step">
-                <div class="k-lifecycle__icon">🔔</div>
-                <h4>Verified Workers Receive Alert</h4>
-                <p>Matching, nearby workers are notified instantly via WhatsApp.</p>
+                <div class="k-lifecycle__icon"><i data-lucide="bell"></i></div>
+                <h4>Nearby Workers Notified</h4>
+                <p>Nearby verified workers receive instant job alerts.</p>
             </div>
-            <div class="k-lifecycle__arrow">→</div>
+            <div class="k-lifecycle__arrow"><i data-lucide="arrow-right"></i></div>
 
             <div class="k-lifecycle__step">
-                <div class="k-lifecycle__icon">🙋</div>
-                <h4>Worker Accepts Shift</h4>
+                <div class="k-lifecycle__icon"><i data-lucide="user-plus"></i></div>
+                <h4>Worker Accepts</h4>
                 <p>First verified worker to accept locks in the shift.</p>
             </div>
-            <div class="k-lifecycle__arrow">→</div>
+            <div class="k-lifecycle__arrow"><i data-lucide="arrow-right"></i></div>
 
             <div class="k-lifecycle__step">
-                <div class="k-lifecycle__icon">✅</div>
+                <div class="k-lifecycle__icon"><i data-lucide="check-circle"></i></div>
                 <h4>Employer Confirms</h4>
-                <p>Employer reviews and confirms the assigned worker.</p>
+                <p>Review the worker profile and confirm instantly.</p>
             </div>
-            <div class="k-lifecycle__arrow">→</div>
+            <div class="k-lifecycle__arrow"><i data-lucide="arrow-right"></i></div>
 
             <div class="k-lifecycle__step">
-                <div class="k-lifecycle__icon">🔐</div>
-                <h4>Job Starting OTP</h4>
-                <p>Employer generates an OTP once the worker reaches the site; worker enters it to confirm start.</p>
+                <div class="k-lifecycle__icon"><i data-lucide="lock"></i></div>
+                <h4>Start OTP</h4>
+                <p>Worker enters the OTP to confirm shift start.</p>
             </div>
-            <div class="k-lifecycle__arrow">→</div>
+            <div class="k-lifecycle__arrow"><i data-lucide="arrow-right"></i></div>
 
             <div class="k-lifecycle__step">
-                <div class="k-lifecycle__icon">🏁</div>
-                <h4>Satisfaction OTP</h4>
-                <p>Employer generates a second OTP when the work is done; the worker enters it to confirm completion.</p>
+                <div class="k-lifecycle__icon"><i data-lucide="flag"></i></div>
+                <h4>Completion OTP</h4>
+                <p>Employer confirms successful completion with a second OTP.</p>
             </div>
-            <div class="k-lifecycle__arrow">→</div>
+            <div class="k-lifecycle__arrow"><i data-lucide="arrow-right"></i></div>
 
             <div class="k-lifecycle__step">
-                <div class="k-lifecycle__icon">💸</div>
+                <div class="k-lifecycle__icon"><i data-lucide="banknote"></i></div>
                 <h4>Payment Released</h4>
-                <p>Payout is released to the worker automatically.</p>
+                <p>Payment is securely released after work completion.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- PAIN -->
-<section class="k-pain">
+<!-- WHY CHOOSE KAARIGAR -->
+<section class="k-why">
     <div class="k-container">
-        <h2 class="k-section-title">The Problem Right Now</h2>
-        <p class="k-section-subtitle">Real staffing gaps, happening today — and how Kaarigar closes them in hours</p>
+        <h2 class="k-section-title">Why Choose Kaarigar?</h2>
 
-        <div class="k-pain__tabs" role="tablist">
-            <button type="button" class="k-pain__tab active" data-pain="restaurant" role="tab" aria-selected="true">🍽️ Restaurants</button>
-            <button type="button" class="k-pain__tab" data-pain="warehouse" role="tab" aria-selected="false">📦 Warehouses</button>
-            <button type="button" class="k-pain__tab" data-pain="retail" role="tab" aria-selected="false">🛍️ Retail</button>
-        </div>
-
-        <div class="k-pain__panels">
-            <div class="k-pain__panel active" data-pain-panel="restaurant">
-                <div class="k-pain__icon">🍽️</div>
-                <p class="k-pain__statement">Restaurants lose revenue because staff don't show up.</p>
-                <p class="k-pain__resolve">✅ Kaarigar solves this in hours — verified waiters, kitchen &amp; cleaning staff, alerted and on-site the same day.</p>
+        <div class="k-why__grid">
+            <div class="k-why__item">
+                <span class="k-why__icon"><i data-lucide="zap"></i></span>
+                <span class="k-why__text">Fill urgent shifts within hours</span>
             </div>
-            <div class="k-pain__panel" data-pain-panel="warehouse">
-                <div class="k-pain__icon">📦</div>
-                <p class="k-pain__statement">Warehouses suffer when manpower is unavailable.</p>
-                <p class="k-pain__resolve">✅ Kaarigar solves this in hours — loaders, packers &amp; sorters staffed up the moment order volume spikes.</p>
+            <div class="k-why__item">
+                <span class="k-why__icon"><i data-lucide="check-circle"></i></span>
+                <span class="k-why__text">Verified workers</span>
             </div>
-            <div class="k-pain__panel" data-pain-panel="retail">
-                <div class="k-pain__icon">🛍️</div>
-                <p class="k-pain__statement">Retail stores struggle during festivals.</p>
-                <p class="k-pain__resolve">✅ Kaarigar solves this in hours — extra floor staff for festival footfall, without a single long-term hire.</p>
+            <div class="k-why__item">
+                <span class="k-why__icon"><i data-lucide="map-pin"></i></span>
+                <span class="k-why__text">Smart location matching</span>
+            </div>
+            <div class="k-why__item">
+                <span class="k-why__icon"><i data-lucide="lock"></i></span>
+                <span class="k-why__text">Secure OTP attendance</span>
+            </div>
+            <div class="k-why__item">
+                <span class="k-why__icon"><i data-lucide="credit-card"></i></span>
+                <span class="k-why__text">Safe payment flow</span>
+            </div>
+            <div class="k-why__item">
+                <span class="k-why__icon"><i data-lucide="star"></i></span>
+                <span class="k-why__text">Ratings after every job</span>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    document.querySelectorAll('.k-pain-item__head').forEach(function (head) {
+        head.addEventListener('click', function () {
+            var item = head.closest('.k-pain-item');
+            var wasActive = item.classList.contains('active');
+
+            document.querySelectorAll('.k-pain-item').forEach(function (i) {
+                i.classList.remove('active');
+                i.querySelector('.k-pain-item__head').setAttribute('aria-expanded', 'false');
+            });
+
+            if (!wasActive) {
+                item.classList.add('active');
+                head.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+</script>
 
 <!-- INDUSTRIES TICKER -->
-<section class="k-skills">
+@* <section class="k-skills">
     <div class="k-container">
         <div class="k-skills-track">
             @foreach (var industry in industries)
@@ -296,53 +457,44 @@
             }
         </div>
     </div>
-</section>
-
-<script>
-    document.querySelectorAll('.k-pain__tab').forEach(function (tab) {
-        tab.addEventListener('click', function () {
-            var target = tab.getAttribute('data-pain');
-
-            document.querySelectorAll('.k-pain__tab').forEach(function (t) {
-                t.classList.remove('active');
-                t.setAttribute('aria-selected', 'false');
-            });
-            tab.classList.add('active');
-            tab.setAttribute('aria-selected', 'true');
-
-            document.querySelectorAll('.k-pain__panel').forEach(function (panel) {
-                panel.classList.toggle('active', panel.getAttribute('data-pain-panel') === target);
-            });
-        });
-    });
-</script>
+</section> *@
 
 <!-- TRUST & SAFETY -->
 <section class="k-trust">
     <div class="k-container">
-        <h2 class="k-section-title">Built for Trust &amp; Safety</h2>
-        <p class="k-section-subtitle">Every worker and employer goes through strict verification</p>
+        <h2 class="k-section-title">Why Businesses Trust Kaarigar?</h2>
+        <p class="k-section-subtitle">Every job on Kaarigar is backed by identity verification, secure OTP check-ins, and admin approval.</p>
 
         <div class="k-trust__grid">
             <div class="k-trust-card">
-                <div class="k-trust-card__icon">📱</div>
-                <h4>Mobile OTP Verification</h4>
-                <p>Every account is linked to a verified mobile number.</p>
+                <div class="k-trust-card__icon"><i data-lucide="badge-check"></i></div>
+                <h4>Verified Identity</h4>
+                <p>Government ID verified</p>
             </div>
             <div class="k-trust-card">
-                <div class="k-trust-card__icon">📋</div>
-                <h4>Document Verification</h4>
-                <p>Aadhaar, PAN, Voter ID &amp; Driving License verified by Admin.</p>
+                <div class="k-trust-card__icon"><i data-lucide="badge-check"></i></div>
+                <h4>Skills &amp; Experience Verified</h4>
+                <p>Relevant experience checked</p>
             </div>
             <div class="k-trust-card">
-                <div class="k-trust-card__icon">📍</div>
-                <h4>Location and Skill Based Matching</h4>
-                <p>Workers only receive relevant jobs within their chosen radius.</p>
+                <div class="k-trust-card__icon"><i data-lucide="badge-check"></i></div>
+                <h4>OTP Check-In</h4>
+                <p>Secure start &amp; completion</p>
             </div>
             <div class="k-trust-card">
-                <div class="k-trust-card__icon">✅</div>
-                <h4>Admin Approval Gate</h4>
-                <p>All accounts require manual admin approval before going live.</p>
+                <div class="k-trust-card__icon"><i data-lucide="badge-check"></i></div>
+                <h4>Smart Matching</h4>
+                <p>Nearby verified workers only</p>
+            </div>
+            <div class="k-trust-card">
+                <div class="k-trust-card__icon"><i data-lucide="badge-check"></i></div>
+                <h4>Manual Approval</h4>
+                <p>Every profile reviewed</p>
+            </div>
+            <div class="k-trust-card">
+                <div class="k-trust-card__icon"><i data-lucide="badge-check"></i></div>
+                <h4>Ratings &amp; Reviews</h4>
+                <p>Built from real completed jobs</p>
             </div>
         </div>
     </div>
@@ -352,8 +504,8 @@
 <section class="k-cta">
     <div class="k-container">
         <div class="k-cta__box">
-            <h2>Ready to Get Started?</h2>
-            <p>Registration is free. Approval is fast. Jobs are real.</p>
+            <h2>Find Workers in Hours. Fill Shifts. Grow Faster.</h2>
+            <p>Join businesses and skilled workers building the future of on-demand work.</p>
 
             <div class="k-cta__buttons">
                 <a href="/Account/Register?role=employer" class="k-btn k-btn--primary k-btn--lg">Register as Employer</a>
@@ -364,21 +516,4 @@
 </section>
 
 <!-- FOOTER -->
-<footer class="k-footer">
-    <div class="k-container">
-        <div class="k-footer__inner">
-            <div>
-                <div class="k-footer__brand">KAARIGAR</div>
-                <p>India's Trusted Skilled Workforce Platform</p>
-            </div>
-            <div class="k-footer__links">
-                <a href="/Account/Login">Login</a>
-                <a href="/Account/Register">Register</a>
-                <a href="/terms">Terms of Use</a>
-            </div>
-        </div>
-        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; text-align: center;">
-            &copy; @DateTime.Now.Year Kaarigar. All rights reserved.
-        </div>
-    </div>
-</footer>
+<partial name="_MarketingFooter" />
