@@ -132,7 +132,7 @@
 
         <!-- ── BUSINESS PROOF ────────────────────────────────────────────── -->
         <div class="k-dash-section">
-            <h2 class="k-dash-section__title">Business Proof (GST / Gumasthadhara)</h2>
+            <h2 class="k-dash-section__title">Upload Business Proof (GST, Gumasthadhar, Food license, Udyam etc…)</h2>
 
             @if (!string.IsNullOrEmpty(Model.ExistingProofFileName))
             {
@@ -155,12 +155,15 @@
                         <option value="">-- Select --</option>
                         <option value="GST">GST Certificate</option>
                         <option value="GUMASTHA">Gumasthadhara (Shop &amp; Establishment)</option>
+                        <option value="FOODLIC">Food license</option>
+                        <option value="UDYAM">Udyam</option>
+                        <option value="OTHER">Other</option>
                     </select>
                     <span asp-validation-for="BusinessProofTypeCd" class="k-field-error"></span>
                 </div>
 
                 <div class="k-form__group">
-                    <label asp-for="BusinessProofNumberTxt">GST / Gumasthadhara Number <span class="k-req">*</span></label>
+                    <label asp-for="BusinessProofNumberTxt">Proof Number<span class="k-req">*</span></label>
                     <input asp-for="BusinessProofNumberTxt" class="k-input" placeholder="Registration / certificate number" />
                     <span asp-validation-for="BusinessProofNumberTxt" class="k-field-error"></span>
                 </div>

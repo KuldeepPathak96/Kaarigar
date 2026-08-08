@@ -10,10 +10,10 @@
     <div class="k-dash-header">
         <div>
             <h1 class="k-dash-title">
-                Good @(DateTime.Now.Hour < 12 ? "morning" : DateTime.Now.Hour < 17 ? "afternoon" : "evening"),
+                Welcome back,
                 @(Model.CompanyName ?? Model.EmployerName) 👋
             </h1>
-            <p class="k-dash-subtitle">Here's what's happening with your job posts today.</p>
+            <p class="k-dash-subtitle">Here's an overview of your hiring activity.</p>
         </div>
         @if (Model.IsApproved)
         {
@@ -49,7 +49,7 @@
             </div>
             <div class="k-kpi-card__body">
                 <div class="k-kpi-card__value">@Model.TotalJobsPosted</div>
-                <div class="k-kpi-card__label">Total Jobs Posted</div>
+                <div class="k-kpi-card__label">Jobs Posted</div>
             </div>
         </div>
 
@@ -75,7 +75,7 @@
             </div>
             <div class="k-kpi-card__body">
                 <div class="k-kpi-card__value">@Model.TotalApplications</div>
-                <div class="k-kpi-card__label">Applications Received</div>
+                <div class="k-kpi-card__label">Worker Applications</div>
             </div>
         </div>
 
@@ -87,7 +87,7 @@
             </div>
             <div class="k-kpi-card__body">
                 <div class="k-kpi-card__value">@Model.JobsFilled</div>
-                <div class="k-kpi-card__label">Jobs Filled</div>
+                <div class="k-kpi-card__label">Positions Filled</div>
             </div>
         </div>
 
@@ -106,12 +106,12 @@
                 <div class="k-empty-state__icon">📋</div>
                 @if (Model.TotalJobsPosted > 0)
                 {
-                    <p class="k-empty-state__text">No applicant activity yet. Workers matching your job(s) are being notified — check back soon.</p>
+                    <p class="k-empty-state__text">No worker applications yet. Workers matching your job(s) are being notified — check back soon.</p>
                     <a href="/job/my-jobs" class="k-btn k-btn--secondary">View My Job Posts</a>
                 }
                 else
                 {
-                    <p class="k-empty-state__text">No applicant activity yet. Post a job to get started.</p>
+                    <p class="k-empty-state__text">No worker applications yet. Post your first job and start receiving applications from verified workers nearby.</p>
                     @if (Model.IsApproved)
                     {
                         <a href="/job/post" class="k-btn k-btn--primary">Post Your First Job</a>

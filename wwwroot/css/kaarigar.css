@@ -1279,6 +1279,34 @@ img {
     margin-bottom: 1.75rem;
 }
 
+.k-auth-trust-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin: -1rem 0 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--k-border);
+}
+
+    .k-auth-trust-line span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--k-text);
+        white-space: nowrap;
+    }
+
+    .k-auth-trust-line svg {
+        width: 16px;
+        height: 16px;
+        color: var(--k-green);
+        stroke-width: 3;
+        flex-shrink: 0;
+    }
+
 .k-auth-success {
     text-align: center;
     padding: 1.5rem 0;

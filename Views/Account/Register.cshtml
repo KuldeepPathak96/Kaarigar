@@ -23,19 +23,30 @@
             <!-- SUCCESS STATE -->
             <div class="k-auth-success">
                 <div class="k-success-icon">✅</div>
-                <h2>Registration Submitted!</h2>
+                <h2>Account Created Successfully!</h2>
                 <p>
-                    Your account is pending <strong>Admin approval</strong>.
-                    You will receive an SMS / WhatsApp notification on
-                    <strong>+91 @submittedPhone</strong> once approved.
+                    Thank you for registering with Kaarigar.
+
+                    Your account is currently under verification.
+
+                    You'll receive an SMS / Whatsapp once approved.
+
+                    Estimated approval time:
+                    Within 24 Hours
                 </p>
                 <a class="k-btn k-btn--primary" href="/">Back to Home</a>
             </div>
         }
         else
         {
-            <h2 class="k-auth-title">Create Your Account</h2>
-            <p class="k-auth-sub">Free registration. Admin-approved before going live.</p>
+            <h2 class="k-auth-title">Join Kaarigar Today</h2>
+            <p class="k-auth-sub">Registration is free. Every account is manually verified before activation.</p>
+
+            <div class="k-auth-trust-line">
+                <span><i data-lucide="check"></i> Free Registration</span>
+                <span><i data-lucide="check"></i> Manual Verification</span>
+                <span><i data-lucide="check"></i> No Hidden Charges</span>
+            </div>
 
             <!-- ROLE TOGGLE -->
             <div class="k-role-toggle">
@@ -110,7 +121,7 @@
                         <input asp-for="Password"
                                type="password"
                                class="k-input"
-                               placeholder="Min. 8 characters" />
+                               placeholder="Minimum 8 characters" />
                         <span asp-validation-for="Password" class="k-field-error"></span>
                     </div>
                     <div class="k-form__group">
@@ -131,7 +142,7 @@
                         <label asp-for="CompanyName">Company / Business Name</label>
                         <input asp-for="CompanyName"
                                class="k-input"
-                               placeholder="e.g. Patel Construction Works" />
+                               placeholder="e.g. ABC Restaurant" />
                     </div>
 
                     <div class="k-form__row">
@@ -190,7 +201,7 @@
                     <label class="k-checkbox-label">
                         <input asp-for="AgreeToTerms" type="checkbox" />
                         I agree to the <a href="/terms" target="_blank">Terms of Use</a> and understand
-                        my account requires Admin approval before I can log in.
+                        that my account will be reviewed before activation.
                     </label>
                     <span asp-validation-for="AgreeToTerms" class="k-field-error"></span>
                 </div>
