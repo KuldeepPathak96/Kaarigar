@@ -109,6 +109,12 @@
             <input type="hidden" asp-for="LatitudeNbr" id="latitudeInput" />
             <input type="hidden" asp-for="LongitudeNbr" id="longitudeInput" />
             <div id="gpsCoordsPreview" class="k-form__hint" style="display:none;"></div>
+
+            <div id="locationMap" class="k-location-map"></div>
+            <p class="k-location-map-hint">
+                <i data-lucide="map-pin" style="width:14px;height:14px;"></i>
+                Click on the map or drag the pin to set your exact business location.
+            </p>
         </div>
 
         <!-- ── LOGO ──────────────────────────────────────────────────────── -->
@@ -132,7 +138,7 @@
 
         <!-- ── BUSINESS PROOF ────────────────────────────────────────────── -->
         <div class="k-dash-section">
-            <h2 class="k-dash-section__title">Upload Business Proof (GST, Gumasthadhar, Food license, Udyam etc…)</h2>
+            <h2 class="k-dash-section__title">Business Verification</h2>
 
             @if (!string.IsNullOrEmpty(Model.ExistingProofFileName))
             {
@@ -199,6 +205,16 @@
             spinner.style.display = 'inline-block';
         });
 
+        // ── Interactive Location Map ────────────────────────────────────────
+        const kLocationMap = initKaarigarLocationMap({
+            mapId: 'locationMap',
+            latInputId: 'latitudeInput',
+            lngInputId: 'longitudeInput',
+            previewId: 'gpsCoordsPreview',
+            defaultLat: 22.3072,
+            defaultLng: 73.1812
+        });
+
         // ── "Use My Current Location" (Google reverse geocoding) ──────────────
             (function () {
             const btn = document.getElementById('useMyLocationBtn');
@@ -240,6 +256,10 @@
                         document.getElementById('longitudeInput').value = lng;
                         coordsPreview.textContent = 'Location captured: ' + lat.toFixed(6) + ', ' + lng.toFixed(6);
                         coordsPreview.style.display = 'block';
+
+                        if (kLocationMap) {
+                            kLocationMap.setLatLng(lat, lng, true);
+                        }
 
                         try {
                             const response = await fetch('/account/profile/reverse-geocode?lat=' + lat + '&lng=' + lng);

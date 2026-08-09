@@ -134,6 +134,12 @@
             <input type="hidden" asp-for="LongitudeNbr" id="longitudeInput" />
             <div id="gpsCoordsPreview" class="k-form__hint" style="display:none;"></div>
 
+            <div id="locationMap" class="k-location-map"></div>
+            <p class="k-location-map-hint">
+                <i data-lucide="map-pin" style="width:14px;height:14px;"></i>
+                Click on the map or drag the pin to set your exact location.
+            </p>
+
             <div class="k-form__group k-form__group--checkbox" style="margin-top:12px">
                 <label class="k-checkbox-label">
                     <input type="checkbox" asp-for="IsNotificationEnabledFl" />
@@ -236,6 +242,16 @@
             spinner.style.display = 'inline-block';
         });
 
+        // ── Interactive Location Map ────────────────────────────────────────
+        const kLocationMap = initKaarigarLocationMap({
+            mapId: 'locationMap',
+            latInputId: 'latitudeInput',
+            lngInputId: 'longitudeInput',
+            previewId: 'gpsCoordsPreview',
+            defaultLat: 22.3072,
+            defaultLng: 73.1812
+        });
+
         // ── "Use My Current Location" (Google reverse geocoding) ──────────────
         (function () {
             const btn = document.getElementById('useMyLocationBtn');
@@ -274,6 +290,10 @@
                         document.getElementById('longitudeInput').value = lng;
                         coordsPreview.textContent = 'Location captured: ' + lat.toFixed(6) + ', ' + lng.toFixed(6);
                         coordsPreview.style.display = 'block';
+
+                        if (kLocationMap) {
+                            kLocationMap.setLatLng(lat, lng, true);
+                        }
 
                         try {
                             const response = await fetch('/account/profile/reverse-geocode?lat=' + lat + '&lng=' + lng);

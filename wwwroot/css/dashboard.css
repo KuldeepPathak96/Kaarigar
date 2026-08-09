@@ -837,3 +837,41 @@
         font-size: 0.62rem;
     }
 }
+
+/* ── LOCATION MAP PICKER ─────────────────────────────────────────────────── */
+.k-location-map {
+    height: 320px;
+    width: 100%;
+    border-radius: var(--r-lg, 16px);
+    border: 1px solid var(--k-border);
+    margin: 0.75rem 0 0.5rem;
+    z-index: 0;
+    background: var(--k-surface);
+}
+
+.k-location-map .k-map-fallback {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--k-muted);
+    background: var(--k-surface);
+}
+
+.k-location-map-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--k-muted);
+    margin-bottom: 1.25rem;
+}
+
+@media (max-width: 600px) {
+    .k-location-map {
+        height: 240px;
+    }
+}

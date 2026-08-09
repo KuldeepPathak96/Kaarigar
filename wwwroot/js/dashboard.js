@@ -60,3 +60,29 @@
     // (Handled server-side via TempData in _DashboardLayout.cshtml)
 
 })();
+
+// ── Toggle chip visual state (Required Skills / Gender Preference) ─────────
+// CSS :has() already handles this in modern browsers; this listener is just
+// a fallback for older browsers so the selected state still shows correctly.
+(function () {
+    document.querySelectorAll('.k-checkbox-chip, .k-gender-toggle__option').forEach(function (chip) {
+        var input = chip.querySelector('input');
+        if (!input) return;
+
+        function sync() {
+            chip.classList.toggle('is-selected', input.checked);
+        }
+
+        sync();
+        input.addEventListener('change', function () {
+            if (input.type === 'radio' && input.name) {
+                document.querySelectorAll('input[name="' + input.name + '"]').forEach(function (radio) {
+                    var label = radio.closest('.k-checkbox-chip, .k-gender-toggle__option');
+                    if (label) label.classList.toggle('is-selected', radio.checked);
+                });
+            } else {
+                sync();
+            }
+        });
+    });
+})();

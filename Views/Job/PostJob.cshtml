@@ -31,9 +31,9 @@
 
             <div class="k-form__row">
                 <div class="k-form__group">
-                    <label asp-for="JobTitle">Job Title <span class="k-req">*</span></label>
+                    <label asp-for="JobTitle">Worker Category <span class="k-req">*</span></label>
                     <select asp-for="JobTitle" asp-items="Model.JobTitleOptions" class="k-input">
-                        <option value="">-- Select a job title --</option>
+                        <option value="">-- Select Worker Category --</option>
                     </select>
                     <span asp-validation-for="JobTitle" class="k-field-error"></span>
                 </div>
@@ -47,7 +47,7 @@
 
             <div class="k-form__row">
                 <div class="k-form__group">
-                    <label asp-for="HourlyWageAmt">Hourly Rate (optional)</label>
+                    <label asp-for="HourlyWageAmt">Per Hour Rate <span class="k-req">*</span></label>
                     <select asp-for="HourlyWageAmt" asp-items="Model.HourlyRateOptionsList" class="k-input">
                         <option value="">-- Select an hourly rate --</option>
                     </select>
@@ -76,6 +76,25 @@
                 </div>
                 <small class="k-form__hint">Select any additional skills relevant to this job (optional).</small>
             </div>
+
+            <div class="k-form__group">
+                <label>Gender Preference</label>
+                <div class="k-gender-toggle">
+                    <label class="k-gender-toggle__option">
+                        <input type="radio" name="GenderPreferenceCd" value="ANY" checked="@(Model.GenderPreferenceCd == "ANY" || string.IsNullOrEmpty(Model.GenderPreferenceCd))" />
+                        <span>Any</span>
+                    </label>
+                    <label class="k-gender-toggle__option">
+                        <input type="radio" name="GenderPreferenceCd" value="MALE" checked="@(Model.GenderPreferenceCd == "MALE")" />
+                        <span><i data-lucide="user"></i> Male</span>
+                    </label>
+                    <label class="k-gender-toggle__option">
+                        <input type="radio" name="GenderPreferenceCd" value="FEMALE" checked="@(Model.GenderPreferenceCd == "FEMALE")" />
+                        <span><i data-lucide="user"></i> Female</span>
+                    </label>
+                </div>
+                <small class="k-form__hint">Optional — leave on "Any" unless this shift specifically requires a male or female worker.</small>
+            </div>
         </div>
 
         <div class="k-dash-section">
@@ -97,13 +116,13 @@
 
             <div class="k-form__row">
                 <div class="k-form__group">
-                    <label asp-for="DurationHourNbr">Job Duration (hours) <span class="k-req">*</span></label>
+                    <label asp-for="DurationHourNbr">Shift Duration (hours) <span class="k-req">*</span></label>
                     <input asp-for="DurationHourNbr" type="number" min="1" max="720" class="k-input" placeholder="e.g. 8" />
                     <span asp-validation-for="DurationHourNbr" class="k-field-error"></span>
                 </div>
 
                 <div class="k-form__group">
-                    <label>Job Ends</label>
+                    <label>Shift Ends</label>
                     <p class="k-input" style="background:#F9FAFB;display:flex;align-items:center;color:#555">
                         @(Model.EndDateTime.HasValue ? Model.EndDateTime.Value.ToString("dd MMM yyyy, h:mm tt") : "Fill in start date/time and duration")
                     </p>
@@ -129,7 +148,7 @@
             <div id="gpsCoordsPreview" class="k-form__hint" style="display:none;"></div>
 
             <div class="k-form__group">
-                <label asp-for="LocationAddressTxt">Job Location / Address <span class="k-req">*</span></label>
+                <label asp-for="LocationAddressTxt">Work Location <span class="k-req">*</span></label>
                 <textarea asp-for="LocationAddressTxt" class="k-input" rows="2" placeholder="Full address including area and city"></textarea>
                 <span asp-validation-for="LocationAddressTxt" class="k-field-error"></span>
                 <small class="k-form__hint">Prefilled from your Profile address — edit if this job is at a different site.</small>
@@ -137,6 +156,12 @@
 
             <input type="hidden" asp-for="LatitudeNbr" id="latitudeInput" />
             <input type="hidden" asp-for="LongitudeNbr" id="longitudeInput" />
+
+            <div id="locationMap" class="k-location-map"></div>
+            <p class="k-location-map-hint">
+                <i data-lucide="map-pin" style="width:14px;height:14px;"></i>
+                Click on the map or drag the pin to set the exact shift location.
+            </p>
 
             <div class="k-form__group">
                 <label asp-for="ContactNbr">Contact Number <span class="k-req">*</span></label>
@@ -196,6 +221,16 @@
             });
         }
 
+        // ── Interactive Location Map ────────────────────────────────────────
+        const kLocationMap = initKaarigarLocationMap({
+            mapId: 'locationMap',
+            latInputId: 'latitudeInput',
+            lngInputId: 'longitudeInput',
+            previewId: 'gpsCoordsPreview',
+            defaultLat: 22.3072,
+            defaultLng: 73.1812
+        });
+
         // ── "Use My Current Location" — captures GPS pin only (no address auto-fill) ──
         (function () {
             const btn = document.getElementById('useMyLocationBtn');
@@ -222,6 +257,10 @@
                         document.getElementById('longitudeInput').value = lng;
                         coordsPreview.textContent = 'Location pinned: ' + lat.toFixed(6) + ', ' + lng.toFixed(6);
                         coordsPreview.style.display = 'block';
+
+                        if (kLocationMap) {
+                            kLocationMap.setLatLng(lat, lng, true);
+                        }
 
                         btn.disabled = false;
                         btnText.style.display = 'inline';

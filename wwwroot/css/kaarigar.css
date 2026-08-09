@@ -1908,23 +1908,104 @@ img {
 .k-checkbox-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
     margin-top: 6px;
 }
 
 .k-checkbox-chip {
-    display: flex;
+    position: relative;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
+    padding: 0.5rem 1.1rem;
+    border: 1.5px solid var(--k-border);
+    border-radius: 9999px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--k-text);
+    background: var(--k-white);
+    transition: all 0.15s ease;
+    user-select: none;
 }
 
+    .k-checkbox-chip:hover {
+        border-color: var(--k-yellow);
+    }
+
     .k-checkbox-chip input {
-        margin: 0;
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+        pointer-events: none;
+    }
+
+    /* Modern browsers: reflect the checkbox's checked state directly. */
+    .k-checkbox-chip:has(input:checked) {
+        background: var(--k-yellow);
+        border-color: var(--k-yellow);
+        color: var(--k-black);
+    }
+
+    /* Fallback (older browsers without :has support) — toggled via JS. */
+    .k-checkbox-chip.is-selected {
+        background: var(--k-yellow);
+        border-color: var(--k-yellow);
+        color: var(--k-black);
+    }
+
+/* ── GENDER PREFERENCE TOGGLE ────────────────────────────────────────────── */
+.k-gender-toggle {
+    display: inline-flex;
+    gap: 0.6rem;
+    margin-top: 6px;
+    flex-wrap: wrap;
+}
+
+.k-gender-toggle__option {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem 1.25rem;
+    border: 1.5px solid var(--k-border);
+    border-radius: 9999px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--k-text);
+    background: var(--k-white);
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+    .k-gender-toggle__option:hover {
+        border-color: var(--k-yellow);
+    }
+
+    .k-gender-toggle__option input {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+        pointer-events: none;
+    }
+
+    .k-gender-toggle__option svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .k-gender-toggle__option:has(input:checked) {
+        background: var(--k-yellow);
+        border-color: var(--k-yellow);
+        color: var(--k-black);
+    }
+
+    .k-gender-toggle__option.is-selected {
+        background: var(--k-yellow);
+        border-color: var(--k-yellow);
+        color: var(--k-black);
     }
 
 .k-job-card-grid {

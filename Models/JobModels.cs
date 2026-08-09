@@ -115,6 +115,12 @@ public class JobPost
     [StringLength(15)]
     public string? ContactNbr { get; set; }
 
+    /// <summary>'ANY' | 'MALE' | 'FEMALE' — optional gender preference for this shift.</summary>
+    [Required]
+    [Column("GENDER_PREFERENCE_CD")]
+    [StringLength(10)]
+    public string GenderPreferenceCd { get; set; } = "ANY";
+
     /// <summary>'ACTIVE' | 'PAUSED' | 'CLOSED'</summary>
     [Required]
     [Column("STATUS_CD")]

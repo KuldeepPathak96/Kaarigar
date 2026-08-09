@@ -1,5 +1,7 @@
 @using Kaarigar.Services
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
+    var googleMapsApiKey = Configuration["GoogleMaps:ApiKey"];
     var session  = UserSession.FromContext(Context);
     var role     = session.RoleCd ?? "";
     var fullName = session.FullName ?? "User";
@@ -159,9 +161,18 @@
         }
     </nav>
 
+    <script src="~/js/location-map.js" asp-append-version="true"></script>
+    @if (!string.IsNullOrWhiteSpace(googleMapsApiKey))
+    {
+        <script src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey&libraries=places&callback=onKaarigarMapsReady" async defer></script>
+    }
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/dashboard.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        if (window.lucide) { lucide.createIcons(); }
+    </script>
 </body>
 </html>
 

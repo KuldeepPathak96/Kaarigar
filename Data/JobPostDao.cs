@@ -64,6 +64,7 @@ public class JobPostDao : IJobPostDao
         existing.LatitudeNbr = jobPost.LatitudeNbr;
         existing.LongitudeNbr = jobPost.LongitudeNbr;
         existing.ContactNbr = jobPost.ContactNbr;
+        existing.GenderPreferenceCd = jobPost.GenderPreferenceCd;
         existing.UpdatedBy = "JOB_POST_EDIT";
         existing.UpdatedTs = DateTime.UtcNow;
 

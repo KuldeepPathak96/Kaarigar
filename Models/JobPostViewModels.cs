@@ -39,7 +39,8 @@ public class PostJobViewModel
     public List<SelectListItem> SkillOptions { get; set; } = new();
 
     /// <summary>Chosen from the admin-editable HOURLY_RATE_OPTION dropdown — not typed freely.</summary>
-    [Range(0, 100000, ErrorMessage = "Please select a valid hourly rate.")]
+    [Required(ErrorMessage = "Per hour rate is required.")]
+    [Range(0.01, 100000, ErrorMessage = "Please select a valid hourly rate.")]
     public decimal? HourlyWageAmt { get; set; }
 
     /// <summary>Populated by the controller from active HourlyRateOption rows.</summary>
@@ -82,6 +83,9 @@ public class PostJobViewModel
     [Required(ErrorMessage = "Contact number is required.")]
     [RegularExpression(@"^\d{10}$", ErrorMessage = "Enter a valid 10-digit contact number.")]
     public string ContactNbr { get; set; } = string.Empty;
+
+    /// <summary>'ANY' | 'MALE' | 'FEMALE' — optional gender preference for this shift.</summary>
+    public string GenderPreferenceCd { get; set; } = "ANY";
 
     /// <summary>'ACTIVE' | 'PAUSED' — only meaningful when editing; new posts always start ACTIVE.</summary>
     public string StatusCd { get; set; } = "ACTIVE";

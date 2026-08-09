@@ -74,6 +74,7 @@ public class JobPostService : IJobPostService
             LongitudeNbr = jobPost.LongitudeNbr,
             ContactNbr = jobPost.ContactNbr ?? string.Empty,
             StatusCd = jobPost.StatusCd,
+            GenderPreferenceCd = jobPost.GenderPreferenceCd,
         };
     }
 
@@ -105,6 +106,7 @@ public class JobPostService : IJobPostService
             LatitudeNbr = model.LatitudeNbr,
             LongitudeNbr = model.LongitudeNbr,
             ContactNbr = model.ContactNbr.Trim(),
+            GenderPreferenceCd = string.IsNullOrWhiteSpace(model.GenderPreferenceCd) ? "ANY" : model.GenderPreferenceCd,
             StatusCd = "ACTIVE",
             CreatedBy = "JOB_POST_CREATE",
             CreatedIpAddr = ipAddress,
@@ -162,6 +164,7 @@ public class JobPostService : IJobPostService
             LatitudeNbr = model.LatitudeNbr,
             LongitudeNbr = model.LongitudeNbr,
             ContactNbr = model.ContactNbr.Trim(),
+            GenderPreferenceCd = string.IsNullOrWhiteSpace(model.GenderPreferenceCd) ? "ANY" : model.GenderPreferenceCd,
         };
 
         await _dao.UpdateJobPostAsync(jobPost, model.SelectedSkillIds);
