@@ -111,7 +111,7 @@
         @if (!Model.Applicants.Any())
         {
             <div class="k-empty-state">
-                <div class="k-empty-state__icon">🧑‍🔧</div>
+                <div class="k-empty-state__icon"><i data-lucide="hard-hat"></i></div>
                 <p class="k-empty-state__text">No one has taken this job yet.</p>
             </div>
         }
@@ -150,7 +150,7 @@
                                     @applicant.Name
                                     @if (!string.IsNullOrEmpty(applicant.RevealedContactNbr))
                                     {
-                                        <div class="k-job-card__meta" style="font-size:12px">📞 @applicant.RevealedContactNbr</div>
+                                        <div class="k-job-card__meta" style="font-size:12px"><i data-lucide="phone" style="width:12px;height:12px;vertical-align:-1px;"></i> @applicant.RevealedContactNbr</div>
                                     }
                                 </td>
                                 <td data-label="Skills">@(applicant.SkillNames.Any() ? string.Join(", ", applicant.SkillNames) : "Not specified")</td>
@@ -167,10 +167,15 @@
                                 <td data-label="Job Site OTP" style="min-width:190px">
                                     @if (applicant.StatusCd == "COMPLETED")
                                     {
-                                        <span class="k-badge k-badge--green">✅ Completed</span>
+                                        <span class="k-badge k-badge--green"><i data-lucide="check" style="width:12px;height:12px;vertical-align:-1px;"></i> Completed</span>
                                         @if (applicant.RatingNbr.HasValue)
                                         {
-                                            <div>@(new string('⭐', applicant.RatingNbr.Value))</div>
+                                            <div class="k-star-rating">
+                                                @for (var s = 1; s <= 5; s++)
+                                                {
+                                                    <i data-lucide="star" class="@(s <= applicant.RatingNbr.Value ? "k-star-filled" : "k-star-empty")"></i>
+                                                }
+                                            </div>
                                         }
                                         else
                                         {
@@ -179,11 +184,11 @@
                                                 <input type="hidden" name="jobPostId" value="@Model.JobPostId" />
                                                 <select name="ratingNbr" class="k-input" required>
                                                     <option value="">Rate ▾</option>
-                                                    <option value="5">⭐⭐⭐⭐⭐</option>
-                                                    <option value="4">⭐⭐⭐⭐</option>
-                                                    <option value="3">⭐⭐⭐</option>
-                                                    <option value="2">⭐⭐</option>
-                                                    <option value="1">⭐</option>
+                                                    <option value="5">5 — Excellent</option>
+                                                    <option value="4">4 — Very Good</option>
+                                                    <option value="3">3 — Good</option>
+                                                    <option value="2">2 — Fair</option>
+                                                    <option value="1">1 — Poor</option>
                                                 </select>
                                                 <button type="submit" class="k-btn k-btn--sm k-btn--primary">Submit</button>
                                             </form>

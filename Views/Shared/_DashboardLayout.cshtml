@@ -144,7 +144,7 @@
         <main class="k-dash-main">
             @if (TempData["SessionKicked"] is string kicked)
             {
-                <div class="k-dash-banner k-dash-banner--warn">⚠ @kicked</div>
+                <div class="k-dash-banner k-dash-banner--warn"><i data-lucide="alert-triangle" style="width:16px;height:16px;vertical-align:-3px;"></i> @kicked</div>
             }
             @RenderBody()
         </main>

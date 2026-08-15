@@ -1,6 +1,7 @@
 @{
     ViewData["Title"] = "Cancellation & Refund Policy — Kaarigar";
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    var lastUpdated = "01 August 2026";
 }
 
 <!-- NAV -->
@@ -11,12 +12,126 @@
         <a href="/" class="k-legal__back">&larr; Back to Home</a>
 
         <h1 class="k-legal__title">Cancellation &amp; Refund Policy</h1>
-        <p class="k-legal__updated">This page is a placeholder — full policy content coming soon.</p>
+        <p class="k-legal__updated">Effective Date: 01 August 2026 &nbsp;|&nbsp; Last updated: @lastUpdated</p>
 
-        <p>
-            Details on how job/application cancellations are handled, and any applicable
-            refund terms, will be added here shortly.
-        </p>
+        <details class="k-legal__toc">
+            <summary>Table of Contents</summary>
+            <ul>
+                <li><a href="#sec-1">1. Introduction</a></li>
+                <li><a href="#sec-2">2. Kaarigar's Role</a></li>
+                <li><a href="#sec-3">3. Definitions</a></li>
+                <li><a href="#sec-4">4. General Principles</a></li>
+                <li><a href="#sec-5">5. Employer Cancellation Policy</a></li>
+                <li><a href="#sec-6">6. Worker Cancellation Policy</a></li>
+                <li><a href="#sec-7">7. Employer No-show</a></li>
+                <li><a href="#sec-8">8. Refund Eligibility</a></li>
+                <li><a href="#sec-9">9. Non-refundable Items</a></li>
+                <li><a href="#sec-10">10. Refund Request Process</a></li>
+                <li><a href="#sec-11">11. Refund Timelines</a></li>
+                <li><a href="#sec-12">12. Payment Failures</a></li>
+                <li><a href="#sec-13">13. Chargebacks</a></li>
+                <li><a href="#sec-14">14. Promotional Credits &amp; Coupons</a></li>
+                <li><a href="#sec-15">15. Subscriptions</a></li>
+                <li><a href="#sec-16">16. Enterprise Customers</a></li>
+                <li><a href="#sec-17">17. Exceptional Circumstances</a></li>
+                <li><a href="#sec-18">18. Changes to This Policy</a></li>
+                <li><a href="#sec-19">19. Governing Law</a></li>
+                <li><a href="#sec-20">20. Contact Us</a></li>
+            </ul>
+        </details>
+
+        <h3 id="sec-1">1. Introduction</h3>
+            <p>This Cancellation &amp; Refund Policy ("Policy") explains the rules governing cancellations, refunds, credits, and related matters for services offered through the Kaarigar Platform ("Platform").</p>
+            <p>By accessing or using the Platform, you agree to this Policy in addition to the Terms of Use and Privacy Policy.</p>
+            <p>This Policy applies to:</p>
+            <ul><li>Employers</li><li>Workers</li><li>Enterprise Customers</li><li>Subscription Users</li><li>Any other users of the Platform</li></ul>
+            <h3 id="sec-2">2. Kaarigar's Role</h3>
+            <p>Kaarigar operates as a technology platform that facilitates connections between businesses and workers.</p>
+            <p>Unless expressly agreed in a separate written agreement, Kaarigar is not responsible for the actual performance of work, the employment relationship, wages, or contractual obligations between Employers and Workers.</p>
+            <p>Accordingly, refunds are governed by this Policy and the specific circumstances of each transaction.</p>
+            <h3 id="sec-3">3. Definitions</h3>
+            <p>For this Policy:</p>
+            <ul><li>Employer means a business or individual posting work opportunities.</li><li>Worker means a person accepting work through the Platform.</li><li>Platform Fee means any fee charged by Kaarigar.</li><li>Service Fee means fees payable for Platform services.</li><li>Subscription Fee means charges for premium plans.</li><li>Transaction means any booking, job posting, payment, or purchase made through the Platform.</li></ul>
+            <h3 id="sec-4">4. General Principles</h3>
+            <p>Refunds are not automatic.</p>
+            <p>Each request will be evaluated based on:</p>
+            <ul><li>Platform records</li><li>OTP verification</li><li>Attendance records</li><li>Payment status</li><li>Cancellation timing</li><li>Reason for cancellation</li><li>Investigation findings</li><li>Applicable law</li><li>Kaarigar may request additional information before processing any refund.</li></ul>
+            <h3 id="sec-5">5. Employer Cancellation Policy</h3>
+            <h4>5.1 Cancellation Before Worker Accepts</h4>
+            <p>If an Employer cancels a job before any Worker accepts it:</p>
+            <ul><li>No Worker compensation will be payable.</li><li>Any Platform Fee already paid may be refunded or credited, subject to applicable deductions and payment gateway charges.</li></ul>
+            <h4>5.2 Cancellation After Worker Accepts but Before Shift Starts</h4>
+            <p>Where a Worker has accepted the assignment and the Employer cancels before the scheduled shift start:</p>
+            <p>Kaarigar may:</p>
+            <ul><li>Refund the Platform Fee in whole or in part;</li><li>Retain an administrative or convenience fee; and/or</li><li>Compensate the affected Worker where applicable under the Platform's compensation rules.</li><li>The exact treatment may depend on the timing of cancellation and the applicable commercial terms.</li></ul>
+            <h4>5.3 Cancellation After Shift Starts</h4>
+            <p>Once a Worker has started work (including where commencement is confirmed through OTP or other attendance verification), refunds will generally not be available.</p>
+            <p>Any compensation due to the Worker will remain the Employer's responsibility unless otherwise stated in a separate agreement.</p>
+            <h4>5.4 Repeated Employer Cancellations</h4>
+            <p>Repeated cancellations may result in:</p>
+            <ul><li>Reduced account visibility</li><li>Temporary restrictions</li><li>Additional cancellation fees</li><li>Suspension</li><li>Permanent account termination</li></ul>
+            <h3 id="sec-6">6. Worker Cancellation Policy</h3>
+            <h4>6.1 Cancellation Before Shift</h4>
+            <p>Workers may cancel accepted assignments before the scheduled start time.</p>
+            <p>Repeated cancellations without reasonable cause may result in:</p>
+            <ul><li>Lower reliability score</li><li>Reduced job visibility</li><li>Temporary suspension</li><li>Permanent removal from the Platform</li></ul>
+            <h4>6.2 No-Show</h4>
+            <p>A Worker who fails to report for an accepted assignment without reasonable notice may be treated as a "No-Show."</p>
+            <p>No payment will ordinarily be made for a No-Show.</p>
+            <p>Repeated No-Shows may lead to account restrictions or termination.</p>
+            <h4>6.3 Early Departure</h4>
+            <p>If a Worker leaves an assignment before completion without Employer approval or a valid reason, payment may be reduced or withheld to the extent permitted by applicable law and the agreed terms.</p>
+            <h3 id="sec-7">7. Employer No-show</h3>
+            <p>If an Employer:</p>
+            <ul><li>Provides an incorrect location,</li><li>Is unavailable at the worksite,</li><li>Cancels upon the Worker arriving,</li><li>Fails to provide work after confirmation,</li></ul>
+            <p>Kaarigar may, where appropriate:</p>
+            <ul><li>Award compensation or credits to the Worker;</li><li>Charge cancellation fees to the Employer;</li><li>Restrict the Employer's account for repeated occurrences.</li></ul>
+            <h3 id="sec-8">8. Refund Eligibility</h3>
+            <p>Refunds may be considered where:</p>
+            <ul><li>Duplicate payment occurred.</li><li>Payment was processed in error.</li><li>Technical failure prevented service delivery.</li><li>The transaction failed but funds were debited.</li><li>Kaarigar cancelled the transaction before service commencement.</li><li>Applicable law requires a refund.</li></ul>
+            <h3 id="sec-9">9. Non-refundable Items</h3>
+            <p>Unless required by applicable law or expressly stated otherwise, the following are generally non-refundable:</p>
+            <ul><li>Platform Fees</li><li>Convenience Fees</li><li>Administrative Charges</li><li>Verification Fees</li><li>Background Verification Charges</li><li>Subscription Fees already utilized</li><li>Promotional Services</li><li>Advertising Services</li><li>Premium Listings</li><li>Featured Listings</li><li>Custom Enterprise Services</li></ul>
+            <h3 id="sec-10">10. Refund Request Process</h3>
+            <p>Users seeking a refund should submit a request through the Platform or the designated support channels within 7 days of the relevant transaction or such other period as may be specified by Kaarigar.</p>
+            <p>A refund request should include:</p>
+            <ul><li>Name</li><li>Registered Mobile Number</li><li>Transaction ID</li><li>Job ID (if applicable)</li><li>Reason for the request</li><li>Supporting documents or screenshots (where available)</li><li>Kaarigar may request additional information if necessary to evaluate the request.</li></ul>
+            <h3 id="sec-11">11. Refund Timelines</h3>
+            <p>Where a refund is approved:</p>
+            <ul><li>Processing may commence within 7—10 business days.</li><li>Actual credit timelines depend on the user's bank, card issuer, UPI provider, or payment service provider.</li></ul>
+            <p>Kaarigar is not responsible for delays attributable to third-party financial institutions or payment processors after the refund has been initiated.</p>
+            <h3 id="sec-12">12. Payment Failures</h3>
+            <p>If a payment fails due to technical reasons but funds are debited:</p>
+            <ul><li>The transaction may be automatically reversed by the payment provider; or</li><li>The User may contact Kaarigar with proof of the transaction for review.</li></ul>
+            <h3 id="sec-13">13. Chargebacks</h3>
+            <p>Users should first contact Kaarigar before initiating a chargeback with their payment provider.</p>
+            <p>Fraudulent or abusive chargebacks may result in:</p>
+            <ul><li>Suspension of the account;</li><li>Recovery of amounts due;</li><li>Restriction of Platform access; or</li><li>Other action permitted by law.</li></ul>
+            <h3 id="sec-14">14. Promotional Credits &amp; Coupons</h3>
+            <p>Promotional credits, coupons, referral rewards, or similar benefits:</p>
+            <ul><li>Have no cash value unless expressly stated.</li><li>Are non-transferable.</li><li>May expire.</li><li>May be withdrawn or modified at Kaarigar's discretion.</li><li>Unused promotional benefits are generally not refundable.</li></ul>
+            <h3 id="sec-15">15. Subscriptions</h3>
+            <p>Subscription plans, if introduced, shall be governed by the applicable subscription terms.</p>
+            <p>Unless otherwise stated:</p>
+            <ul><li>Subscription fees are non-refundable after activation.</li><li>Cancellation will prevent future renewals but will not ordinarily result in a refund for the current billing period.</li></ul>
+            <h3 id="sec-16">16. Enterprise Customers</h3>
+            <p>Enterprise customers operating under separate commercial agreements shall be governed by the cancellation, refund, and payment provisions contained in those agreements.</p>
+            <p>Where there is any conflict between this Policy and a separately executed enterprise agreement, the enterprise agreement shall prevail to the extent of the inconsistency.</p>
+            <h3 id="sec-17">17. Exceptional Circumstances</h3>
+            <p>Kaarigar may, in its sole discretion and without creating any obligation or precedent, provide full or partial refunds, credits, or other goodwill adjustments in exceptional circumstances.</p>
+            <p>Such decisions shall not be interpreted as establishing a right to similar treatment in future cases.</p>
+            <h3 id="sec-18">18. Changes to This Policy</h3>
+            <p>Kaarigar may modify this Policy from time to time.</p>
+            <p>Material changes will be communicated through the Platform or by other reasonable means.</p>
+            <p>Continued use of the Platform after the effective date of the revised Policy constitutes acceptance of the updated Policy.</p>
+            <h3 id="sec-19">19. Governing Law</h3>
+            <p>This Policy shall be governed by the laws of India.</p>
+            <p>Any disputes relating to this Policy shall be resolved in accordance with the dispute resolution provisions set out in the Kaarigar Terms of Use.</p>
+            <h3 id="sec-20">20. Contact Us</h3>
+            <p>For any questions, refund requests, or assistance regarding this Policy, please contact:</p>
+            <ul><li>Kaarigar Technologies</li><li>Email: info@kaarigar.co</li><li>Phone: +91-9726728838</li></ul>
+            <p>Branch Office:</p>
+            <ul><li>Office No. 21, 4th Floor, Darshnam Trade Center-II,</li><li>Near Surya Palace Hotel,</li><li>Sayajigunj, Vadodara — 390020, Gujarat, India.</li></ul>
     </div>
 </section>
 

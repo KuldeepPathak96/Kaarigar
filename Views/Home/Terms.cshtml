@@ -1,7 +1,7 @@
 @{
     ViewData["Title"] = "Terms of Use — Kaarigar";
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
-    var lastUpdated = "26 July 2026";
+    var lastUpdated = "01 August 2026";
 }
 
 <!-- NAV -->
@@ -12,132 +12,709 @@
         <a href="/" class="k-legal__back">&larr; Back to Home</a>
 
         <h1 class="k-legal__title">Terms of Use</h1>
-        <p class="k-legal__updated">Last updated: @lastUpdated</p>
+        <p class="k-legal__updated">Effective Date: 01 August 2026 &nbsp;|&nbsp; Last updated: @lastUpdated</p>
 
         <div class="k-legal__notice">
-            This is a general-purpose template covering how Kaarigar's platform works today.
-            It is provided as a starting point and has not been reviewed by a lawyer —
-            please have it checked against applicable Indian law (including the IT Act,
-            DPDP Act 2023, and any state shops &amp; establishment / staffing regulations)
-            before relying on it in production.
+            <strong>IMPORTANT NOTICE:</strong> Please read these Terms of Use carefully before
+            accessing or using the Kaarigar Platform. These Terms constitute a legally binding
+            agreement between you ("User", "Employer", "Worker", "You", or "Your") and Kaarigar
+            Technologies ("Kaarigar", "Company", "We", "Us", or "Our"). By accessing, browsing,
+            registering, posting jobs, applying for jobs, or otherwise using the Platform, you
+            acknowledge that you have read, understood, and agreed to be bound by these Terms,
+            our Privacy Policy, Cancellation &amp; Refund Policy, Community Guidelines, and any
+            additional policies published on the Platform. If you do not agree with these Terms,
+            you must not use the Platform.
         </div>
 
-        <p>
-            These Terms of Use ("Terms") govern access to and use of the Kaarigar platform
-            (the "Platform"), including the website and any related mobile experience,
-            operated by Kaarigar ("Kaarigar", "we", "us", "our"). By registering for an
-            account or otherwise using the Platform, you ("you", "User") agree to be bound
-            by these Terms. If you do not agree, please do not use the Platform.
-        </p>
+        <details class="k-legal__toc">
+            <summary>Table of Contents</summary>
+            <ul>
+                <li class="k-legal-toc__part"><strong>PART A — INTRODUCTION</strong></li>
+                <li><a href="#sec-1">1. Definitions</a></li>
+                <li><a href="#sec-2">2. Acceptance of Terms</a></li>
+                <li><a href="#sec-3">3. About Kaarigar</a></li>
+                <li><a href="#sec-4">4. Nature of the Platform</a></li>
+                <li><a href="#sec-5">5. Eligibility</a></li>
+                <li><a href="#sec-6">6. User Accounts</a></li>
+                <li><a href="#sec-7">7. Verification</a></li>
+                <li><a href="#sec-8">8. Account Security</a></li>
+                <li class="k-legal-toc__part"><strong>PART B — MARKETPLACE MODEL</strong></li>
+                <li><a href="#sec-9">9. Marketplace Services</a></li>
+                <li><a href="#sec-10">10. No Employment Relationship</a></li>
+                <li><a href="#sec-11">11. No Principal Employer Relationship</a></li>
+                <li><a href="#sec-12">12. No Labour Contractor Relationship</a></li>
+                <li><a href="#sec-13">13. No Agency Relationship</a></li>
+                <li><a href="#sec-14">14. User Responsibilities</a></li>
+                <li class="k-legal-toc__part"><strong>PART C — EMPLOYER TERMS</strong></li>
+                <li><a href="#sec-15">15. Employer Registration</a></li>
+                <li><a href="#sec-16">16. Posting Jobs</a></li>
+                <li><a href="#sec-17">17. Employer Obligations</a></li>
+                <li><a href="#sec-18">18. Payments</a></li>
+                <li><a href="#sec-19">19. Ratings &amp; Reviews</a></li>
+                <li><a href="#sec-20">20. Employer Prohibited Conduct</a></li>
+                <li class="k-legal-toc__part"><strong>PART D — WORKER TERMS</strong></li>
+                <li><a href="#sec-21">21. Worker Registration</a></li>
+                <li><a href="#sec-22">22. Worker Responsibilities</a></li>
+                <li><a href="#sec-23">23. Accepting Jobs</a></li>
+                <li><a href="#sec-24">24. Attendance and Shift Management</a></li>
+                <li><a href="#sec-25">25. OTP Verification</a></li>
+                <li><a href="#sec-26">26. Ratings and Reviews</a></li>
+                <li><a href="#sec-27">27. Worker Prohibited Conduct</a></li>
+                <li><a href="#sec-28">28. Workplace Conduct and Safety</a></li>
+                <li><a href="#sec-29">29. Suspension or Termination of Worker Account</a></li>
+                <li class="k-legal-toc__part"><strong>PART E — PAYMENTS, FEES &amp; FINANCIAL TERMS</strong></li>
+                <li><a href="#sec-30">30. Platform Fees</a></li>
+                <li><a href="#sec-31">31. Payment Processing</a></li>
+                <li><a href="#sec-32">32. Taxes</a></li>
+                <li><a href="#sec-33">33. Refunds</a></li>
+                <li><a href="#sec-34">34. Wallet, Credits &amp; Promotional Benefits</a></li>
+                <li><a href="#sec-35">35. Subscriptions</a></li>
+                <li><a href="#sec-36">36. Payment Disputes</a></li>
+                <li><a href="#sec-37">37. Fraudulent Payments</a></li>
+                <li><a href="#sec-38">38. Changes to Fees</a></li>
+                <li><a href="#sec-39">39. No Financial Advice</a></li>
+                <li><a href="#sec-40">40. Financial Records</a></li>
+                <li class="k-legal-toc__part"><strong>PART F — PLATFORM RULES &amp; ACCEPTABLE USE</strong></li>
+                <li><a href="#sec-41">41. Platform License</a></li>
+                <li><a href="#sec-42">42. Intellectual Property</a></li>
+                <li><a href="#sec-43">43. User Content</a></li>
+                <li><a href="#sec-44">44. AI Features</a></li>
+                <li><a href="#sec-45">45. Communications</a></li>
+                <li><a href="#sec-46">46. Third-party Services</a></li>
+                <li><a href="#sec-47">47. Acceptable Use Policy</a></li>
+                <li><a href="#sec-48">48. Automated Access &amp; Data Scraping</a></li>
+                <li><a href="#sec-49">49. Security</a></li>
+                <li><a href="#sec-50">50. Platform Modifications</a></li>
+                <li><a href="#sec-51">51. Beta Features</a></li>
+                <li><a href="#sec-52">52. Open API &amp; Integrations (Future)</a></li>
+                <li><a href="#sec-53">53. Platform Availability</a></li>
+                <li><a href="#sec-54">54. Data Backup</a></li>
+                <li class="k-legal-toc__part"><strong>PART G — TRUST, SAFETY &amp; LEGAL ENFORCEMENT</strong></li>
+                <li><a href="#sec-55">55. Trust &amp; Safety</a></li>
+                <li><a href="#sec-56">56. Complaints &amp; Dispute Assistance</a></li>
+                <li><a href="#sec-57">57. Account Suspension</a></li>
+                <li><a href="#sec-58">58. Termination</a></li>
+                <li><a href="#sec-59">59. Disclaimer of Warranties</a></li>
+                <li><a href="#sec-60">60. Limitation of Liability</a></li>
+                <li><a href="#sec-61">61. Indemnity</a></li>
+                <li><a href="#sec-62">62. Force Majeure</a></li>
+                <li><a href="#sec-63">63. Governing Law</a></li>
+                <li><a href="#sec-64">64. Dispute Resolution</a></li>
+                <li><a href="#sec-65">65. Jurisdiction</a></li>
+                <li><a href="#sec-66">66. Changes to These Terms</a></li>
+                <li><a href="#sec-67">67. Severability</a></li>
+                <li><a href="#sec-68">68. Waiver</a></li>
+                <li><a href="#sec-69">69. Assignment</a></li>
+                <li><a href="#sec-70">70. Entire Agreement</a></li>
+                <li><a href="#sec-71">71. Contact Information</a></li>
+                <li class="k-legal-toc__part"><strong>PART H — SPECIAL PLATFORM POLICIES</strong></li>
+                <li><a href="#sec-72">72. Anti-fraud Policy</a></li>
+                <li><a href="#sec-73">73. Verification Policy</a></li>
+                <li><a href="#sec-74">74. Safety Policy</a></li>
+                <li><a href="#sec-75">75. Community Guidelines</a></li>
+                <li><a href="#sec-76">76. Quality Policy</a></li>
+                <li><a href="#sec-77">77. Document Verification Policy</a></li>
+                <li><a href="#sec-78">78. Workplace Conduct</a></li>
+                <li><a href="#sec-79">79. Communication Policy</a></li>
+                <li><a href="#sec-80">80. Account Security</a></li>
+                <li><a href="#sec-81">81. Platform Improvement</a></li>
+                <li><a href="#sec-82">82. Records &amp; Electronic Consent</a></li>
+                <li><a href="#sec-83">83. Compliance with Applicable Laws</a></li>
+                <li><a href="#sec-84">84. Survival</a></li>
+                <li><a href="#sec-85">85. Interpretation</a></li>
+                <li><a href="#sec-86">86. Contact &amp; Legal Notices</a></li>
+                <li><a href="#sec-87">87. Anti-Discrimination &amp; Equal Opportunity</a></li>
+            </ul>
+        </details>
 
-        <h2>1. Who Can Use Kaarigar</h2>
-        <p>
-            Kaarigar connects two kinds of Users: <strong>Employers</strong> (businesses,
-            households, or individuals seeking workers) and <strong>Workers</strong>
-            ("Kaarigar Partners" — electricians, plumbers, drivers, cooks, and other
-            skilled/semi-skilled workers seeking jobs). You must be at least 18 years old
-            and legally capable of entering into a binding contract to register.
-        </p>
-
-        <h2>2. Registration &amp; Verification</h2>
-        <ul>
-            <li>You must provide accurate, current information during registration, including a valid mobile number, which is verified via OTP.</li>
-            <li>Workers must upload a valid government ID proof (Aadhaar, PAN, Voter ID, or Driving Licence). Employers must upload valid business proof (GST or Gumastha registration) where applicable.</li>
-            <li>All accounts require Admin approval before becoming active. Kaarigar may approve, reject, or request additional documents at its discretion.</li>
-            <li>You are responsible for keeping your login credentials confidential and for all activity under your account.</li>
-        </ul>
-
-        <h2>3. The Role Kaarigar Plays</h2>
-        <p>
-            Kaarigar is a platform that helps Employers and Workers find each other. Kaarigar
-            is <strong>not</strong> the employer of any Worker, and does not itself hire,
-            supervise, or direct work performed. Any job or engagement arranged through the
-            Platform is a direct arrangement between the Employer and the Worker. Employers
-            are responsible for ensuring the work offered complies with applicable labour
-            laws, safety standards, and wage regulations.
-        </p>
-
-        <h2>4. Job Posting &amp; Applications</h2>
-        <ul>
-            <li>Employers are responsible for the accuracy of job postings, including required skills, location, timing, and the hourly rate offered.</li>
-            <li>Workers may browse and express interest in job postings. An Employer viewing or contacting an applicant does not, by itself, create a binding obligation on either party to proceed.</li>
-            <li>Job start and completion are confirmed using one-time passwords (Job Starting OTP and Satisfaction OTP) generated by the Employer and entered by the Worker. Both parties are responsible for completing this verification honestly and accurately.</li>
-            <li>Either party may cancel an application before the job starts, with a reason recorded for transparency.</li>
-        </ul>
-
-        <h2>5. Payments</h2>
-        <p>
-            Unless explicitly stated otherwise on the Platform, Kaarigar does not currently
-            process, hold, or guarantee payment of wages between Employers and Workers.
-            Payment terms are agreed directly between the Employer and Worker. If and when
-            Kaarigar introduces in-platform payments, separate payment terms will apply and
-            will be presented for your acceptance at that time.
-        </p>
-
-        <h2>6. Notifications</h2>
-        <p>
-            By registering, you consent to receive service-related communications from
-            Kaarigar via SMS, WhatsApp, and/or email — including OTPs, job alerts, and
-            status updates on applications. You may opt out of non-essential notifications
-            (such as job-match alerts) from your profile settings; essential account and
-            security messages cannot be opted out of.
-        </p>
-
-        <h2>7. User Conduct</h2>
-        <p>You agree not to:</p>
-        <ul>
-            <li>Provide false, misleading, or fraudulent information, including fake documents or job postings.</li>
-            <li>Use the Platform for any unlawful purpose, or to harass, threaten, or discriminate against another User.</li>
-            <li>Attempt to circumvent the Platform's verification, OTP, or approval processes.</li>
-            <li>Interfere with the security or proper functioning of the Platform.</li>
-        </ul>
-
-        <h2>8. Content &amp; Documents You Provide</h2>
-        <p>
-            You retain ownership of documents and information you upload (ID proofs,
-            business proofs, resumes, photos). You grant Kaarigar a limited licence to
-            store and process this content solely to operate the Platform — including
-            verification by Admin and, where relevant, sharing necessary details (such as
-            name and contact number) with the other party once an application proceeds.
-        </p>
-
-        <h2>9. Privacy</h2>
-        <p>
-            Our handling of your personal data, including what we collect and how it is
-            used, shared, and retained, is described in our Privacy Policy. By using the
-            Platform you also agree to that Privacy Policy.
-        </p>
-
-        <h2>10. Account Suspension &amp; Termination</h2>
-        <p>
-            Kaarigar may suspend or terminate an account at its discretion, including where
-            a User provides false information, is found to violate these Terms, or is the
-            subject of credible complaints from other Users. Users may also request deletion
-            of their account by contacting Kaarigar.
-        </p>
-
-        <h2>11. Disclaimers &amp; Limitation of Liability</h2>
-        <p>
-            The Platform is provided "as is." Kaarigar does not guarantee the availability,
-            conduct, skill, reliability, or reputation of any Employer or Worker, and is not
-            responsible for the outcome of any engagement arranged through the Platform,
-            including disputes over pay, work quality, or workplace incidents. To the
-            maximum extent permitted by law, Kaarigar's liability arising from use of the
-            Platform is limited to the fullest extent permitted under applicable law.
-        </p>
-
-        <h2>12. Changes to These Terms</h2>
-        <p>
-            We may update these Terms from time to time. Material changes will be reflected
-            by updating the "Last updated" date above, and continued use of the Platform
-            after changes take effect constitutes acceptance of the revised Terms.
-        </p>
-
-        <h2>13. Contact Us</h2>
-        <p>
-            Questions about these Terms can be directed to Kaarigar support through the
-            contact details provided on the Platform.
-        </p>
+        <h2 class="k-legal__part" id="part-a-introduction">PART A — INTRODUCTION</h2>
+            <h3 id="sec-1">1. Definitions</h3>
+            <p>For the purpose of these Terms:</p>
+            <h4>1.1 Platform</h4>
+            <p>"Platform" means the Kaarigar website, mobile applications, software applications, dashboards, APIs, communication systems, and all related products and services operated by Kaarigar.</p>
+            <h4>1.2 Company</h4>
+            <p>"Kaarigar", "Company", "We", "Us" or "Our" means Kaarigar Technologies, including its subsidiaries, affiliates, successors and assigns.</p>
+            <h4>1.3 Employer</h4>
+            <p>An Employer means any business, company, partnership, LLP, proprietorship, organization, institution, government entity, startup, MSME, enterprise, contractor, facility management company, restaurant, hotel, warehouse, retail business, hospital, manufacturer, logistics company, event organizer, commercial establishment or any other entity that registers on the Platform for the purpose of discovering, engaging or communicating with workers.</p>
+            <h4>1.4 Worker</h4>
+            <p>A Worker means any individual who creates a profile on the Platform for the purpose of discovering, applying for, accepting or performing work opportunities.</p>
+            <h4>1.5 User</h4>
+            <p>A User includes every person or entity accessing or using the Platform, including Employers, Workers, visitors, administrators and authorized representatives.</p>
+            <h4>1.6 Job</h4>
+            <p>A Job means any work opportunity, including hourly work, shifts, daily work, temporary assignments, contract work, project-based work or permanent employment opportunities posted by an Employer.</p>
+            <h4>1.7 Shift</h4>
+            <p>A Shift means a specific work period defined by an Employer, including start time, end time, location and payment.</p>
+            <h4>1.8 Content</h4>
+            <p>Content includes text, images, videos, documents, resumes, company information, ratings, reviews, comments, messages and all other information uploaded or published on the Platform.</p>
+            <h4>1.9 Applicable Law</h4>
+            <p>Applicable Law means all Central, State and local laws, rules, regulations, government notifications, judicial orders and statutory requirements applicable to the User and/or the Platform.</p>
+            <h3 id="sec-2">2. Acceptance of Terms</h3>
+            <p>By accessing or using the Platform, you represent and warrant that:</p>
+            <ul><li>You have read these Terms.</li><li>You understand these Terms.</li><li>You agree to comply with these Terms.</li><li>You are legally capable of entering into binding agreements.</li><li>You will comply with all applicable laws while using the Platform.</li><li>If you do not agree, you must immediately discontinue use of the Platform.</li></ul>
+            <h3 id="sec-3">3. About Kaarigar</h3>
+            <p>Kaarigar operates India's On-Demand B2B Workforce Platform, enabling businesses to connect with workers for hourly shifts, temporary assignments, project-based engagements and permanent hiring opportunities across multiple industries.</p>
+            <p>The Platform uses technology to facilitate workforce discovery, communication and matching between Employers and Workers.</p>
+            <h3 id="sec-4">4. Nature of the Platform</h3>
+            <h4>4.1 Technology Marketplace</h4>
+            <p>Kaarigar operates as a technology-enabled online marketplace.</p>
+            <p>The Platform enables Employers and Workers to discover each other, communicate and engage directly.</p>
+            <h4>4.2 No Guarantee of Engagement</h4>
+            <p>Kaarigar does not guarantee that:</p>
+            <ul><li>an Employer will hire a Worker;</li><li>a Worker will accept a Job;</li><li>any Job will be completed;</li><li>any User will receive a specific number of opportunities;</li><li>any User will achieve particular business outcomes.</li></ul>
+            <h4>4.3 Marketplace Only</h4>
+            <p>Unless expressly agreed in writing through a separate agreement, Kaarigar provides only the technology platform and does not itself provide workforce, staffing, recruitment, payroll or outsourcing services.</p>
+            <h3 id="sec-5">5. Eligibility</h3>
+            <p>To use the Platform:</p>
+            <ul><li>Individuals must be legally competent to enter into binding contracts under applicable law.</li><li>Businesses must have the legal authority to operate and register.</li><li>Users must provide accurate and complete information.</li><li>Users must not be prohibited by law from using the Platform.</li><li>Kaarigar may refuse or suspend access if eligibility requirements are not met.</li></ul>
+            <h3 id="sec-6">6. User Accounts</h3>
+            <p>Users must create an account to access certain features of the Platform.</p>
+            <p>Each User shall:</p>
+            <ul><li>provide true, accurate and complete information;</li><li>maintain the accuracy of account information;</li><li>promptly update any changes;</li><li>keep login credentials confidential;</li><li>be responsible for all activities conducted through their account.</li><li>Users must not share accounts or create accounts on behalf of another person without authorization.</li></ul>
+            <h3 id="sec-7">7. Verification</h3>
+            <p>Kaarigar may require identity verification, business verification, document verification or other checks before granting access to certain features.</p>
+            <p>Verification by Kaarigar indicates only that certain information or documents have been reviewed to the extent of the verification process adopted by the Platform. It does not constitute a certification, endorsement or guarantee regarding the identity, qualifications, experience, suitability, reliability or conduct of any User.</p>
+            <p>Users remain responsible for conducting their own assessment before entering into any engagement.</p>
+            <h3 id="sec-8">8. Account Security</h3>
+            <p>Users are solely responsible for maintaining the confidentiality of their account credentials and for all activities occurring under their account.</p>
+            <p>Users must immediately notify Kaarigar if they become aware of any unauthorized access, suspected compromise or misuse of their account.</p>
+            <p>Kaarigar reserves the right to suspend or restrict access where it reasonably believes that account security has been compromised or that the account is being used in violation of these Terms.</p>
+            <h2 class="k-legal__part" id="part-b-marketplace-model">PART B — MARKETPLACE MODEL</h2>
+            <h3 id="sec-9">9. Marketplace Services</h3>
+            <h4>9.1 Nature of Services</h4>
+            <p>Kaarigar is a technology-enabled online marketplace that facilitates the discovery, communication, and engagement between businesses seeking workforce and individuals seeking work opportunities.</p>
+            <p>The Platform enables users to:</p>
+            <ul><li>Register and create user profiles.</li><li>Post workforce requirements.</li><li>Search for workers or jobs.</li><li>Apply for work opportunities.</li><li>Communicate through the Platform.</li><li>Schedule work assignments.</li><li>Verify attendance through platform features.</li><li>Submit ratings and reviews.</li><li>Access related workforce management features introduced from time to time.</li></ul>
+            <h4>9.2 Platform Role</h4>
+            <p>Kaarigar provides only the technological infrastructure necessary to facilitate interactions between Users.</p>
+            <p>Kaarigar does not participate in the negotiation, supervision, execution, or completion of work assignments unless expressly stated under a separate written agreement.</p>
+            <h4>9.3 Independent Decisions</h4>
+            <p>Employers independently decide:</p>
+            <ul><li>whom to hire;</li><li>wages or compensation;</li><li>work schedules;</li><li>work location;</li><li>duties and responsibilities;</li><li>duration of engagement;</li><li>workplace policies.</li></ul>
+            <p>Workers independently decide:</p>
+            <ul><li>whether to register;</li><li>whether to apply;</li><li>whether to accept work;</li><li>availability;</li><li>preferred working hours;</li><li>willingness to continue an engagement.</li></ul>
+            <h4>9.4 Platform Availability</h4>
+            <p>Kaarigar does not guarantee uninterrupted access to the Platform.</p>
+            <p>The Platform may be unavailable due to:</p>
+            <ul><li>maintenance;</li><li>upgrades;</li><li>technical failures;</li><li>cyber security incidents;</li><li>force majeure events;</li><li>third-party service failures.</li></ul>
+            <h3 id="sec-10">10. No Employment Relationship</h3>
+            <h4>10.1 Marketplace Only</h4>
+            <p>Kaarigar is not the employer of Workers using the Platform unless expressly agreed under a separate written agreement.</p>
+            <p>The Platform merely facilitates introductions between Employers and Workers.</p>
+            <h4>10.2 Employment Relationship</h4>
+            <p>Any employment relationship, contractual engagement, consultancy, apprenticeship, freelance arrangement, temporary engagement, or other working relationship exists solely between the Employer and the Worker.</p>
+            <h4>10.3 Employer Responsibilities</h4>
+            <p>The Employer remains solely responsible for:</p>
+            <ul><li>recruitment decisions;</li><li>interviews;</li><li>selection;</li><li>appointment;</li><li>wages;</li><li>overtime;</li><li>incentives;</li><li>bonuses;</li><li>leave;</li><li>disciplinary actions;</li><li>workplace safety;</li><li>statutory compliances;</li><li>termination;</li><li>employee benefits.</li></ul>
+            <h4>10.4 Worker Responsibilities</h4>
+            <p>Workers remain solely responsible for:</p>
+            <ul><li>accepting work voluntarily;</li><li>performing assigned duties;</li><li>complying with workplace rules;</li><li>maintaining professional conduct;</li><li>complying with applicable laws.</li></ul>
+            <h4>10.5 No Employer Status</h4>
+            <p>Nothing contained in these Terms shall be interpreted as creating an employer—employee relationship between Kaarigar and any Worker solely because the Worker uses the Platform.</p>
+            <h3 id="sec-11">11. No Principal Employer Relationship</h3>
+            <h4>11.1 Platform Role</h4>
+            <p>Unless expressly agreed through a separate written commercial agreement, Kaarigar does not act as the Principal Employer in respect of work engagements facilitated through the Platform.</p>
+            <h4>11.2 Independent Engagement</h4>
+            <p>Employers independently engage Workers through the Platform.</p>
+            <p>The Employer remains responsible for all obligations arising from such engagement under applicable law.</p>
+            <h4>11.3 No Control Over Work</h4>
+            <p>Kaarigar does not ordinarily:</p>
+            <ul><li>supervise work;</li><li>allocate daily tasks;</li><li>control work execution;</li><li>approve leave;</li><li>issue employment instructions;</li><li>manage attendance outside Platform features;</li><li>exercise disciplinary authority.</li></ul>
+            <h4>11.4 Compliance Responsibility</h4>
+            <p>Compliance with labour, employment, wage, social security, occupational safety, taxation, and other applicable laws remains the responsibility of the Employer engaging the Worker, unless otherwise agreed in writing.</p>
+            <h3 id="sec-12">12. No Labour Contractor Relationship</h3>
+            <h4>12.1 Marketplace Platform</h4>
+            <p>Kaarigar operates as a technology marketplace and not as a labour contractor in the ordinary course of Platform operations.</p>
+            <h4>12.2 No Supply of Labour</h4>
+            <p>Kaarigar does not itself recruit, deploy, assign, supervise, or supply manpower to Employers through the Platform unless a separate written agreement specifically provides for such services.</p>
+            <h4>12.3 No Payroll Services</h4>
+            <p>Unless separately contracted, Kaarigar does not:</p>
+            <ul><li>process salaries;</li><li>maintain attendance;</li><li>administer payroll;</li><li>deduct statutory contributions;</li><li>manage employment benefits;</li><li>provide labour compliance services.</li></ul>
+            <h4>12.4 Separate Commercial Agreements</h4>
+            <p>If Kaarigar enters into a separate agreement to provide staffing, payroll, outsourcing, or employer-of-record services, that agreement shall govern those services independently of these Terms.</p>
+            <h3 id="sec-13">13. No Agency Relationship</h3>
+            <p>Nothing in these Terms shall be construed to create:</p>
+            <ul><li>partnership;</li><li>joint venture;</li><li>agency;</li><li>franchise;</li><li>fiduciary relationship;</li><li>employment relationship;</li><li>representative authority,</li><li>between Kaarigar and any User.</li><li>No User has authority to bind Kaarigar to any contract, representation, or obligation unless expressly authorized in writing.</li></ul>
+            <h3 id="sec-14">14. User Responsibilities</h3>
+            <h4>14.1 General Responsibilities</h4>
+            <p>Every User agrees to:</p>
+            <ul><li>provide accurate information;</li><li>comply with applicable laws;</li><li>use the Platform honestly;</li><li>respect other Users;</li><li>maintain account security;</li><li>promptly update profile information;</li><li>avoid misuse of the Platform.</li></ul>
+            <h4>14.2 Accuracy of Information</h4>
+            <p>Users are solely responsible for ensuring that all information submitted on the Platform is true, accurate, complete, and current.</p>
+            <p>Providing false, misleading, forged, or incomplete information may result in suspension or termination of the account.</p>
+            <h4>14.3 Independent Evaluation</h4>
+            <p>Employers and Workers acknowledge that they are responsible for independently evaluating the suitability, qualifications, experience, reputation, and reliability of the other party before entering into any engagement.</p>
+            <p>Kaarigar does not guarantee the accuracy of user-provided information beyond any verification process expressly described by the Platform.</p>
+            <h4>14.4 Compliance with Laws</h4>
+            <p>Users must comply with all applicable laws, regulations, permits, licences, and contractual obligations relevant to their use of the Platform and any work engagement.</p>
+            <h4>14.5 Prohibited Use</h4>
+            <p>Users shall not use the Platform to:</p>
+            <ul><li>engage in illegal or fraudulent activities;</li><li>post misleading or deceptive information;</li><li>discriminate unlawfully;</li><li>harass, threaten, or abuse other users;</li><li>upload malicious software or harmful code;</li><li>attempt unauthorized access to the Platform;</li><li>interfere with the operation or security of the Platform;</li><li>misuse personal data obtained through the Platform.</li><li>Violation of these obligations may result in suspension, termination, legal action, or reporting to the appropriate authorities.</li></ul>
+            <h2 class="k-legal__part" id="part-c-employer-terms">PART C — EMPLOYER TERMS</h2>
+            <h3 id="sec-15">15. Employer Registration</h3>
+            <h4>15.1 Eligibility</h4>
+            <p>To register as an Employer on Kaarigar, you must:</p>
+            <p>Be at least 18 years of age or otherwise legally competent to enter into binding contracts under applicable law.</p>
+            <p>If registering on behalf of an entity, be duly authorized to bind that entity.</p>
+            <p>Provide complete, accurate, and up-to-date information during registration.</p>
+            <p>Comply with all applicable laws, regulations, and licensing requirements relevant to your business.</p>
+            <p>Kaarigar reserves the right to refuse, suspend, or terminate registration where the eligibility criteria are not met or where information provided is inaccurate or misleading.</p>
+            <h4>15.2 Business Information</h4>
+            <p>Employers may be required to provide, where applicable:</p>
+            <ul><li>Business or Trade Name</li><li>Legal Entity Name</li><li>Business Registration Number (if applicable)</li><li>GSTIN (if applicable)</li><li>PAN</li><li>Registered Office Address</li><li>Branch Address</li><li>Contact Person Details</li><li>Mobile Number</li><li>Email Address</li><li>Company Logo</li><li>Nature of Business</li><li>Industry Category</li><li>Number of Employees</li><li>Authorized Representative Details</li><li>Any other information reasonably required for verification or platform operations</li></ul>
+            <p>Kaarigar may verify the authenticity of such information but does not guarantee the legal status or reputation of any Employer.</p>
+            <h4>15.3 Verification</h4>
+            <p>Kaarigar may request supporting documents for business verification, such as:</p>
+            <ul><li>GST Registration</li><li>PAN</li><li>Certificate of Incorporation</li><li>Partnership Deed</li><li>Shop &amp; Establishment Registration</li><li>MSME Registration</li><li>Trade Licence</li><li>Authorized Signatory Identification</li><li>Any other documents deemed necessary</li></ul>
+            <p>Verification by Kaarigar signifies only that certain information or documents have been reviewed. It is not an endorsement, certification, guarantee, or representation regarding the Employer's financial standing, legal compliance, or business practices.</p>
+            <h4>15.4 Authorized Users</h4>
+            <p>An Employer may authorize employees or representatives to access the Platform on its behalf.</p>
+            <p>The Employer is responsible for ensuring that such users comply with these Terms and remains liable for all activities performed through its account.</p>
+            <h3 id="sec-16">16. Posting Jobs</h3>
+            <h4>16.1 Accuracy of Job Information</h4>
+            <p>Employers must ensure that all job postings are accurate, complete, and truthful.</p>
+            <p>Job postings should clearly specify, where applicable:</p>
+            <ul><li>Job Title</li><li>Industry</li><li>Location</li><li>Shift Date</li><li>Start Time</li><li>End Time</li><li>Duration</li><li>Number of Workers Required</li><li>Skills Required</li><li>Experience Required</li><li>Compensation</li><li>Overtime (if applicable)</li><li>Uniform or Safety Equipment (if applicable)</li><li>Reporting Instructions</li><li>Contact Person (where permitted)</li></ul>
+            <h4>16.2 Lawful Jobs Only</h4>
+            <p>Employers shall post only lawful work opportunities.</p>
+            <p>Jobs must not:</p>
+            <ul><li>Violate applicable laws.</li><li>Involve child labour.</li><li>Involve bonded or forced labour.</li><li>Require illegal activities.</li><li>Promote discrimination.</li><li>Endanger health or safety without lawful safeguards.</li><li>Misrepresent wages or working conditions.</li></ul>
+            <p>Kaarigar reserves the right to reject or remove any job that, in its sole discretion, violates these Terms or applicable law.</p>
+            <h4>16.3 Employer Responsibility for Job Content</h4>
+            <p>Employers are solely responsible for:</p>
+            <ul><li>The accuracy of job descriptions.</li><li>Compensation details.</li><li>Working conditions.</li><li>Workplace safety.</li><li>Compliance with statutory obligations.</li><li>Representations made to workers.</li><li>Kaarigar is not responsible for reviewing or validating every job posting.</li></ul>
+            <h4>16.4 Job Modifications</h4>
+            <p>Employers may edit or update job postings before workers are engaged, subject to platform functionality and applicable policies.</p>
+            <p>Material changes to a job after worker acceptance should be communicated promptly. Workers may decline materially altered assignments.</p>
+            <h4>16.5 Job Cancellation</h4>
+            <p>Employers may cancel job postings in accordance with Kaarigar's Cancellation &amp; Refund Policy.</p>
+            <p>Repeated cancellations, especially after workers have accepted assignments, may lead to restrictions, penalties, or suspension of the Employer account.</p>
+            <h3 id="sec-17">17. Employer Obligations</h3>
+            <p>Employers agree to:</p>
+            <ul><li>Treat workers with dignity and respect.</li><li>Provide a safe and lawful working environment.</li><li>Communicate honestly.</li><li>Honour agreed compensation.</li><li>Comply with all applicable laws.</li><li>Maintain professional conduct.</li><li>Cooperate during investigations of complaints or disputes.</li><li>Use the Platform in good faith.</li></ul>
+            <h4>17.1 Workplace Safety</h4>
+            <p>Employers are responsible for providing, where applicable:</p>
+            <ul><li>Safe working conditions.</li><li>Necessary safety equipment.</li><li>Job-specific training or instructions.</li><li>Emergency procedures.</li><li>Compliance with occupational health and safety laws.</li></ul>
+            <h4>17.2 Equal Opportunity</h4>
+            <p>Employers shall not discriminate unlawfully on the basis of race, caste, religion, sex, disability, age, or any other protected characteristic under applicable law.</p>
+            <p>Where a role has genuine occupational requirements permitted by law, such requirements should be clearly stated.</p>
+            <h4>17.3 Compliance with Labour and Employment Laws</h4>
+            <p>Employers are solely responsible for complying with all labour, employment, social security, wage, tax, occupational safety, and other statutory obligations arising from engagements with workers, unless Kaarigar has expressly agreed otherwise in a separate written contract.</p>
+            <h3 id="sec-18">18. Payments</h3>
+            <h4>18.1 Compensation</h4>
+            <p>Employers are responsible for ensuring that workers receive the agreed compensation in accordance with the agreed terms and applicable law.</p>
+            <h4>18.2 Platform Charges</h4>
+            <p>Kaarigar may charge service fees, subscription fees, convenience fees, or other charges for access to certain Platform features. Such charges will be communicated before they become payable.</p>
+            <h4>18.3 Taxes</h4>
+            <p>Employers are responsible for determining and complying with any tax obligations arising from their engagements with workers.</p>
+            <p>Kaarigar does not provide tax advice.</p>
+            <h4>18.4 Payment Disputes</h4>
+            <p>Any disputes regarding compensation between Employers and Workers should first be resolved directly between the parties.</p>
+            <p>Where appropriate, Kaarigar may, at its discretion, facilitate communication or mediation, but is not obligated to adjudicate or guarantee payment.</p>
+            <h3 id="sec-19">19. Ratings &amp; Reviews</h3>
+            <p>Employers may rate and review workers after completion of an engagement.</p>
+            <p>Ratings and reviews must:</p>
+            <ul><li>Be honest and based on actual experience.</li><li>Not contain abusive, defamatory, discriminatory, or unlawful content.</li><li>Not be manipulated through incentives or coercion.</li><li>Kaarigar reserves the right to remove reviews that violate these Terms.</li></ul>
+            <h3 id="sec-20">20. Employer Prohibited Conduct</h3>
+            <p>Employers shall not:</p>
+            <ul><li>Post false or misleading jobs.</li><li>Impersonate another person or business.</li><li>Circumvent the Platform to avoid applicable fees, where such fees apply.</li><li>Request workers to engage in illegal activities.</li><li>Harass, threaten, or abuse workers.</li><li>Discriminate unlawfully.</li><li>Collect personal data from workers for purposes unrelated to the engagement.</li><li>Use automated tools to scrape or misuse Platform data.</li><li>Upload malicious software or harmful code.</li><li>Attempt to gain unauthorized access to the Platform.</li><li>Interfere with the operation, integrity, or security of the Platform.</li><li>Engage in fraudulent, deceptive, or unfair practices.</li></ul>
+            <p>Kaarigar may suspend, restrict, or terminate Employer accounts for violations of these Terms and may report unlawful conduct to appropriate authorities where required.</p>
+            <h2 class="k-legal__part" id="part-d-worker-terms">PART D — WORKER TERMS</h2>
+            <h3 id="sec-21">21. Worker Registration</h3>
+            <h4>21.1 Eligibility</h4>
+            <p>To register as a Worker on the Platform, you must:</p>
+            <ul><li>Be legally eligible to work under the applicable laws of India.</li><li>Be at least 18 years of age or otherwise legally competent to enter into binding contracts.</li><li>Provide true, complete, and accurate information during registration.</li><li>Maintain updated profile information.</li><li>Comply with these Terms of Use and all applicable laws.</li><li>Kaarigar reserves the right to reject, suspend, or terminate registrations that do not meet these eligibility requirements.</li></ul>
+            <h4>21.2 Worker Profile</h4>
+            <p>Workers may be required to provide:</p>
+            <ul><li>Full Name</li><li>Mobile Number</li><li>Email Address (optional where permitted)</li><li>Photograph</li><li>Date of Birth</li><li>Gender (optional)</li><li>Residential Address</li><li>Current City</li><li>Preferred Work Locations</li><li>Skills</li><li>Experience</li><li>Languages Known</li><li>Education</li><li>Availability</li><li>Bank Account Details (where applicable)</li><li>UPI ID (where applicable)</li><li>Emergency Contact (optional)</li><li>Government-issued Identity Documents</li><li>Any other information reasonably required for verification or platform operations</li><li>Workers are responsible for ensuring that all information remains accurate and up to date.</li></ul>
+            <h4>21.3 Verification</h4>
+            <p>Kaarigar may verify certain information provided by Workers, including identity, contact details, or supporting documents.</p>
+            <p>Verification does not constitute a guarantee of the Worker's qualifications, skills, character, conduct, suitability, or performance.</p>
+            <p>Employers remain responsible for independently evaluating Workers before engagement.</p>
+            <h4>21.4 Profile Visibility</h4>
+            <p>By creating a Worker profile, you acknowledge that certain profile information may be visible to Employers for the purpose of evaluating work opportunities.</p>
+            <p>Kaarigar will process and display such information in accordance with its Privacy Policy.</p>
+            <h3 id="sec-22">22. Worker Responsibilities</h3>
+            <p>Workers agree to:</p>
+            <ul><li>Provide accurate information.</li><li>Maintain updated profiles.</li><li>Accept only those assignments they genuinely intend to perform.</li><li>Report to work on time.</li><li>Perform assigned duties with reasonable skill, care, and professionalism.</li><li>Follow lawful workplace rules and safety instructions.</li><li>Respect Employers, fellow workers, and customers.</li><li>Protect confidential business information.</li><li>Use the Platform honestly and responsibly.</li></ul>
+            <h4>22.1 Professional Conduct</h4>
+            <p>Workers shall:</p>
+            <ul><li>Behave professionally.</li><li>Maintain appropriate workplace etiquette.</li><li>Follow reasonable workplace instructions.</li><li>Use safety equipment where required.</li><li>Maintain personal hygiene where relevant to the role.</li><li>Avoid disruptive or abusive behaviour.</li></ul>
+            <h4>22.2 Compliance with Laws</h4>
+            <p>Workers are responsible for complying with all applicable laws, regulations, permits, licences, and contractual obligations relevant to the work they undertake.</p>
+            <h3 id="sec-23">23. Accepting Jobs</h3>
+            <h4>23.1 Independent Choice</h4>
+            <p>Workers are free to choose whether to apply for or accept work opportunities.</p>
+            <p>Nothing in these Terms obligates a Worker to accept any particular assignment.</p>
+            <h4>23.2 Commitment</h4>
+            <p>Once a Worker accepts a job, the Worker agrees to make reasonable efforts to complete the engagement as agreed, unless prevented by circumstances beyond their reasonable control.</p>
+            <h4>23.3 Accurate Availability</h4>
+            <p>Workers should maintain accurate availability information to improve the quality of matching and reduce unnecessary cancellations.</p>
+            <h4>23.4 Cancellations by Workers</h4>
+            <p>Workers should cancel accepted assignments only where genuinely necessary.</p>
+            <p>Repeated cancellations, particularly at short notice, may result in:</p>
+            <ul><li>Reduced visibility on the Platform.</li><li>Temporary restrictions.</li><li>Account suspension.</li><li>Other actions permitted under these Terms.</li></ul>
+            <h3 id="sec-24">24. Attendance and Shift Management</h3>
+            <h4>24.1 Reporting to Work</h4>
+            <p>Workers are expected to report to the designated location at the agreed reporting time.</p>
+            <h4>24.2 Punctuality</h4>
+            <p>Repeated late arrivals may affect a Worker's ratings, reliability score, or eligibility for future opportunities.</p>
+            <h4>24.3 Early Departure</h4>
+            <p>Workers should not leave an assignment before completion without the Employer's approval, except in emergencies or where continuing the work would be unlawful or unsafe.</p>
+            <h4>24.4 No-Show</h4>
+            <p>Failure to report for an accepted assignment without reasonable notice or justification may be treated as a "No-Show."</p>
+            <p>Repeated No-Shows may result in warnings, reduced visibility, temporary suspension, or permanent removal from the Platform.</p>
+            <h3 id="sec-25">25. OTP Verification</h3>
+            <h4>25.1 Shift Start</h4>
+            <p>Where the Platform uses OTP verification, the Worker must enter the Shift Start OTP at the work location to confirm commencement of the assignment.</p>
+            <h4>25.2 Shift Completion</h4>
+            <p>At the completion of the assignment, the Worker may be required to complete the Shift Completion OTP process in accordance with Platform procedures.</p>
+            <h4>25.3 Accuracy</h4>
+            <p>Workers must not misuse OTP verification or attempt to manipulate attendance records.</p>
+            <p>Any fraudulent use of OTP features may result in immediate suspension or termination of the Worker's account.</p>
+            <h3 id="sec-26">26. Ratings and Reviews</h3>
+            <p>Following completion of an assignment, Employers may provide ratings and reviews based on their experience.</p>
+            <p>Workers may also rate Employers where the Platform permits.</p>
+            <p>Ratings should be:</p>
+            <ul><li>Honest.</li><li>Fair.</li><li>Respectful.</li><li>Based on actual experience.</li><li>Kaarigar may remove ratings or reviews that violate these Terms or applicable law.</li></ul>
+            <h3 id="sec-27">27. Worker Prohibited Conduct</h3>
+            <p>Workers shall not:</p>
+            <ul><li>Provide false or misleading information.</li><li>Use forged or altered documents.</li><li>Create multiple accounts without authorization.</li><li>Share accounts with others.</li><li>Impersonate another person.</li><li>Misrepresent skills or qualifications.</li><li>Accept assignments with no intention of attending.</li><li>Engage in fraud or deceptive practices.</li><li>Demand unauthorized payments.</li><li>Solicit work outside the Platform in violation of applicable Platform policies.</li><li>Harass, threaten, abuse, or discriminate against Employers or other users.</li><li>Use illegal drugs or consume alcohol while performing work where prohibited.</li><li>Carry weapons or dangerous items without lawful authority.</li><li>Damage Employer property.</li><li>Disclose confidential business information.</li><li>Upload malicious software or harmful code.</li><li>Attempt unauthorized access to the Platform.</li><li>Violate applicable laws.</li><li>Violation of these provisions may result in account suspension, termination, legal action, or reporting to appropriate authorities.</li></ul>
+            <h3 id="sec-28">28. Workplace Conduct and Safety</h3>
+            <p>Workers agree to:</p>
+            <ul><li>Follow reasonable workplace safety instructions.</li><li>Use required personal protective equipment (PPE) where provided or required.</li><li>Immediately report unsafe working conditions, accidents, injuries, or emergencies to the Employer and, where appropriate, through the Platform.</li><li>Refrain from engaging in violence, harassment, intimidation, theft, or other misconduct at the workplace.</li></ul>
+            <p>If a Worker believes that continuing an assignment would expose them to an immediate and serious risk to health or safety, they should notify the Employer and, where possible, inform Kaarigar through the Platform or support channels.</p>
+            <h3 id="sec-29">29. Suspension or Termination of Worker Account</h3>
+            <p>Kaarigar may suspend, restrict, or terminate a Worker account where it reasonably believes that the Worker has:</p>
+            <ul><li>Violated these Terms.</li><li>Submitted false information.</li><li>Engaged in fraudulent or deceptive conduct.</li><li>Repeatedly cancelled accepted assignments without reasonable cause.</li><li>Failed to attend accepted assignments on multiple occasions.</li><li>Misused Platform features, including OTP verification.</li><li>Harassed or threatened other users.</li><li>Engaged in unlawful activities.</li><li>Compromised the security or integrity of the Platform.</li></ul>
+            <p>Where appropriate, Kaarigar may provide the Worker with an opportunity to respond before taking permanent action, unless immediate action is necessary to protect users, comply with legal obligations, or safeguard the Platform.</p>
+            <h2 class="k-legal__part" id="part-e-payments-fees-financial-terms">PART E — PAYMENTS, FEES &amp; FINANCIAL TERMS</h2>
+            <h3 id="sec-30">30. Platform Fees</h3>
+            <h4>30.1 Service Fees</h4>
+            <p>Kaarigar may charge fees for access to certain Platform features or services, including but not limited to:</p>
+            <ul><li>Job Posting Fees</li><li>Worker Hiring Fees</li><li>Platform Service Fees</li><li>Convenience Fees</li><li>Subscription Fees</li><li>Enterprise Membership Fees</li><li>Premium Listing Fees</li><li>Verification Charges</li><li>Background Verification Charges</li><li>Featured Employer Listings</li><li>Featured Worker Profiles</li><li>Recruitment Campaign Services</li><li>Advertising Services</li><li>AI Matching Services</li><li>Other value-added services introduced from time to time</li><li>All applicable fees will be displayed before the User confirms the relevant transaction.</li></ul>
+            <h4>30.2 Future Paid Services</h4>
+            <p>Certain features of the Platform may initially be offered free of charge.</p>
+            <p>Kaarigar reserves the right to introduce pricing, subscription plans, transaction fees, or paid services at any time. Where reasonably practicable, users will be notified before such changes take effect.</p>
+            <p>Continued use of the relevant service after the effective date of revised pricing constitutes acceptance of the updated fees.</p>
+            <h4>30.3 Enterprise Plans</h4>
+            <p>Kaarigar may offer customized commercial arrangements for enterprise customers, including large businesses, franchises, hospitals, manufacturing companies, logistics operators, facility management companies, and other organizations.</p>
+            <p>Such arrangements shall be governed by separate commercial agreements where applicable.</p>
+            <h3 id="sec-31">31. Payment Processing</h3>
+            <h4>31.1 Payment Methods</h4>
+            <p>Payments on the Platform may be processed using one or more of the following methods:</p>
+            <ul><li>UPI</li><li>Net Banking</li><li>Debit Cards</li><li>Credit Cards</li><li>Bank Transfer</li><li>Digital Wallets</li><li>Corporate Billing</li><li>Other payment methods supported by the Platform</li><li>Payment processing may be carried out through authorized third-party payment service providers.</li></ul>
+            <h4>31.2 Payment Authorization</h4>
+            <p>By initiating a payment, you authorize Kaarigar and its payment service providers to process the transaction in accordance with the applicable payment instructions.</p>
+            <h4>31.3 Third-Party Payment Providers</h4>
+            <p>Payment services may be provided by independent third-party providers.</p>
+            <p>Kaarigar is not responsible for delays, failures, security incidents, or technical issues attributable to such third-party providers, except to the extent required by applicable law.</p>
+            <h4>31.4 Failed Payments</h4>
+            <p>Where a payment cannot be processed due to insufficient funds, technical issues, chargebacks, payment reversals, or other reasons, Kaarigar may suspend or restrict access to relevant services until the outstanding amount is resolved.</p>
+            <h3 id="sec-32">32. Taxes</h3>
+            <h4>32.1 User Responsibility</h4>
+            <p>Each User is responsible for determining and complying with their own tax obligations arising from the use of the Platform or any engagement facilitated through it.</p>
+            <h4>32.2 Employer Responsibility</h4>
+            <p>Employers are responsible for complying with all applicable tax laws, including any withholding obligations, where applicable.</p>
+            <h4>32.3 Worker Responsibility</h4>
+            <p>Workers are responsible for complying with any tax obligations applicable to their income earned through engagements facilitated by the Platform.</p>
+            <h4>32.4 GST</h4>
+            <p>Where GST or any other indirect taxes are applicable to Platform services, such taxes may be charged in addition to the applicable fees, in accordance with prevailing law.</p>
+            <h3 id="sec-33">33. Refunds</h3>
+            <h4>33.1 Refund Eligibility</h4>
+            <p>Refunds, if any, shall be governed by Kaarigar's Cancellation &amp; Refund Policy.</p>
+            <h4>33.2 Non-Refundable Charges</h4>
+            <p>Unless otherwise specified:</p>
+            <ul><li>Verification Fees</li><li>Subscription Fees</li><li>Platform Convenience Fees</li><li>Administrative Charges</li><li>Promotional Services may be non-refundable.</li></ul>
+            <h4>33.3 Exceptional Circumstances</h4>
+            <p>Kaarigar may, at its sole discretion, issue full or partial refunds in exceptional circumstances, without creating any obligation to do so in future cases.</p>
+            <h3 id="sec-34">34. Wallet, Credits &amp; Promotional Benefits</h3>
+            <h4>34.1 Digital Wallet</h4>
+            <p>Kaarigar may introduce a digital wallet facility allowing Users to maintain balances for Platform transactions.</p>
+            <p>The wallet shall be subject to separate terms, applicable laws, and any operational limits prescribed by Kaarigar.</p>
+            <h4>34.2 Promotional Credits</h4>
+            <p>The Platform may offer promotional credits, referral bonuses, incentives, coupons, or other benefits.</p>
+            <p>Such benefits:</p>
+            <ul><li>have no cash value unless expressly stated;</li><li>may be subject to expiry;</li><li>may be withdrawn or modified at any time;</li><li>are non-transferable unless expressly permitted.</li></ul>
+            <h4>34.3 Referral Programs</h4>
+            <p>Kaarigar may operate referral programs from time to time.</p>
+            <p>Participation shall be governed by the applicable referral program terms, including eligibility criteria, reward conditions, and restrictions.</p>
+            <h3 id="sec-35">35. Subscriptions</h3>
+            <h4>35.1 Subscription Plans</h4>
+            <p>Kaarigar may offer subscription plans providing access to additional features or services.</p>
+            <p>Subscription benefits may include:</p>
+            <ul><li>Increased job posting limits.</li><li>Premium visibility.</li><li>AI-powered matching.</li><li>Advanced analytics.</li><li>Dedicated account management.</li><li>Priority support.</li><li>Enterprise integrations.</li><li>Other premium services.</li></ul>
+            <h4>35.2 Renewal</h4>
+            <p>Subscriptions may renew automatically where clearly disclosed and where permitted by applicable law, unless cancelled before the renewal date.</p>
+            <h4>35.3 Cancellation</h4>
+            <p>Users may cancel subscriptions in accordance with the applicable subscription terms.</p>
+            <p>Cancellation does not automatically entitle the User to a refund unless expressly provided.</p>
+            <h3 id="sec-36">36. Payment Disputes</h3>
+            <h4>36.1 Between Employers and Workers</h4>
+            <p>Payment disputes arising between Employers and Workers should first be resolved directly between the parties.</p>
+            <h4>36.2 Platform Assistance</h4>
+            <p>Where appropriate, Kaarigar may facilitate communication between the parties to assist in resolving disputes.</p>
+            <p>Such assistance is voluntary and does not make Kaarigar responsible for the underlying payment obligation.</p>
+            <h4>36.3 Investigation</h4>
+            <p>Kaarigar reserves the right to temporarily suspend disputed transactions or related Platform services while investigating allegations of fraud, misuse, or policy violations.</p>
+            <h3 id="sec-37">37. Fraudulent Payments</h3>
+            <p>Users shall not:</p>
+            <ul><li>Use stolen payment instruments.</li><li>Engage in chargeback fraud.</li><li>Reverse payments dishonestly.</li><li>Use unauthorized accounts.</li><li>Manipulate payment systems.</li><li>Circumvent Platform fees.</li><li>Attempt money laundering or other unlawful financial activities.</li><li>Kaarigar may suspend accounts, reverse benefits, recover losses, and report suspected unlawful activity to the appropriate authorities.</li></ul>
+            <h3 id="sec-38">38. Changes to Fees</h3>
+            <p>Kaarigar reserves the right to revise, introduce, modify, or discontinue any Platform fees, pricing models, subscription plans, or payment structures.</p>
+            <p>Where practicable, Users will receive advance notice of material pricing changes.</p>
+            <p>Updated pricing will become effective from the date specified in the relevant notice or publication.</p>
+            <h3 id="sec-39">39. No Financial Advice</h3>
+            <p>Kaarigar does not provide financial, tax, accounting, investment, or legal advice.</p>
+            <p>Users should seek independent professional advice regarding their financial or tax obligations.</p>
+            <h3 id="sec-40">40. Financial Records</h3>
+            <p>Users are responsible for maintaining their own records relating to payments, invoices, taxes, receipts, and other financial matters arising from their use of the Platform.</p>
+            <p>Kaarigar may make transaction histories or invoices available through the Platform where applicable but is not responsible for each User's statutory record-keeping obligations.</p>
+            <h2 class="k-legal__part" id="part-f-platform-rules-acceptable-use">PART F — PLATFORM RULES &amp; ACCEPTABLE USE</h2>
+            <h3 id="sec-41">41. Platform License</h3>
+            <h4>41.1 Limited License</h4>
+            <p>Subject to compliance with these Terms, Kaarigar grants Users a limited, non-exclusive, non-transferable, non-sublicensable and revocable license to access and use the Platform solely for its intended purposes.</p>
+            <p>This license does not transfer ownership of the Platform or any intellectual property rights.</p>
+            <h4>41.2 Restrictions</h4>
+            <p>Users shall not:</p>
+            <ul><li>Copy or reproduce the Platform.</li><li>Modify or create derivative works.</li><li>Reverse engineer, decompile or disassemble any software.</li><li>Sell, lease or sublicense Platform access.</li><li>Circumvent Platform security.</li><li>Remove copyright notices.</li><li>Access source code.</li><li>Build competing services using Kaarigar's technology.</li></ul>
+            <h4>41.3 License Termination</h4>
+            <p>This license automatically terminates if the User violates these Terms.</p>
+            <p>Upon termination, Users must immediately cease using the Platform.</p>
+            <h3 id="sec-42">42. Intellectual Property</h3>
+            <h4>42.1 Ownership</h4>
+            <p>All intellectual property rights relating to the Platform are owned by or licensed to Kaarigar.</p>
+            <p>This includes, without limitation:</p>
+            <ul><li>Software</li><li>Mobile Applications</li><li>Website</li><li>Logo</li><li>Brand Name</li><li>Trademark</li><li>Trade Dress</li><li>User Interface (UI)</li><li>User Experience (UX)</li><li>Graphics</li><li>Icons</li><li>Design Elements</li><li>Databases</li><li>AI Models</li><li>Matching Algorithms</li><li>Documentation</li><li>Videos</li><li>Marketing Materials</li><li>Source Code</li><li>APIs</li><li>Business Methods</li><li>Domain Names</li><li>Nothing in these Terms transfers ownership of these rights to any User.</li></ul>
+            <h4>42.2 Trademark Protection</h4>
+            <p>"Kaarigar", the Kaarigar logo, taglines, and associated branding are valuable intellectual property.</p>
+            <p>Users shall not use, reproduce, modify, register, or imitate Kaarigar's trademarks without prior written consent.</p>
+            <h4>42.3 Feedback</h4>
+            <p>If a User provides suggestions, ideas, feature requests, bug reports, or other feedback relating to the Platform, the User grants Kaarigar a worldwide, perpetual, irrevocable, royalty-free license to use, modify, commercialize, and incorporate such feedback without any obligation to compensate the User.</p>
+            <h3 id="sec-43">43. User Content</h3>
+            <h4>43.1 Ownership of User Content</h4>
+            <p>Users retain ownership of the content they upload to the Platform.</p>
+            <p>However, by uploading content, Users grant Kaarigar a non-exclusive, worldwide, royalty-free license to host, store, reproduce, display, process, and use such content solely for operating, improving, promoting, securing, and providing the Platform.</p>
+            <h4>43.2 Responsibility</h4>
+            <p>Users are solely responsible for the content they upload.</p>
+            <p>Users warrant that they have the necessary rights and permissions to upload such content.</p>
+            <h4>43.3 Prohibited Content</h4>
+            <p>Users shall not upload content that:</p>
+            <ul><li>Is false or misleading.</li><li>Is defamatory.</li><li>Is obscene or pornographic.</li><li>Promotes violence or hatred.</li><li>Infringes intellectual property rights.</li><li>Contains malware or harmful code.</li><li>Violates privacy rights.</li><li>Is unlawful.</li><li>Kaarigar may remove such content without prior notice.</li></ul>
+            <h3 id="sec-44">44. AI Features</h3>
+            <h4>44.1 AI-Based Services</h4>
+            <p>The Platform may use artificial intelligence, machine learning, automation, or algorithmic systems to enhance services, including:</p>
+            <ul><li>Worker matching</li><li>Employer recommendations</li><li>Search ranking</li><li>Fraud detection</li><li>Duplicate account detection</li><li>Skill suggestions</li><li>Profile scoring</li><li>Spam detection</li><li>Safety monitoring</li><li>Analytics</li></ul>
+            <h4>44.2 No Guarantee</h4>
+            <p>AI-generated recommendations are intended to assist Users and should not be considered guarantees of suitability, performance, or outcomes.</p>
+            <p>Users remain responsible for exercising independent judgment.</p>
+            <h4>44.3 Future AI Services</h4>
+            <p>Kaarigar may introduce additional AI-powered features from time to time, including interview assistance, resume analysis, workforce forecasting, or productivity tools, subject to applicable laws and these Terms.</p>
+            <h3 id="sec-45">45. Communications</h3>
+            <h4>45.1 Platform Communications</h4>
+            <p>By using the Platform, Users consent to receive communications relating to their account and use of the Platform through channels such as:</p>
+            <ul><li>SMS</li><li>Email</li><li>Push Notifications</li><li>WhatsApp (where available)</li><li>In-app Notifications</li><li>Phone Calls (where appropriate)</li><li>These communications may include account updates, job alerts, security notifications, transactional messages, and service announcements.</li></ul>
+            <h4>45.2 Marketing Communications</h4>
+            <p>Where required by applicable law, Users may opt in or opt out of receiving promotional communications.</p>
+            <p>Transactional or service-related communications may continue to be sent even if marketing communications are declined.</p>
+            <h3 id="sec-46">46. Third-party Services</h3>
+            <p>The Platform may integrate with third-party services, including:</p>
+            <ul><li>Payment gateways</li><li>SMS providers</li><li>Email providers</li><li>Maps</li><li>Identity verification services</li><li>Analytics providers</li><li>Cloud hosting providers</li><li>Background verification providers</li><li>Kaarigar is not responsible for the products, services, policies, or availability of such third-party providers.</li><li>Users' interactions with third parties are governed by the applicable third-party terms and policies.</li></ul>
+            <h3 id="sec-47">47. Acceptable Use Policy</h3>
+            <p>Users agree to use the Platform only for lawful purposes and in a manner consistent with these Terms.</p>
+            <p>Users shall not:</p>
+            <ul><li>Use the Platform for fraudulent purposes.</li><li>Attempt unauthorized access.</li><li>Interfere with Platform operations.</li><li>Upload viruses or malicious code.</li><li>Misuse Platform features.</li><li>Create fake accounts.</li><li>Impersonate others.</li><li>Circumvent Platform fees.</li><li>Violate applicable laws.</li><li>Harass or threaten other users.</li><li>Misuse personal information.</li><li>Attempt to disrupt the Platform.</li></ul>
+            <h3 id="sec-48">48. Automated Access &amp; Data Scraping</h3>
+            <p>Without prior written permission, Users shall not:</p>
+            <ul><li>Use bots or automated scripts.</li><li>Scrape Platform data.</li><li>Crawl the Platform.</li><li>Copy databases.</li><li>Mine user information.</li><li>Build competing datasets.</li><li>Use automated account creation tools.</li><li>Perform bulk downloading of content.</li><li>Kaarigar may block, suspend, or take legal action against unauthorized automated access.</li></ul>
+            <h3 id="sec-49">49. Security</h3>
+            <p>Users shall not:</p>
+            <ul><li>Attempt penetration testing without authorization.</li><li>Probe vulnerabilities.</li><li>Bypass authentication systems.</li><li>Introduce malicious software.</li><li>Launch denial-of-service attacks.</li><li>Interfere with Platform infrastructure.</li><li>Attempt to gain unauthorized access to user accounts or systems.</li><li>Suspected security incidents may be investigated and reported to the appropriate authorities where required.</li></ul>
+            <h3 id="sec-50">50. Platform Modifications</h3>
+            <p>Kaarigar may, at its discretion:</p>
+            <ul><li>Introduce new features.</li><li>Modify existing features.</li><li>Discontinue services.</li><li>Conduct maintenance.</li><li>Release beta features.</li><li>Update the user interface.</li><li>Change matching logic.</li><li>Improve Platform functionality.</li><li>Such changes do not create an obligation to maintain any particular feature indefinitely.</li></ul>
+            <h3 id="sec-51">51. Beta Features</h3>
+            <p>From time to time, Kaarigar may make beta, experimental, or early-access features available.</p>
+            <p>These features are provided "as is" and may be modified, suspended, or withdrawn without notice.</p>
+            <p>Users participate in beta programs at their own discretion and are encouraged to provide feedback.</p>
+            <h3 id="sec-52">52. Open API &amp; Integrations (Future)</h3>
+            <p>If Kaarigar offers APIs or integration services:</p>
+            <ul><li>Access will be subject to separate API terms.</li><li>API credentials must be kept secure.</li><li>Excessive or abusive API usage may result in suspension.</li><li>APIs must not be used to build competing services or extract user data beyond the permitted scope.</li></ul>
+            <h3 id="sec-53">53. Platform Availability</h3>
+            <p>While Kaarigar aims to provide reliable access, it does not guarantee uninterrupted, error-free, or continuous availability.</p>
+            <p>The Platform may be temporarily unavailable due to maintenance, upgrades, security incidents, network failures, force majeure events, or third-party service disruptions.</p>
+            <h3 id="sec-54">54. Data Backup</h3>
+            <p>Users are responsible for maintaining copies of any important information they upload or generate through the Platform.</p>
+            <p>Although Kaarigar may maintain backups for operational purposes, it does not guarantee the recovery of lost user data.</p>
+            <h2 class="k-legal__part" id="part-g-trust-safety-legal-enforcement">PART G — TRUST, SAFETY &amp; LEGAL ENFORCEMENT</h2>
+            <h3 id="sec-55">55. Trust &amp; Safety</h3>
+            <h4>55.1 Safe Marketplace</h4>
+            <p>Kaarigar is committed to maintaining a safe, professional, and trustworthy platform for all Users.</p>
+            <p>To achieve this, Kaarigar may implement measures including:</p>
+            <ul><li>Identity verification</li><li>Business verification</li><li>Document verification</li><li>OTP-based attendance verification</li><li>AI-powered fraud detection</li><li>Manual profile reviews</li><li>Ratings and reviews</li><li>Complaint handling</li><li>Account monitoring</li><li>Risk-based restrictions</li></ul>
+            <p>These measures are intended to improve trust and reduce misuse but do not guarantee the conduct, identity, or reliability of any User.</p>
+            <h4>55.2 Reporting Misconduct</h4>
+            <p>Users are encouraged to promptly report:</p>
+            <ul><li>Fraud</li><li>Fake profiles</li><li>Identity misuse</li><li>Harassment</li><li>Discrimination</li><li>Unsafe workplaces</li><li>Illegal activities</li><li>Workplace violence</li><li>Payment fraud</li><li>Misuse of Platform features</li><li>Reports may be submitted through the Platform or designated support channels.</li></ul>
+            <h4>55.3 Investigation</h4>
+            <p>Kaarigar may investigate reported misconduct and may request information or documents from the parties involved.</p>
+            <p>Failure to cooperate with a reasonable investigation may result in restrictions or suspension of the relevant account.</p>
+            <h3 id="sec-56">56. Complaints &amp; Dispute Assistance</h3>
+            <h4>56.1 User Complaints</h4>
+            <p>Users may raise complaints relating to:</p>
+            <ul><li>Account access</li><li>Job postings</li><li>Worker conduct</li><li>Employer conduct</li><li>Payments</li><li>Platform functionality</li><li>Ratings and reviews</li><li>Verification</li><li>Privacy concerns</li><li>Kaarigar will use reasonable efforts to review complaints in a timely manner.</li></ul>
+            <h4>56.2 Platform Facilitation</h4>
+            <p>Where appropriate, Kaarigar may facilitate communication between Employers and Workers to assist in resolving disputes.</p>
+            <p>Such facilitation is voluntary and does not make Kaarigar a mediator, arbitrator, employer, contractor, principal employer, or guarantor of any outcome.</p>
+            <h4>56.3 Independent Resolution</h4>
+            <p>Unless otherwise agreed in writing, disputes arising directly between Employers and Workers should first be resolved between those parties.</p>
+            <h3 id="sec-57">57. Account Suspension</h3>
+            <p>Kaarigar may suspend or restrict a User account where it reasonably believes that the User has:</p>
+            <ul><li>Violated these Terms.</li><li>Submitted false information.</li><li>Used forged documents.</li><li>Engaged in fraudulent conduct.</li><li>Misused Platform features.</li><li>Harassed or abused other Users.</li><li>Attempted unauthorized access.</li><li>Compromised Platform security.</li><li>Violated applicable laws.</li><li>Failed to comply with reasonable requests during investigations.</li></ul>
+            <p>Where appropriate, Kaarigar may provide notice before suspension unless immediate action is necessary to protect users, comply with legal obligations, or safeguard the Platform.</p>
+            <h3 id="sec-58">58. Termination</h3>
+            <h4>58.1 Termination by User</h4>
+            <p>Users may close their account at any time through the Platform or by contacting support, subject to the completion of outstanding obligations and any applicable legal or contractual requirements.</p>
+            <h4>58.2 Termination by Kaarigar</h4>
+            <p>Kaarigar may terminate or permanently disable an account where:</p>
+            <ul><li>Serious violations of these Terms occur.</li><li>Fraud is established.</li><li>Repeated misuse of the Platform is identified.</li><li>Required by law or a competent authority.</li><li>Continued access poses a risk to the Platform or other Users.</li><li>Termination does not affect any rights or obligations that accrued prior to termination.</li></ul>
+            <h3 id="sec-59">59. Disclaimer of Warranties</h3>
+            <p>The Platform is provided on an "as is" and "as available" basis.</p>
+            <p>To the fullest extent permitted by applicable law, Kaarigar disclaims all warranties, whether express, implied, statutory, or otherwise, including warranties relating to:</p>
+            <ul><li>Merchantability</li><li>Fitness for a particular purpose</li><li>Accuracy</li><li>Availability</li><li>Reliability</li><li>Non-infringement</li><li>Security</li><li>Continuous operation</li></ul>
+            <p>Kaarigar does not guarantee that:</p>
+            <ul><li>Workers will be available.</li><li>Employers will hire.</li><li>Jobs will be completed.</li><li>Payments will be made.</li><li>The Platform will always be uninterrupted or error-free.</li><li>Matches generated by the Platform will meet a User's expectations.</li></ul>
+            <h3 id="sec-60">60. Limitation of Liability</h3>
+            <p>To the maximum extent permitted by applicable law, Kaarigar shall not be liable for any indirect, incidental, consequential, exemplary, punitive, or special damages arising out of or relating to the use of the Platform, including but not limited to:</p>
+            <ul><li>Loss of profits</li><li>Loss of business</li><li>Loss of opportunities</li><li>Loss of reputation</li><li>Loss of data</li><li>Business interruption</li><li>Personal disputes between Users</li><li>Workplace incidents</li><li>Delays or cancellations</li><li>Technical failures</li></ul>
+            <p>Where liability cannot legally be excluded, Kaarigar's aggregate liability shall be limited to the amount of Platform service fees paid by the affected User to Kaarigar during the three (3) months immediately preceding the event giving rise to the claim, or ₹5,000, whichever is lower, unless a higher limit is required under applicable law.</p>
+            <h3 id="sec-61">61. Indemnity</h3>
+            <p>Users agree to defend, indemnify, and hold harmless Kaarigar, its affiliates, directors, officers, employees, consultants, and agents from and against any claims, liabilities, damages, losses, costs, or expenses (including reasonable legal fees) arising out of or relating to:</p>
+            <ul><li>Their breach of these Terms.</li><li>Violation of applicable laws.</li><li>Misuse of the Platform.</li><li>Infringement of third-party rights.</li><li>Fraudulent or unlawful conduct.</li><li>Content submitted by the User.</li><li>This obligation survives termination of the User's account.</li></ul>
+            <h3 id="sec-62">62. Force Majeure</h3>
+            <p>Kaarigar shall not be liable for any failure or delay in performing its obligations where such failure or delay results from events beyond its reasonable control, including:</p>
+            <ul><li>Natural disasters</li><li>Floods</li><li>Fires</li><li>Earthquakes</li><li>Epidemics or pandemics</li><li>Government actions</li><li>War</li><li>Terrorism</li><li>Civil unrest</li><li>Strikes</li><li>Power failures</li><li>Internet outages</li><li>Cyber-attacks</li><li>Failure of third-party service providers</li></ul>
+            <h3 id="sec-63">63. Governing Law</h3>
+            <p>These Terms shall be governed by and construed in accordance with the laws of India, without regard to conflict of law principles.</p>
+            <h3 id="sec-64">64. Dispute Resolution</h3>
+            <h4>64.1 Amicable Resolution</h4>
+            <p>Before initiating formal legal proceedings, the parties shall make reasonable efforts to resolve disputes through good-faith discussions within thirty (30) days after written notice of the dispute.</p>
+            <h4>64.2 Arbitration</h4>
+            <p>If a dispute is not resolved amicably, it shall be referred to arbitration in accordance with the Arbitration and Conciliation Act, 1996, as amended.</p>
+            <p>Unless otherwise agreed:</p>
+            <p>The arbitration shall be conducted by a sole arbitrator appointed by mutual agreement of the parties. If the parties fail to agree, the appointment shall be made in accordance with applicable law.</p>
+            <p>The seat and venue of arbitration shall be Vadodara, Gujarat, India.</p>
+            <p>The arbitration proceedings shall be conducted in the English language.</p>
+            <p>Nothing in this clause prevents either party from seeking interim or injunctive relief from a court of competent jurisdiction where necessary.</p>
+            <h3 id="sec-65">65. Jurisdiction</h3>
+            <p>Subject to the arbitration provisions above, courts located in Vadodara, Gujarat, India shall have exclusive jurisdiction over matters that are not required to be referred to arbitration or where judicial intervention is permitted under applicable law.</p>
+            <h3 id="sec-66">66. Changes to These Terms</h3>
+            <p>Kaarigar may revise these Terms from time to time.</p>
+            <p>Material changes will be communicated through the Platform, email, or other reasonable means.</p>
+            <p>Continued use of the Platform after the effective date of revised Terms constitutes acceptance of the updated Terms, unless applicable law requires a different process.</p>
+            <h3 id="sec-67">67. Severability</h3>
+            <p>If any provision of these Terms is held to be invalid, illegal, or unenforceable by a court or tribunal of competent jurisdiction, the remaining provisions shall remain in full force and effect.</p>
+            <h3 id="sec-68">68. Waiver</h3>
+            <p>Any failure or delay by Kaarigar in exercising a right or remedy under these Terms shall not constitute a waiver of that right or remedy.</p>
+            <p>A waiver shall be effective only if made in writing by an authorized representative of Kaarigar.</p>
+            <h3 id="sec-69">69. Assignment</h3>
+            <p>Users may not assign or transfer their rights or obligations under these Terms without Kaarigar's prior written consent.</p>
+            <p>Kaarigar may assign or transfer its rights and obligations under these Terms, including as part of a merger, acquisition, corporate restructuring, or sale of assets, subject to applicable law.</p>
+            <h3 id="sec-70">70. Entire Agreement</h3>
+            <p>These Terms, together with the Privacy Policy, Cancellation &amp; Refund Policy, and any other policies expressly incorporated by reference, constitute the entire agreement between the User and Kaarigar regarding the use of the Platform and supersede all prior discussions, understandings, or agreements relating to the subject matter.</p>
+            <h3 id="sec-71">71. Contact Information</h3>
+            <p>For questions, notices, complaints, or legal communications relating to these Terms, Users may contact:</p>
+            <ul><li>Kaarigar Technologies</li><li>Email: info@kaarigar.co</li><li>Phone: +91-9726728838</li></ul>
+            <p>Branch Office: Office No. 21, 4th Floor, Darshnam Trade Center-II, Near Surya Palace Hotel, Sayajigunj, Vadodara — 390020, Gujarat, India</p>
+            <h2 class="k-legal__part" id="part-h-special-platform-policies">PART H — SPECIAL PLATFORM POLICIES</h2>
+            <p>This section strengthens Kaarigar's position as a trusted and compliant marketplace by addressing operational, ethical, and safety standards that go beyond general terms.</p>
+            <h3 id="sec-72">72. Anti-fraud Policy</h3>
+            <h4>72.1 Commitment</h4>
+            <p>Kaarigar is committed to preventing fraud, identity theft, payment abuse, fake job postings, fake worker profiles, and misuse of the Platform.</p>
+            <h4>72.2 Fraud Detection</h4>
+            <p>Kaarigar may use:</p>
+            <ul><li>AI-based fraud detection</li><li>Identity verification</li><li>Device fingerprinting</li><li>OTP verification</li><li>Behaviour monitoring</li><li>Manual review</li><li>Duplicate account detection</li><li>Payment risk analysis</li><li>IP monitoring</li><li>Geo-location verification (where permitted)</li><li>to protect the Platform.</li></ul>
+            <h4>72.3 Fraudulent Activities</h4>
+            <p>The following are strictly prohibited:</p>
+            <ul><li>Fake identities</li><li>Fake companies</li><li>Fake workers</li><li>Fake documents</li><li>Fake payments</li><li>Fake reviews</li><li>Fake attendance</li><li>Fake GPS location</li><li>Fake OTP verification</li><li>Money laundering</li><li>Payment manipulation</li><li>Identity theft</li><li>Chargeback abuse</li><li>Account selling</li><li>Buying fake ratings</li></ul>
+            <h4>72.4 Consequences</h4>
+            <p>Fraud may result in:</p>
+            <ul><li>Immediate suspension</li><li>Permanent ban</li><li>Cancellation of transactions</li><li>Recovery of losses</li><li>Reporting to law enforcement</li><li>Civil legal proceedings</li><li>Criminal complaints</li></ul>
+            <h3 id="sec-73">73. Verification Policy</h3>
+            <p>Verification helps build trust but is not a guarantee.</p>
+            <p>Kaarigar may verify:</p>
+            <ul><li>Employers</li><li>GST</li><li>PAN</li><li>Company Registration</li><li>Business Address</li><li>Contact Person</li><li>Mobile</li><li>Email</li><li>Workers</li><li>Aadhaar (where legally permissible and with consent)</li><li>PAN (where applicable)</li><li>Driving Licence</li><li>Voter ID</li><li>Passport</li><li>Skill Certificates</li><li>Experience</li><li>Mobile Number</li><li>Selfie Verification</li><li>Verification status may change over time.</li><li>Users must immediately update incorrect information.</li></ul>
+            <h3 id="sec-74">74. Safety Policy</h3>
+            <p>Every User deserves a safe workplace.</p>
+            <p>Employers agree to provide:</p>
+            <ul><li>Safe environment</li><li>PPE where applicable</li><li>Drinking water</li><li>Washroom access</li><li>Emergency procedures</li><li>Lawful work</li></ul>
+            <p>Workers agree to:</p>
+            <ul><li>Follow safety rules</li><li>Wear PPE</li><li>Avoid unsafe behaviour</li><li>Report hazards immediately</li></ul>
+            <h3 id="sec-75">75. Community Guidelines</h3>
+            <p>Users should:</p>
+            <ul><li>Respect everyone</li><li>Be professional</li><li>Be honest</li><li>Avoid abusive language</li><li>Avoid discrimination</li><li>Avoid harassment</li><li>Respect privacy</li><li>Follow workplace etiquette</li></ul>
+            <p>Kaarigar has zero tolerance for:</p>
+            <ul><li>Violence</li><li>Hate speech</li><li>Sexual harassment</li><li>Racism</li><li>Caste discrimination</li><li>Religious discrimination</li><li>Threats</li><li>Stalking</li><li>Bullying</li></ul>
+            <h3 id="sec-76">76. Quality Policy</h3>
+            <p>Kaarigar continuously improves marketplace quality using:</p>
+            <ul><li>Ratings</li><li>Reviews</li><li>AI</li><li>Employer feedback</li><li>Worker feedback</li><li>Complaint history</li><li>Attendance history</li><li>Response time</li><li>Job completion rate</li><li>Poor quality may reduce visibility.</li></ul>
+            <h3 id="sec-77">77. Document Verification Policy</h3>
+            <p>Users shall upload only genuine documents.</p>
+            <p>Forgery may lead to:</p>
+            <ul><li>Permanent suspension</li><li>Police complaint</li><li>Blacklisting</li><li>Civil recovery</li></ul>
+            <h3 id="sec-78">78. Workplace Conduct</h3>
+            <p>Workers must not:</p>
+            <ul><li>Consume alcohol</li><li>Consume illegal drugs</li><li>Carry illegal weapons</li><li>Fight</li><li>Abuse customers</li><li>Damage property</li><li>Steal</li><li>Smoke where prohibited</li></ul>
+            <p>Employers shall not:</p>
+            <ul><li>Abuse workers</li><li>Physically threaten workers</li><li>Force overtime unlawfully</li><li>Withhold agreed payments</li><li>Engage in unlawful discrimination</li><li>Provide unsafe working conditions</li></ul>
+            <h3 id="sec-79">79. Communication Policy</h3>
+            <p>Users shall communicate professionally.</p>
+            <p>The following are prohibited:</p>
+            <ul><li>Spam</li><li>Threats</li><li>Fake promises</li><li>Offensive messages</li><li>Sharing malicious links</li><li>Impersonation</li></ul>
+            <h3 id="sec-80">80. Account Security</h3>
+            <p>Users must:</p>
+            <ul><li>Keep passwords confidential.</li><li>Enable available security features.</li><li>Report unauthorized access promptly.</li><li>Avoid sharing OTPs or login credentials.</li><li>Users remain responsible for activity on their accounts until unauthorized access is reported.</li></ul>
+            <h3 id="sec-81">81. Platform Improvement</h3>
+            <p>Kaarigar may continuously improve:</p>
+            <ul><li>AI Matching</li><li>Worker Discovery</li><li>Search Algorithms</li><li>Verification Systems</li><li>Fraud Detection</li><li>Ratings</li><li>User Experience</li><li>Mobile Applications</li><li>APIs</li><li>Employer Dashboard</li><li>Worker Dashboard</li><li>No prior notice is required for minor improvements.</li></ul>
+            <h3 id="sec-82">82. Records &amp; Electronic Consent</h3>
+            <p>Users agree that:</p>
+            <p>Electronic acceptance of these Terms is legally binding.</p>
+            <p>Electronic records, logs, OTP confirmations, digital acknowledgements, and transaction histories maintained by Kaarigar may be used as evidence to the extent permitted by applicable law.</p>
+            <p>Communications sent electronically shall be deemed received in accordance with applicable law and platform procedures.</p>
+            <h3 id="sec-83">83. Compliance with Applicable Laws</h3>
+            <p>Users agree to comply with all applicable laws, regulations, governmental orders, and industry standards relevant to their use of the Platform</p>
+            <p>Nothing in these Terms authorizes or requires a User to act unlawfully.</p>
+            <h3 id="sec-84">84. Survival</h3>
+            <p>The following provisions shall survive termination of a User's account to the extent necessary by their nature:</p>
+            <ul><li>Intellectual Property</li><li>Confidentiality</li><li>Privacy</li><li>Payment Obligations</li><li>Indemnity</li><li>Limitation of Liability</li><li>Governing Law</li><li>Dispute Resolution</li><li>Record Retention</li><li>Any accrued rights or obligations</li></ul>
+            <h3 id="sec-85">85. Interpretation</h3>
+            <p>Headings are provided for convenience only and do not affect interpretation.</p>
+            <p>Words importing the singular include the plural and vice versa where the context requires.</p>
+            <p>References to "including" mean "including without limitation."</p>
+            <h3 id="sec-86">86. Contact &amp; Legal Notices</h3>
+            <p>Formal legal notices relating to these Terms shall be sent to the contact details published by Kaarigar or any updated contact details notified through the Platform.</p>
+            <h3 id="sec-87">87. Anti-Discrimination &amp; Equal Opportunity</h3>
+            <p>Kaarigar is committed to providing a professional, respectful, and inclusive marketplace where businesses and workers can connect fairly.</p>
+            <p>All Users are expected to treat one another with dignity, respect, and professionalism.</p>
+            <p>Kaarigar does not tolerate unlawful discrimination, harassment, or abusive conduct on the Platform.</p>
+            <h4>87.1 Equal Opportunity</h4>
+            <p>Employers are encouraged to make hiring decisions based on legitimate business requirements, qualifications, skills, experience, availability, and suitability for the role.</p>
+            <p>Workers are expected to interact professionally with Employers, customers, and other workers.</p>
+            <h4>87.2 Prohibited Conduct</h4>
+            <p>Users shall not discriminate against another User on the basis of any characteristic protected under applicable law, including, where applicable:</p>
+            <ul><li>Religion</li><li>Caste</li><li>Race</li><li>Ethnicity</li><li>Nationality</li><li>Gender</li><li>Gender Identity</li><li>Sexual Orientation</li><li>Disability</li><li>Age</li><li>Marital Status</li><li>Pregnancy or Maternity</li><li>Language</li><li>Any other characteristic protected by applicable law</li><li>Nothing in this clause prevents an Employer from specifying lawful, genuine occupational requirements where permitted by applicable law.</li></ul>
+            <h4>87.3 Harassment</h4>
+            <p>The following conduct is prohibited:</p>
+            <ul><li>Sexual harassment</li><li>Threats</li><li>Bullying</li><li>Intimidation</li><li>Offensive language</li><li>Hate speech</li><li>Stalking</li><li>Physical abuse</li><li>Verbal abuse</li><li>Online harassment</li></ul>
+            <h4>87.4 Reporting</h4>
+            <p>Users who experience or witness discrimination or harassment may report the matter through the Platform or Kaarigar's support channels.</p>
+            <p>Kaarigar may review reports and take appropriate action in accordance with these Terms.</p>
+            <h4>87.5 Platform Action</h4>
+            <p>Depending on the circumstances, Kaarigar may:</p>
+            <ul><li>Issue warnings</li><li>Remove offending content</li><li>Restrict Platform access</li><li>Suspend accounts</li><li>Permanently terminate accounts</li><li>Report unlawful conduct to competent authorities where required</li></ul>
+            <h4>87.6 Kaarigar's Role</h4>
+            <p>Kaarigar is a technology marketplace and does not supervise or control day-to-day workplace conduct.</p>
+            <p>However, Kaarigar reserves the right to take action against Users who engage in conduct that violates this policy or undermines the safety, integrity, or trust of the Platform.</p>
     </div>
 </section>
 

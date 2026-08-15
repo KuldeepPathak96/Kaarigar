@@ -11,7 +11,7 @@
         <div>
             <h1 class="k-dash-title">
                 Welcome back,
-                @(Model.CompanyName ?? Model.EmployerName) 👋
+                @(Model.CompanyName ?? Model.EmployerName) <i data-lucide="hand" style="width:22px;height:22px;vertical-align:-4px;"></i>
             </h1>
             <p class="k-dash-subtitle">Here's an overview of your hiring activity.</p>
         </div>
@@ -97,13 +97,13 @@
     <div class="k-dash-section">
         <div class="k-dash-section__header">
             <h2 class="k-dash-section__title">Recent Applicant Activity</h2>
-            <a href="/job/my-jobs" class="k-dash-section__link">View all →</a>
+            <a href="/job/my-jobs" class="k-dash-section__link">View all <i data-lucide="arrow-right" style="width:14px;height:14px;vertical-align:-2px;"></i></a>
         </div>
 
         @if (!Model.RecentActivity.Any())
         {
             <div class="k-empty-state">
-                <div class="k-empty-state__icon">📋</div>
+                <div class="k-empty-state__icon"><i data-lucide="clipboard-list"></i></div>
                 @if (Model.TotalJobsPosted > 0)
                 {
                     <p class="k-empty-state__text">No worker applications yet. Workers matching your job(s) are being notified — check back soon.</p>

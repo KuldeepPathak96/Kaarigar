@@ -54,7 +54,7 @@
                     @if (!string.IsNullOrEmpty(app.LocationLabel))
                     {
                         <p class="k-job-card__meta">
-                            📍 @app.LocationLabel
+                            <i data-lucide="map-pin" style="width:14px;height:14px;vertical-align:-2px;"></i> @app.LocationLabel
                             @if (!string.IsNullOrEmpty(app.MapUrl))
                             {
                                 <a href="@app.MapUrl" target="_blank" rel="noopener" style="margin-left:6px">(View Map)</a>
@@ -64,7 +64,7 @@
 
                     @if (app.HourlyWageAmt.HasValue)
                     {
-                        <p class="k-job-card__meta">💰 ₹@app.HourlyWageAmt.Value.ToString("N0") / hour</p>
+                        <p class="k-job-card__meta"><i data-lucide="banknote" style="width:14px;height:14px;vertical-align:-2px;"></i> ₹@app.HourlyWageAmt.Value.ToString("N0") / hour</p>
                     }
 
                     <p class="k-job-card__meta" style="color:#aaa;font-size:12px">Applied @app.AppliedTs.ToString("dd MMM yyyy")</p>
@@ -74,12 +74,12 @@
 
                         @if (app.StatusCd == "COMPLETED")
                         {
-                            <div class="k-alert k-alert--success">✅ Job completed. Thank you!</div>
+                            <div class="k-alert k-alert--success"><i data-lucide="check-circle" style="width:16px;height:16px;vertical-align:-3px;"></i> Job completed. Thank you!</div>
                         }
                         else if (app.AwaitingSatisfactionOtp)
                         {
                             <div class="k-alert k-alert--info">
-                                🏁 Job started! Ask the employer for the <strong>Satisfaction OTP</strong> once the work is done, and enter it below.
+                                <i data-lucide="flag" style="width:16px;height:16px;vertical-align:-3px;"></i> Job started! Ask the employer for the <strong>Satisfaction OTP</strong> once the work is done, and enter it below.
                             </div>
                             <form asp-action="VerifyOtp" asp-controller="EmployeeJob" asp-route-id="@app.JobApplicationId"
                                   method="post" class="k-inline-form" style="gap:8px">
@@ -91,7 +91,7 @@
                         else if (app.AwaitingJobStartOtp)
                         {
                             <div class="k-alert k-alert--info">
-                                📍 Ask the employer for the <strong>Job Starting OTP</strong> once you reach the location, and enter it below.
+                                <i data-lucide="map-pin" style="width:16px;height:16px;vertical-align:-3px;"></i> Ask the employer for the <strong>Job Starting OTP</strong> once you reach the location, and enter it below.
                             </div>
                             <form asp-action="VerifyOtp" asp-controller="EmployeeJob" asp-route-id="@app.JobApplicationId"
                                   method="post" class="k-inline-form" style="gap:8px">

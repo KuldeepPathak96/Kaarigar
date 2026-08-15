@@ -22,7 +22,7 @@
         {
             <!-- SUCCESS STATE -->
             <div class="k-auth-success">
-                <div class="k-success-icon">✅</div>
+                <div class="k-success-icon"><i data-lucide="check-circle"></i></div>
                 <h2>Account Created Successfully!</h2>
                 <p>
                     Thank you for registering with Kaarigar.
@@ -53,12 +53,12 @@
                 <button type="button"
                         class="k-role-toggle__btn @(currentRole == "EMPLOYER" ? "active" : "")"
                         onclick="setRole('EMPLOYER')">
-                    🏗️ I'm an Employer
+                    <i data-lucide="briefcase" style="width:16px;height:16px;vertical-align:-3px;"></i> I'm an Employer
                 </button>
                 <button type="button"
                         class="k-role-toggle__btn @(currentRole == "EMPLOYEE" ? "active" : "")"
                         onclick="setRole('EMPLOYEE')">
-                    👷 I'm a Worker
+                    <i data-lucide="hard-hat" style="width:16px;height:16px;vertical-align:-3px;"></i> I'm a Worker
                 </button>
             </div>
 
@@ -71,7 +71,7 @@
                 @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage as string) || !ViewData.ModelState.IsValid)
                 {
                     <div class="k-alert k-alert--error">
-                        ⚠️
+                        <i data-lucide="alert-triangle" style="width:16px;height:16px;vertical-align:-3px;"></i>
                         @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage as string))
                         {
                             @ViewBag.ErrorMessage
@@ -210,7 +210,7 @@
                 <button type="submit"
                         class="k-btn k-btn--primary k-btn--full k-btn--submit"
                         id="submitBtn">
-                    <span id="submitBtnText">Create Account →</span>
+                    <span id="submitBtnText">Create Account <i data-lucide="arrow-right" style="width:15px;height:15px;vertical-align:-2px;"></i></span>
                     <span id="submitSpinner" class="k-spinner" style="display:none;"></span>
                 </button>
 

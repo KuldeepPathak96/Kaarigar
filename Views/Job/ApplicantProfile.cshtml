@@ -66,11 +66,11 @@
 
         @if (Model.StatusCd == "COMPLETED")
         {
-            <p class="k-empty-state__text">✅ Job Starting OTP and Satisfaction OTP have both been confirmed for this Kaarigar.</p>
+            <p class="k-empty-state__text"><i data-lucide="check-circle" style="width:15px;height:15px;vertical-align:-3px;"></i> Job Starting OTP and Satisfaction OTP have both been confirmed for this Kaarigar.</p>
         }
         else if (Model.StatusCd == "JOB_STARTED")
         {
-            <p class="k-empty-state__text">✅ Job Starting OTP confirmed. Generate the Satisfaction OTP from the <a href="/job/applicants/@Model.JobPostId">Applicants</a> table once the job is done.</p>
+            <p class="k-empty-state__text"><i data-lucide="check-circle" style="width:15px;height:15px;vertical-align:-3px;"></i> Job Starting OTP confirmed. Generate the Satisfaction OTP from the <a href="/job/applicants/@Model.JobPostId">Applicants</a> table once the job is done.</p>
         }
         else
         {

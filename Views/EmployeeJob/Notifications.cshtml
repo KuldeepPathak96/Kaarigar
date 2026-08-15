@@ -17,7 +17,7 @@
         @if (!Model.Notifications.Any())
         {
             <div class="k-empty-state">
-                <div class="k-empty-state__icon">📨</div>
+                <div class="k-empty-state__icon"><i data-lucide="bell"></i></div>
                 <p class="k-empty-state__text">No notifications yet. We'll alert you here (and on WhatsApp) when a matching job is posted.</p>
             </div>
         }
@@ -44,7 +44,7 @@
                                     @if (!string.IsNullOrEmpty(n.MapUrl))
                                     {
                                         <a href="@n.MapUrl" target="_blank" rel="noopener" class="k-btn k-btn--sm k-btn--secondary">
-                                            📍 View Map
+                                            <i data-lucide="map-pin" style="width:14px;height:14px;vertical-align:-2px;"></i> View Map
                                         </a>
                                     }
                                 </td>

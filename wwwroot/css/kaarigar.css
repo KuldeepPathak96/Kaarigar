@@ -893,6 +893,99 @@ img {
     margin: 0;
 }
 
+/* ── FAQ PAGE ────────────────────────────────────────────────────────────── */
+.k-faq-category {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--k-black);
+    margin: 2.5rem 0 1rem;
+}
+
+    .k-faq-category:first-child {
+        margin-top: 0;
+    }
+
+.k-faq-accordion {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.k-faq-item {
+    background: white;
+    border: 1px solid var(--k-border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+    .k-faq-item.active {
+        border-color: var(--k-yellow);
+        box-shadow: var(--shadow-card);
+    }
+
+.k-faq-item__head {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    font: inherit;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 1.1rem 1.25rem;
+}
+
+.k-faq-item__question {
+    flex: 1;
+    font-weight: 700;
+    font-size: 0.97rem;
+    color: var(--k-black);
+}
+
+.k-faq-item__chevron {
+    flex-shrink: 0;
+    color: var(--k-muted);
+    transition: transform 0.15s ease;
+}
+
+.k-faq-item.active .k-faq-item__chevron {
+    transform: rotate(180deg);
+    color: var(--k-black);
+}
+
+.k-faq-item__body {
+    display: none;
+    padding: 0 1.25rem 1.25rem;
+}
+
+    .k-faq-item.active .k-faq-item__body {
+        display: block;
+    }
+
+    .k-faq-item__body p {
+        margin-bottom: 0.75rem;
+        color: var(--k-black-60);
+        font-size: 0.93rem;
+        line-height: 1.65;
+    }
+
+    .k-faq-item__body ul {
+        margin: 0 0 0.75rem 1.25rem;
+        padding: 0;
+    }
+
+    .k-faq-item__body li {
+        color: var(--k-black-60);
+        font-size: 0.93rem;
+        line-height: 1.6;
+        margin-bottom: 0.35rem;
+    }
+
+.k-faq-toc__cat a {
+    font-weight: 600;
+}
+
 /* ── LEGAL PAGES (Terms of Use, etc.) ───────────────────────────────────── */
 .k-legal {
     padding: 3rem 0 5rem;
@@ -943,6 +1036,85 @@ img {
     font-weight: 700;
     color: var(--k-black);
     margin: 2rem 0 0.75rem;
+}
+
+h2.k-legal__part {
+    font-size: 1.05rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--k-white);
+    background: var(--k-black);
+    padding: 0.7rem 1.1rem;
+    border-radius: var(--r-md);
+    margin: 3rem 0 1.25rem;
+}
+
+.k-legal h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--k-black);
+    margin: 1.75rem 0 0.6rem;
+    scroll-margin-top: 90px;
+}
+
+.k-legal h4 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--k-black-60);
+    margin: 1.25rem 0 0.4rem;
+}
+
+.k-legal__toc {
+    background: var(--k-surface);
+    border: 1px solid var(--k-border);
+    border-radius: var(--r-lg);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+    .k-legal__toc summary {
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        color: var(--k-black);
+    }
+
+    .k-legal__toc ul {
+        list-style: none;
+        margin: 1rem 0 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.35rem 1.5rem;
+        max-height: 420px;
+        overflow-y: auto;
+    }
+
+    .k-legal__toc li {
+        margin: 0;
+        font-size: 0.85rem;
+    }
+
+    .k-legal__toc li.k-legal-toc__part {
+        grid-column: 1 / -1;
+        margin-top: 0.6rem;
+    }
+
+    .k-legal__toc a {
+        color: var(--k-black-60);
+        text-decoration: none;
+    }
+
+    .k-legal__toc a:hover {
+        color: var(--k-black);
+        text-decoration: underline;
+    }
+
+@media (max-width: 600px) {
+    .k-legal__toc ul {
+        grid-template-columns: 1fr;
+    }
 }
 
 .k-legal p,

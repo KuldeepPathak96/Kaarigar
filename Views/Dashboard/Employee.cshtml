@@ -10,7 +10,7 @@
     <div class="k-dash-header">
         <div>
             <h1 class="k-dash-title">
-                Welcome back, @Model.EmployeeName 👷
+                Welcome back, @Model.EmployeeName <i data-lucide="hard-hat" style="width:24px;height:24px;vertical-align:-4px;"></i>
             </h1>
             <p class="k-dash-subtitle">Find your next job and track your applications.</p>
         </div>
@@ -97,7 +97,7 @@
             </div>
             @if (Model.JobsCompleted > 0)
             {
-                <div class="k-kpi-card__badge k-kpi-card__badge--yellow">⭐ Great work!</div>
+                <div class="k-kpi-card__badge k-kpi-card__badge--yellow"><i data-lucide="star" style="width:13px;height:13px;vertical-align:-2px;"></i> Great work!</div>
             }
         </div>
 

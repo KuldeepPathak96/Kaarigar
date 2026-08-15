@@ -109,13 +109,13 @@
 
                     @if (job.MatchesSkills && job.RequiredSkillNames.Any())
                     {
-                        <span class="k-badge k-badge--blue" style="align-self:flex-start">✓ Matches your skills</span>
+                        <span class="k-badge k-badge--blue" style="align-self:flex-start"><i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:-2px;"></i> Matches your skills</span>
                     }
 
                     <p class="k-job-card__meta">@job.EmployerDisplayName</p>
 
                     <p class="k-job-card__meta">
-                        📍 @(job.LocationLabel ?? "Location not specified")
+                        <i data-lucide="map-pin" style="width:14px;height:14px;vertical-align:-2px;"></i> @(job.LocationLabel ?? "Location not specified")
                         @if (job.DistanceKm.HasValue)
                         {
                             <text> · @job.DistanceKm.Value km away</text>
@@ -124,18 +124,18 @@
 
                     @if (job.RequiredSkillNames.Any())
                     {
-                        <p class="k-job-card__meta">🛠 @string.Join(", ", job.RequiredSkillNames)</p>
+                        <p class="k-job-card__meta"><i data-lucide="wrench" style="width:14px;height:14px;vertical-align:-2px;"></i> @string.Join(", ", job.RequiredSkillNames)</p>
                     }
 
                     @if (job.HourlyWageAmt.HasValue)
                     {
-                        <p class="k-job-card__meta">💰 ₹@job.HourlyWageAmt.Value.ToString("N0") / hour</p>
+                        <p class="k-job-card__meta"><i data-lucide="banknote" style="width:14px;height:14px;vertical-align:-2px;"></i> ₹@job.HourlyWageAmt.Value.ToString("N0") / hour</p>
                     }
 
                     @if (job.StartDt.HasValue)
                     {
                         <p class="k-job-card__meta">
-                            📅 Starts @job.StartDt.Value.ToString("dd MMM yyyy")
+                            <i data-lucide="calendar" style="width:14px;height:14px;vertical-align:-2px;"></i> Starts @job.StartDt.Value.ToString("dd MMM yyyy")
                             @if (job.DurationHourNbr.HasValue)
                             {
                                 <text> · @job.DurationHourNbr hour(s)</text>
