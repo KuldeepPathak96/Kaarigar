@@ -127,6 +127,14 @@ public class JobPost
     [StringLength(20)]
     public string StatusCd { get; set; } = "ACTIVE";
 
+    /// <summary>Set when this job was created via "Repeat Shift" — points at the original JOB_POST it was copied from. NULL for normal job posts.</summary>
+    [Column("REPEATED_FROM_JOB_POST_ID")]
+    public int? RepeatedFromJobPostId { get; set; }
+
+    /// <summary>True if the employer checked "Repeat Staff" when repeating this shift — the workers who completed the original job get a priority notification window before everyone else is notified.</summary>
+    [Column("IS_REPEAT_STAFF_PRIORITY_FL")]
+    public bool IsRepeatStaffPriorityFl { get; set; }
+
     // Audit
     [Column("CREATED_BY")] public string CreatedBy { get; set; } = "SYSTEM";
     [Column("CREATED_TS")] public DateTime CreatedTs { get; set; } = DateTime.UtcNow;

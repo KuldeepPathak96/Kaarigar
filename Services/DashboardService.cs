@@ -25,7 +25,9 @@ public class DashboardService : IDashboardService
         var active = await _dao.GetActiveJobsCountAsync(userAccountId);
         var apps = await _dao.GetTotalApplicationsAsync(userAccountId);
         var filled = await _dao.GetJobsFilledAsync(userAccountId);
-        var activity = await _dao.GetRecentActivityAsync(userAccountId, take: 5);
+        var liveShifts = await _dao.GetLiveShiftsAsync(userAccountId);
+        var recentApplications = await _dao.GetRecentApplicationsAsync(userAccountId, take: 10);
+        var recentlyFilled = await _dao.GetRecentlyFilledAsync(userAccountId, take: 10);
         var company = await _dao.GetCompanyNameAsync(userAccountId);
         var isApproved = await _dao.IsEmployerApprovedAsync(userAccountId);
 
@@ -35,7 +37,9 @@ public class DashboardService : IDashboardService
             ActiveJobs = active,
             TotalApplications = apps,
             JobsFilled = filled,
-            RecentActivity = activity,
+            LiveShifts = liveShifts,
+            RecentApplications = recentApplications,
+            RecentlyFilled = recentlyFilled,
             CompanyName = company,
             IsApproved = isApproved,
         };

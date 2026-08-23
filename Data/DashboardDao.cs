@@ -54,33 +54,96 @@ public class DashboardDao : IDashboardDao
            .AsNoTracking()
            .CountAsync(j => j.EmployerUserAccountId == userAccountId && j.StatusCd == "CLOSED");
 
-    public async Task<List<ActivityFeedItem>> GetRecentActivityAsync(int userAccountId, int take = 5)
+    // "Confirmed" = the employer has taken a hiring action on this application
+    // (contacted, started, or completed) — there is no dedicated CONFIRMED
+    // status in JOB_APPLICATION.STATUS_CD, so this set is the closest
+    // equivalent to "worker is locked in for the shift".
+    private static readonly string[] ConfirmedStatuses = { "EMPLOYER_CONTACTED", "JOB_STARTED", "COMPLETED" };
+
+    public async Task<List<LiveShiftItem>> GetLiveShiftsAsync(int userAccountId)
     {
-        // Join JobApplications → JobPosts (employer filter) → UserAccounts (employee name)
+        var confirmedCounts = await _db.JobApplications
+            .AsNoTracking()
+            .Where(a => a.JobPost.EmployerUserAccountId == userAccountId &&
+                        a.JobPost.StatusCd == "ACTIVE" &&
+                        ConfirmedStatuses.Contains(a.StatusCd))
+            .GroupBy(a => a.JobPostId)
+            .Select(g => new { JobPostId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.JobPostId, x => x.Count);
+
+        var jobs = await _db.JobPosts
+            .AsNoTracking()
+            .Where(j => j.EmployerUserAccountId == userAccountId && j.StatusCd == "ACTIVE")
+            .Select(j => new { j.JobPostId, j.JobTitle, j.RequiredWorkerNbr, j.StartDt, j.StartTime })
+            .ToListAsync();
+
+        return jobs
+            .Select(j => new LiveShiftItem
+            {
+                JobPostId = j.JobPostId,
+                JobTitle = j.JobTitle,
+                RequiredWorkerNbr = j.RequiredWorkerNbr,
+                ConfirmedWorkerNbr = confirmedCounts.TryGetValue(j.JobPostId, out var c) ? c : 0,
+                StartDateTime = j.StartDt.HasValue ? j.StartDt.Value.Date + (j.StartTime ?? TimeSpan.Zero) : null,
+            })
+            .OrderBy(s => s.StartDateTime ?? DateTime.MaxValue)
+            .ToList();
+    }
+
+    public async Task<List<ApplicationDetailItem>> GetRecentApplicationsAsync(int userAccountId, int take = 10)
+    {
         var rows = await _db.JobApplications
             .AsNoTracking()
             .Where(a => a.JobPost.EmployerUserAccountId == userAccountId)
-            .OrderByDescending(a => a.UpdatedTs ?? a.CreatedTs)
+            .OrderByDescending(a => a.AppliedTs)
             .Take(take)
             .Select(a => new
             {
+                a.JobApplicationId,
                 a.StatusCd,
-                a.UpdatedTs,
-                a.CreatedTs,
+                a.AppliedTs,
                 EmployeeFirstName = a.EmployeeUserAccount.FirstName,
                 EmployeeLastName = a.EmployeeUserAccount.LastName,
                 JobTitle = a.JobPost.JobTitle,
             })
             .ToListAsync();
 
-        return rows.Select(r => new ActivityFeedItem
+        return rows.Select(r => new ApplicationDetailItem
         {
+            JobApplicationId = r.JobApplicationId,
             EmployeeName = $"{r.EmployeeFirstName} {r.EmployeeLastName}".Trim(),
             JobTitle = r.JobTitle,
-            Action = MapStatusToAction(r.StatusCd),
-            Timestamp = r.UpdatedTs ?? r.CreatedTs,
-            AvatarInitial = r.EmployeeFirstName.Length > 0 ? r.EmployeeFirstName[..1].ToUpper() : "?",
             StatusCd = r.StatusCd,
+            AppliedTs = r.AppliedTs,
+        }).ToList();
+    }
+
+    public async Task<List<FilledPositionItem>> GetRecentlyFilledAsync(int userAccountId, int take = 10)
+    {
+        var confirmedCounts = await _db.JobApplications
+            .AsNoTracking()
+            .Where(a => a.JobPost.EmployerUserAccountId == userAccountId &&
+                        a.JobPost.StatusCd == "CLOSED" &&
+                        ConfirmedStatuses.Contains(a.StatusCd))
+            .GroupBy(a => a.JobPostId)
+            .Select(g => new { JobPostId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.JobPostId, x => x.Count);
+
+        var jobs = await _db.JobPosts
+            .AsNoTracking()
+            .Where(j => j.EmployerUserAccountId == userAccountId && j.StatusCd == "CLOSED")
+            .OrderByDescending(j => j.UpdatedTs ?? j.CreatedTs)
+            .Take(take)
+            .Select(j => new { j.JobPostId, j.JobTitle, j.RequiredWorkerNbr, j.UpdatedTs, j.CreatedTs })
+            .ToListAsync();
+
+        return jobs.Select(j => new FilledPositionItem
+        {
+            JobPostId = j.JobPostId,
+            JobTitle = j.JobTitle,
+            RequiredWorkerNbr = j.RequiredWorkerNbr,
+            ConfirmedWorkerNbr = confirmedCounts.TryGetValue(j.JobPostId, out var c) ? c : 0,
+            FilledTs = j.UpdatedTs ?? j.CreatedTs,
         }).ToList();
     }
 
@@ -190,16 +253,4 @@ public class DashboardDao : IDashboardDao
 
         return result;
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    private static string MapStatusToAction(string statusCd) => statusCd switch
-    {
-        "PENDING" => "took work",
-        "EMPLOYER_VIEWED" => "profile viewed by employer",
-        "EMPLOYER_CONTACTED" => "contacted by employer",
-        "JOB_STARTED" => "job started (OTP verified)",
-        "COMPLETED" => "job completed",
-        _ => "updated application",
-    };
 }

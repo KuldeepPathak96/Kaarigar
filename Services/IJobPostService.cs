@@ -10,6 +10,15 @@ public interface IJobPostService
     /// <summary>Loads an existing job post for editing (options included), only if it belongs to this employer.</summary>
     Task<PostJobViewModel?> GetJobForEditAsync(int jobPostId, int employerUserAccountId);
 
+    /// <summary>
+    /// "Repeat Shift": loads an existing job post (must belong to this
+    /// employer) and returns a fresh PostJobViewModel with every field
+    /// prefilled EXCEPT StartDt/StartTime, which are left blank for the
+    /// employer to choose fresh. Returns null if the job doesn't exist or
+    /// isn't theirs.
+    /// </summary>
+    Task<PostJobViewModel?> GetRepeatJobFormAsync(int jobPostId, int employerUserAccountId);
+
     /// <summary>Creates a new job post and triggers WhatsApp notifications to matching employees.</summary>
     Task<ServiceResult> CreateJobAsync(int employerUserAccountId, PostJobViewModel model, string? ipAddress = null);
 

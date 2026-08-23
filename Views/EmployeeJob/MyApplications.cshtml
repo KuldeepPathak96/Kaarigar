@@ -84,7 +84,7 @@
                             <form asp-action="VerifyOtp" asp-controller="EmployeeJob" asp-route-id="@app.JobApplicationId"
                                   method="post" class="k-inline-form" style="gap:8px">
                                 @Html.AntiForgeryToken()
-                                <input type="text" name="otpCd" class="k-input" placeholder="Enter Satisfaction OTP" maxlength="6" style="max-width:180px" />
+                                <input type="text" name="otpCd" class="k-input" placeholder="Enter Satisfaction OTP" maxlength="4" inputmode="numeric" style="max-width:180px" />
                                 <button type="submit" class="k-btn k-btn--sm k-btn--primary">Submit</button>
                             </form>
                         }
@@ -96,7 +96,7 @@
                             <form asp-action="VerifyOtp" asp-controller="EmployeeJob" asp-route-id="@app.JobApplicationId"
                                   method="post" class="k-inline-form" style="gap:8px">
                                 @Html.AntiForgeryToken()
-                                <input type="text" name="otpCd" class="k-input" placeholder="Enter Job Starting OTP" maxlength="6" style="max-width:180px" />
+                                <input type="text" name="otpCd" class="k-input" placeholder="Enter Job Starting OTP" maxlength="4" inputmode="numeric" style="max-width:180px" />
                                 <button type="submit" class="k-btn k-btn--sm k-btn--primary">Submit</button>
                             </form>
                         }

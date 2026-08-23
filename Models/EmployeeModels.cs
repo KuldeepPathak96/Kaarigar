@@ -38,6 +38,14 @@ public class EmployeeProfile
     [Column("PREFERRED_RADIUS_NBR")]
     public int? PreferredRadiusNbr { get; set; }
 
+    /// <summary>
+    /// "Work Preference" — the single Work Category this worker registered under
+    /// (e.g. "Steward / Waiter"). Drives which Skills were offered at registration
+    /// and can be used later for job matching.
+    /// </summary>
+    [Column("WORK_CATEGORY_ID")]
+    public int? WorkCategoryId { get; set; }
+
     /// <summary>Employee-controlled opt-out for job-match WhatsApp alerts (Screen W-02 / W-06 improvement). Defaults to on.</summary>
     [Column("IS_NOTIFICATION_ENABLED_FL")]
     public bool IsNotificationEnabledFl { get; set; } = true;
@@ -52,6 +60,9 @@ public class EmployeeProfile
 
     [ForeignKey("UserAccountId")]
     public UserAccount? UserAccount { get; set; }
+
+    [ForeignKey("WorkCategoryId")]
+    public WorkCategory? WorkCategory { get; set; }
 }
 
 [Table("EMPLOYEE_SKILL")]

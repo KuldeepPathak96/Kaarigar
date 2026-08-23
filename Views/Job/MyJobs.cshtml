@@ -64,6 +64,9 @@
                     <div class="k-job-card__actions">
                         <a href="/job/applicants/@job.JobPostId" class="k-btn k-btn--sm k-btn--secondary">View Applicants</a>
                         <a href="/job/edit/@job.JobPostId" class="k-btn k-btn--sm k-btn--secondary">Edit</a>
+                        <a href="/job/repeat/@job.JobPostId" class="k-btn k-btn--sm k-btn--primary">
+                            <i data-lucide="repeat" style="width:13px;height:13px;vertical-align:-2px;"></i> Repeat Shift
+                        </a>
 
                         @if (job.StatusCd == "ACTIVE")
                         {

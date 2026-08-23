@@ -91,6 +91,33 @@ public class JobController : Controller
         return View("PostJob", vm);
     }
 
+    // ── REPEAT SHIFT (reuses the same PostJob view/form, in "create" mode) ──
+
+    [HttpGet("/job/repeat/{id:int}")]
+    public async Task<IActionResult> RepeatJob(int id)
+    {
+        var session = UserSession.FromContext(HttpContext);
+
+        if (!await _jobPostService.IsEmployerApprovedAsync(session.UserAccountId))
+        {
+            TempData["ErrorMessage"] = "Your account is pending Admin approval. You will be able to post jobs once approved.";
+            return RedirectToAction(nameof(MyJobs));
+        }
+
+        var vm = await _jobPostService.GetRepeatJobFormAsync(id, session.UserAccountId);
+
+        if (vm == null)
+        {
+            TempData["ErrorMessage"] = "Job post not found.";
+            return RedirectToAction(nameof(MyJobs));
+        }
+
+        // Submits to the same [HttpPost("/job/post")] action as a brand new
+        // job — PostJobViewModel.RepeatFromJobPostId (carried via a hidden
+        // field) is all CreateJobAsync needs to treat it as a repeat.
+        return View("PostJob", vm);
+    }
+
     [HttpPost("/job/edit/{id:int}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditJob(int id, PostJobViewModel vm)

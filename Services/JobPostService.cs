@@ -78,6 +78,42 @@ public class JobPostService : IJobPostService
         };
     }
 
+    public async Task<PostJobViewModel?> GetRepeatJobFormAsync(int jobPostId, int employerUserAccountId)
+    {
+        var original = await _dao.GetJobPostForEmployerAsync(jobPostId, employerUserAccountId);
+        if (original == null) return null;
+
+        var skills = await _dao.GetActiveSkillsAsync();
+        var rateOptions = await _hourlyRateOptionDao.GetActiveAsync();
+
+        return new PostJobViewModel
+        {
+            // Everything below is copied from the original job...
+            JobTitle = original.JobTitle,
+            RequiredWorkerNbr = original.RequiredWorkerNbr,
+            DescriptionTxt = original.DescriptionTxt,
+            SelectedSkillIds = original.JobSkills.Select(js => js.SkillId).ToList(),
+            HourlyWageAmt = original.HourlyWageAmt,
+            LocationAddressTxt = original.LocationAddressTxt,
+            LatitudeNbr = original.LatitudeNbr,
+            LongitudeNbr = original.LongitudeNbr,
+            ContactNbr = original.ContactNbr ?? string.Empty,
+            GenderPreferenceCd = original.GenderPreferenceCd,
+            DurationHourNbr = original.DurationHourNbr,
+
+            // ...except date/time, left blank for the employer to pick fresh.
+            StartDt = null,
+            StartTime = null,
+
+            SkillOptions = ToSkillOptions(skills),
+            JobTitleOptions = ToTitleOptions(skills),
+            HourlyRateOptionsList = ToRateOptions(rateOptions),
+
+            RepeatFromJobPostId = original.JobPostId,
+            RepeatFromSummaryTxt = $"{original.JobTitle} — originally posted for {original.StartDt:dd MMM yyyy}",
+        };
+    }
+
     public async Task<bool> IsEmployerApprovedAsync(int employerUserAccountId)
     {
         var loaded = await _employerProfileDao.GetProfileAsync(employerUserAccountId);
@@ -108,6 +144,8 @@ public class JobPostService : IJobPostService
             ContactNbr = model.ContactNbr.Trim(),
             GenderPreferenceCd = string.IsNullOrWhiteSpace(model.GenderPreferenceCd) ? "ANY" : model.GenderPreferenceCd,
             StatusCd = "ACTIVE",
+            RepeatedFromJobPostId = model.RepeatFromJobPostId,
+            IsRepeatStaffPriorityFl = model.RepeatFromJobPostId.HasValue && model.RepeatStaffFl,
             CreatedBy = "JOB_POST_CREATE",
             CreatedIpAddr = ipAddress,
             CreatedTs = DateTime.UtcNow,

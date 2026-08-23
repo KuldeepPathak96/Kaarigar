@@ -365,6 +365,10 @@
 
 .k-kpi-grid--4 {
     grid-template-columns: repeat(4, 1fr);
+    /* So an expanded card (which grows taller) doesn't force its row
+       siblings to stretch to match -- each card sizes to its own content
+       and simply top-aligns within the (now taller) row track. */
+    align-items: start;
 }
 
 .k-kpi-grid--3 {
@@ -873,5 +877,223 @@
 @media (max-width: 600px) {
     .k-location-map {
         height: 240px;
+    }
+}
+
+/* ── EXPANDABLE KPI CARDS (Employer Dashboard) ────────────────────────────── */
+/* Each expandable card contains its OWN nested .k-kpi-detail-panel — clicking
+   the card grows that card in place, it does not open a separate section
+   elsewhere on the page. align-items:start on .k-kpi-grid--4 (above) stops
+   the taller card from stretching its row-siblings. */
+
+.k-kpi-card--link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.k-kpi-card--expandable {
+    cursor: pointer;
+    position: relative;
+}
+
+.k-kpi-card__expand-hint {
+    margin-top: 0.75rem;
+    font-size: 0.7rem;
+    color: var(--k-muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.2rem;
+}
+
+.k-kpi-card__expand-hint svg {
+    transition: transform 0.2s;
+}
+
+.k-kpi-card--expandable.is-open .k-kpi-card__expand-hint svg {
+    transform: rotate(180deg);
+}
+
+.k-kpi-detail-panel {
+    /* Lives inside the card, so no border/shadow/background of its own --
+       just a self-contained block that grows the card when opened. */
+    padding: 0;
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+}
+
+.k-kpi-detail-panel.is-open {
+    max-height: 2000px;
+    opacity: 1;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--k-border);
+}
+
+.k-shift-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--k-border);
+}
+
+.k-shift-item:last-child {
+    border-bottom: none;
+}
+
+.k-shift-item__main {
+    flex: 1;
+    min-width: 0;
+}
+
+.k-shift-item__title {
+    font-weight: 700;
+    color: var(--k-black);
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+}
+
+.k-shift-item__progress {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--k-green-dk);
+    margin-bottom: 0.15rem;
+}
+
+.k-shift-item__progress--full {
+    color: var(--k-muted);
+}
+
+.k-shift-item__timing {
+    font-size: 0.8rem;
+    color: var(--k-muted);
+}
+
+.k-shift-item__cta {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--r-md);
+    background: var(--k-green);
+    color: white;
+    text-decoration: none;
+}
+
+.k-shift-item__cta:hover {
+    opacity: 0.9;
+}
+
+.k-shift-item__cta--muted {
+    background: var(--k-surface);
+    color: var(--k-muted);
+}
+
+.k-detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--k-border);
+}
+
+.k-detail-row:last-child {
+    border-bottom: none;
+}
+
+.k-detail-row__main {
+    flex: 1;
+    min-width: 0;
+}
+
+.k-detail-row__title {
+    font-weight: 600;
+    color: var(--k-black);
+    font-size: 0.9rem;
+}
+
+.k-detail-row__sub {
+    font-size: 0.8rem;
+    color: var(--k-muted);
+    margin-top: 0.1rem;
+}
+
+.k-detail-panel-empty {
+    text-align: center;
+    padding: 1.5rem 0.5rem;
+    color: var(--k-muted);
+    font-size: 0.88rem;
+}
+
+/* ── EMPLOYER DASHBOARD KPI CARDS — MOBILE FIXES ──────────────────────────── */
+/* k-kpi-grid--4 is only used on the Employer dashboard, so these overrides
+   are safe to scope specifically without affecting Admin (--5) or
+   Employee (--3) dashboards. The new badge + "Details" expand-hint made
+   the existing 2-per-row mobile layout too cramped, so this drops to a
+   single column below 640px and un-absolutes the expand-hint so it can't
+   overlap the badge or wrap awkwardly. */
+
+@media (max-width: 640px) {
+    .k-kpi-grid--4 {
+        grid-template-columns: 1fr;
+    }
+
+    .k-kpi-card {
+        padding: 1.1rem;
+    }
+
+    .k-kpi-card__expand-hint {
+        position: static;
+        margin-top: 0.6rem;
+        justify-content: flex-end;
+    }
+
+    .k-kpi-card__badge {
+        top: 0.85rem;
+        right: 0.85rem;
+    }
+}
+
+/* At 480px the generic rule below used to force k-kpi-grid--4 into 2
+   columns too; this later, more specific rule wins and keeps it at 1
+   column all the way down. */
+@media (max-width: 480px) {
+    .k-kpi-grid--4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Shift items and detail rows: stack vertically on narrow screens instead
+   of squeezing a CTA button next to wrapping text, which was overflowing
+   / getting cut off on phone widths. */
+@media (max-width: 560px) {
+    .k-shift-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.6rem;
+    }
+
+    .k-shift-item__cta {
+        text-align: center;
+        width: 100%;
+    }
+
+    .k-detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+    }
+
+    .k-kpi-detail-panel.is-open {
+        padding-top: 0.85rem;
+        margin-top: 0.85rem;
     }
 }

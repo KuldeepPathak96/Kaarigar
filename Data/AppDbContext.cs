@@ -1,4 +1,4 @@
-using Kaarigar.Models;
+ï»¿using Kaarigar.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kaarigar.Data;
@@ -17,6 +17,8 @@ public class AppDbContext : DbContext
     public DbSet<OtpRecord> OtpRecords { get; set; }
     public DbSet<MobileVerificationOtp> MobileVerificationOtps { get; set; }
     public DbSet<BusinessCategory> BusinessCategories { get; set; }
+    public DbSet<WorkCategory> WorkCategories { get; set; }
+    public DbSet<WorkCategorySkill> WorkCategorySkills { get; set; }
     public DbSet<HourlyRateOption> HourlyRateOptions { get; set; }
     public DbSet<Skill> Skills { get; set; }
     public DbSet<JobSkill> JobSkills { get; set; }
@@ -42,7 +44,7 @@ public class AppDbContext : DbContext
              .HasMaxLength(20);
         });
 
-        // EMPLOYER_PROFILE constraints — FK_EMPLOYER_PROFILE_USER_ACCOUNT is ON DELETE CASCADE
+        // EMPLOYER_PROFILE constraints ï¿½ FK_EMPLOYER_PROFILE_USER_ACCOUNT is ON DELETE CASCADE
         modelBuilder.Entity<EmployerProfile>(e =>
         {
             e.HasIndex(ep => ep.UserAccountId).IsUnique();
@@ -51,7 +53,7 @@ public class AppDbContext : DbContext
              .HasForeignKey(ep => ep.UserAccountId)
              .OnDelete(DeleteBehavior.Cascade);
 
-            // BUSINESS_CATEGORY has no ON DELETE CASCADE in the schema — Restrict.
+            // BUSINESS_CATEGORY has no ON DELETE CASCADE in the schema ï¿½ Restrict.
             e.HasIndex(ep => ep.BusinessCategoryId);
             e.HasOne(ep => ep.BusinessCategory)
              .WithMany()
@@ -64,7 +66,33 @@ public class AppDbContext : DbContext
             e.HasIndex(c => c.CategoryName).IsUnique();
         });
 
-        // EMPLOYEE_PROFILE constraints — FK_EMPLOYEE_PROFILE_USER_ACCOUNT is ON DELETE CASCADE
+        // WORK_CATEGORY  FK_WORK_CATEGORY_BUSINESS_CATEGORY (no cascade in schema, Restrict)
+        modelBuilder.Entity<WorkCategory>(e =>
+        {
+            e.HasIndex(wc => wc.BusinessCategoryId);
+            e.HasOne(wc => wc.BusinessCategory)
+             .WithMany()
+             .HasForeignKey(wc => wc.BusinessCategoryId)
+             .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // WORK_CATEGORY_SKILL  many-to-many mapping, both FKs Restrict
+        modelBuilder.Entity<WorkCategorySkill>(e =>
+        {
+            e.HasIndex(wcs => new { wcs.WorkCategoryId, wcs.SkillId }).IsUnique();
+
+            e.HasOne(wcs => wcs.WorkCategory)
+             .WithMany()
+             .HasForeignKey(wcs => wcs.WorkCategoryId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            e.HasOne(wcs => wcs.Skill)
+             .WithMany()
+             .HasForeignKey(wcs => wcs.SkillId)
+             .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // EMPLOYEE_PROFILE constraints ï¿½ FK_EMPLOYEE_PROFILE_USER_ACCOUNT is ON DELETE CASCADE
         modelBuilder.Entity<EmployeeProfile>(e =>
         {
             e.HasIndex(ep => ep.UserAccountId).IsUnique();
@@ -72,15 +100,23 @@ public class AppDbContext : DbContext
              .WithMany()
              .HasForeignKey(ep => ep.UserAccountId)
              .OnDelete(DeleteBehavior.Cascade);
+
+            // WORK_CATEGORY has no ON DELETE CASCADE in the schema, Restrict,
+            // same pattern as EMPLOYER_PROFILE -> BUSINESS_CATEGORY above.
+            e.HasIndex(ep => ep.WorkCategoryId);
+            e.HasOne(ep => ep.WorkCategory)
+             .WithMany()
+             .HasForeignKey(ep => ep.WorkCategoryId)
+             .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // EMPLOYEE_SKILL — FK_EMPLOYEE_SKILL_USER_ACCOUNT is ON DELETE CASCADE
+        // EMPLOYEE_SKILL ï¿½ FK_EMPLOYEE_SKILL_USER_ACCOUNT is ON DELETE CASCADE
         modelBuilder.Entity<EmployeeSkill>(e =>
         {
             e.HasIndex(es => new { es.UserAccountId, es.SkillId }).IsUnique();
         });
 
-        // JOB_POST — FK_JOB_POST_EMPLOYER has NO "ON DELETE CASCADE" in the
+        // JOB_POST ï¿½ FK_JOB_POST_EMPLOYER has NO "ON DELETE CASCADE" in the
         // script (defaults to NO ACTION), so map it as Restrict.
         modelBuilder.Entity<JobPost>(e =>
         {
@@ -99,7 +135,7 @@ public class AppDbContext : DbContext
         });
 
 
-        // JOB_APPLICATION — FK_JOB_APPLICATION_JOB_POST and
+        // JOB_APPLICATION ï¿½ FK_JOB_APPLICATION_JOB_POST and
         // FK_JOB_APPLICATION_EMPLOYEE both have NO "ON DELETE CASCADE"
         // (defaults to NO ACTION) ? Restrict.
         modelBuilder.Entity<JobApplication>(e =>
@@ -119,7 +155,7 @@ public class AppDbContext : DbContext
              .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // NOTIFICATION_LOG — all FKs default to NO ACTION ? Restrict.
+        // NOTIFICATION_LOG ï¿½ all FKs default to NO ACTION ? Restrict.
         modelBuilder.Entity<NotificationLog>(e =>
         {
             e.HasIndex(n => n.EmployeeUserAccountId);
@@ -141,7 +177,7 @@ public class AppDbContext : DbContext
              .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // OTP_RECORD — both FKs default to NO ACTION ? Restrict.
+        // OTP_RECORD ï¿½ both FKs default to NO ACTION ? Restrict.
         modelBuilder.Entity<OtpRecord>(e =>
         {
             e.HasIndex(o => o.GeneratedTs);

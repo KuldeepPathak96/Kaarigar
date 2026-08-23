@@ -159,7 +159,7 @@ public class JobApplicantService : IJobApplicantService
         return new ServiceResult(true, $"{label} OTP generated. Valid for 15 minutes — share it only with this Kaarigar in person.");
     }
 
-    private static string GenerateOtpCode() => Random.Shared.Next(0, 1_000_000).ToString("D6");
+    private static string GenerateOtpCode() => Random.Shared.Next(0, 10_000).ToString("D4");
 
     public async Task<ServiceResult> SubmitRatingAsync(int jobApplicationId, int employerUserAccountId, byte ratingNbr, string? reviewTxt)
     {

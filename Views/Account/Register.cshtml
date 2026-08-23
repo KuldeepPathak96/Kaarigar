@@ -25,29 +25,22 @@
                 <div class="k-success-icon"><i data-lucide="check-circle"></i></div>
                 <h2>Account Created Successfully!</h2>
                 <p>
-                    Thank you for registering with Kaarigar.
-
-                    Your account is currently under verification.
-
-                    You'll receive an SMS / Whatsapp once approved.
-
-                    Estimated approval time:
-                    Within 24 Hours
+                    Thank you for registering with Kaarigar.<br />
+                    Your account is currently under verification.<br />
+                    You'll receive an SMS / WhatsApp message once approved.
+                </p>
+                <p class="k-auth-success__eta">
+                    Estimated approval time: <strong>Within 24 Hours</strong>
                 </p>
                 <a class="k-btn k-btn--primary" href="/">Back to Home</a>
             </div>
         }
         else
         {
-            <h2 class="k-auth-title">Join Kaarigar Today</h2>
+            <h2 class="k-auth-title">
+                Create Your Account
+            </h2>
             <p class="k-auth-sub">Registration is free. Every account is manually verified before activation.</p>
-
-            <div class="k-auth-trust-line">
-                <span><i data-lucide="check"></i> Free Registration</span>
-                <span><i data-lucide="check"></i> Manual Verification</span>
-                <span><i data-lucide="check"></i> No Hidden Charges</span>
-            </div>
-
             <!-- ROLE TOGGLE -->
             <div class="k-role-toggle">
                 <button type="button"
@@ -109,7 +102,7 @@
                                inputmode="numeric" />
                     </div>
                     <span asp-validation-for="ContactNbr" class="k-field-error"></span>
-                    <span class="k-field-hint">Used for OTP &amp; job notifications</span>
+                    <span class="k-field-hint">Used for OTP Login &amp; whatsapp job notifications</span>
                 </div>
 
                 <!-- PASSWORD -->
@@ -145,6 +138,15 @@
                                placeholder="e.g. ABC Restaurant" />
                     </div>
 
+                    <div class="k-form__group">
+                        <label asp-for="BusinessCategoryId">Business Category <span class="k-req">*</span></label>
+                        <select asp-for="BusinessCategoryId" asp-items="Model.BusinessCategoryOptions"
+                                id="employerBusinessCategoryId" class="k-input">
+                            <option value="">-- Select a category --</option>
+                        </select>
+                        <span asp-validation-for="BusinessCategoryId" class="k-field-error"></span>
+                    </div>
+
                     <div class="k-form__row">
                         <div class="k-form__group">
                             <label asp-for="CityName">City <span class="k-req">*</span></label>
@@ -154,7 +156,7 @@
                             <span asp-validation-for="CityName" class="k-field-error"></span>
                         </div>
                         <div class="k-form__group">
-                            <label asp-for="AreaAddressTxt">Area / Address</label>
+                            <label asp-for="AreaAddressTxt">Area</label>
                             <input asp-for="AreaAddressTxt" id="employerAreaAddressTxt"
                                    class="k-input" autocomplete="off"
                                    data-area-picker data-city-source="employerCityName"
@@ -169,6 +171,24 @@
 
                     <div class="k-form__row">
                         <div class="k-form__group">
+                            <label asp-for="WorkCategoryId">Work Category <span class="k-req">*</span></label>
+                            <select asp-for="WorkCategoryId" id="workCategoryId" class="k-input"
+                                    data-work-category-picker
+                                    data-initial-value="@Model.WorkCategoryId"></select>
+                            <span asp-validation-for="WorkCategoryId" class="k-field-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="k-form__group">
+                        <label>Skills <span class="k-req">*</span></label>
+                        <div class="k-checkbox-grid" id="employeeSkillsPicker"
+                             data-skills-picker data-work-category-source="workCategoryId"
+                             data-initial-skill-ids="@string.Join(",", Model.SelectedSkillIds)"></div>
+                        <span asp-validation-for="SelectedSkillIds" class="k-field-error"></span>
+                    </div>
+
+                    <div class="k-form__row">
+                        <div class="k-form__group">
                             <label asp-for="CityName">City <span class="k-req">*</span></label>
                             <select asp-for="CityName" id="employeeCityName" class="k-input"
                                     data-city-picker data-area-target="employeeAreaAddressTxt"
@@ -176,23 +196,12 @@
                             <span asp-validation-for="CityName" class="k-field-error"></span>
                         </div>
                         <div class="k-form__group">
-                            <label asp-for="PreferredRadiusNbr">Preferred Work Radius</label>
-                            <select asp-for="PreferredRadiusNbr" class="k-input k-select">
-                                <option value="">Any Distance</option>
-                                <option value="5">Within 5 km</option>
-                                <option value="10">Within 10 km</option>
-                                <option value="25">Within 25 km</option>
-                                <option value="50">Within 50 km</option>
-                            </select>
+                            <label asp-for="AreaAddressTxt">Area</label>
+                            <input asp-for="AreaAddressTxt" id="employeeAreaAddressTxt"
+                                   class="k-input" autocomplete="off"
+                                   data-area-picker data-city-source="employeeCityName"
+                                   placeholder="Karelibaug, Vadodara" />
                         </div>
-                    </div>
-
-                    <div class="k-form__group">
-                        <label asp-for="AreaAddressTxt">Area / Address</label>
-                        <input asp-for="AreaAddressTxt" id="employeeAreaAddressTxt"
-                               class="k-input" autocomplete="off"
-                               data-area-picker data-city-source="employeeCityName"
-                               placeholder="Karelibaug, Vadodara" />
                     </div>
                 </div>
 
@@ -217,6 +226,12 @@
                 <p class="k-auth-switch">
                     Already have an account? <a href="/Account/Login">Log In</a>
                 </p>
+                <div class="k-auth-trust-line k-auth-trust-line--bottom">
+                    <span><i data-lucide="check"></i> Free Registration</span>
+                    <span><i data-lucide="check"></i> Manual Verification</span>
+                    <span><i data-lucide="check"></i> No Hidden Charges</span>
+                    <span><i data-lucide="check"></i> Secure Payments</span>
+                </div>
             </form>
         }
     </div>
@@ -225,8 +240,9 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/city-area-picker.js"></script>
+    <script src="~/js/work-category-picker.js"></script>
     <script>
-                function setRole(role) {
+        function setRole(role) {
             document.getElementById('roleCdInput').value = role;
             document.querySelectorAll('.k-role-toggle__btn').forEach(btn => btn.classList.remove('active'));
             event.currentTarget.classList.add('active');
@@ -243,9 +259,15 @@
             employeeSection.querySelectorAll('input, select').forEach(el => el.disabled = showEmployer);
 
             if (showEmployer) {
-                document.getElementById('PreferredRadiusNbr') && (document.getElementById('PreferredRadiusNbr').value = '');
+                var radius = document.getElementById('PreferredRadiusNbr');
+                if (radius) radius.value = '';
+                var workCategory = document.getElementById('workCategoryId');
+                if (workCategory) workCategory.selectedIndex = 0;
             } else {
-                document.getElementById('CompanyName') && (document.getElementById('CompanyName').value = '');
+                var companyName = document.getElementById('CompanyName');
+                if (companyName) companyName.value = '';
+                var businessCategory = document.getElementById('employerBusinessCategoryId');
+                if (businessCategory) businessCategory.selectedIndex = 0;
             }
         }
 

@@ -10,11 +10,22 @@ public class AuthService : IAuthService
 {
     private readonly AppDbContext _db;
     private readonly ILogger<AuthService> _logger;
+    private readonly ILoginOtpDao _loginOtpDao;
+    private readonly ISmsSenderService _smsSender;
+    private readonly string _webOtpDomain;
 
-    public AuthService(AppDbContext db, ILogger<AuthService> logger)
+    private const int LoginOtpLength = 4;
+    private static readonly TimeSpan LoginOtpValidity = TimeSpan.FromMinutes(10);
+    private static readonly TimeSpan LoginOtpThrottleWindow = TimeSpan.FromMinutes(15);
+    private const int MaxLoginOtpRequestsPerWindow = 5;
+
+    public AuthService(AppDbContext db, ILogger<AuthService> logger, ILoginOtpDao loginOtpDao, ISmsSenderService smsSender, IConfiguration configuration)
     {
         _db = db;
         _logger = logger;
+        _loginOtpDao = loginOtpDao;
+        _smsSender = smsSender;
+        _webOtpDomain = configuration["WebOtp:Domain"] ?? "kaarigar.co";
     }
 
     /// <summary>
@@ -62,6 +73,7 @@ public class AuthService : IAuthService
             {
                 UserAccountId = user.UserAccountId,
                 CompanyName = model.CompanyName?.Trim(),
+                BusinessCategoryId = model.BusinessCategoryId,
                 CityName = model.CityName?.Trim(),
                 AreaAddressTxt = model.AreaAddressTxt?.Trim(),
                 CreatedBy = "REGISTRATION_FORM",
@@ -77,7 +89,7 @@ public class AuthService : IAuthService
                 UserAccountId = user.UserAccountId,
                 CityName = model.CityName?.Trim(),
                 AreaAddressTxt = model.AreaAddressTxt?.Trim(),
-                PreferredRadiusNbr = model.PreferredRadiusNbr,
+                WorkCategoryId = model.WorkCategoryId,
                 CreatedBy = "REGISTRATION_FORM",
                 CreatedIpAddr = ipAddress,
                 CreatedTs = DateTime.UtcNow,
@@ -139,6 +151,101 @@ public class AuthService : IAuthService
         await _db.SaveChangesAsync();
 
         return (new ServiceResult(true, "Login successful."), user);
+    }
+
+    // ── OTP LOGIN ────────────────────────────────────────────────────────────
+
+    /// <summary>Step 1: generate + "send" (see ISmsSenderService) a 4-digit OTP for login.</summary>
+    public async Task<ServiceResult> RequestLoginOtpAsync(string contactNbr)
+    {
+        contactNbr = contactNbr.Trim();
+
+        var user = await _loginOtpDao.GetUserByContactNbrAsync(contactNbr);
+        if (user == null)
+            return new ServiceResult(false, "No account found with this mobile number.");
+
+        if (user.RoleCd == "ADMIN")
+            return new ServiceResult(false, "No account found with this mobile number.");
+
+        var recentCount = await _loginOtpDao.CountRecentOtpRequestsAsync(contactNbr, LoginOtpThrottleWindow);
+        if (recentCount >= MaxLoginOtpRequestsPerWindow)
+            return new ServiceResult(false, "Too many OTP requests. Please wait a few minutes and try again.");
+
+        await _loginOtpDao.InvalidatePreviousOtpsAsync(contactNbr);
+
+        var otpCd = GenerateLoginOtp();
+        var otp = new MobileVerificationOtp
+        {
+            ContactNbr = contactNbr,
+            OtpCd = otpCd,
+            PurposeCd = "LOGIN",
+            GeneratedTs = DateTime.UtcNow,
+            ExpiresTs = DateTime.UtcNow.Add(LoginOtpValidity),
+            IsUsedFl = false,
+            CreatedBy = "LOGIN_OTP_REQUEST",
+        };
+        await _loginOtpDao.CreateOtpAsync(otp);
+
+        try
+        {
+            await _smsSender.SendAsync(
+                toContactNbr: contactNbr,
+                // The trailing "@domain #code" line is required by the browser
+                // WebOTP API (navigator.credentials.get) for Android Chrome to
+                // auto-detect and offer to autofill this SMS's OTP. The domain
+                // must exactly match the site's origin (no https://, no path).
+                // iOS Safari's QuickType OTP suggestion also benefits from a
+                // clearly-labelled numeric code and doesn't require this line,
+                // but it doesn't hurt it either.
+                message: $"Your Kaarigar login OTP is {otpCd}. Valid for 10 minutes. Do not share this with anyone.\n@{_webOtpDomain} #{otpCd}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send login OTP SMS to {ContactNbr}", contactNbr);
+            return new ServiceResult(false, "We couldn't send the OTP right now. Please try again shortly.");
+        }
+
+        return new ServiceResult(true, "OTP sent to your mobile number.");
+    }
+
+    /// <summary>Step 2: verify the OTP and sign in — no password check.</summary>
+    public async Task<(ServiceResult Result, UserAccount? User)> LoginWithOtpAsync(string contactNbr, string otpCd)
+    {
+        contactNbr = contactNbr.Trim();
+        otpCd = (otpCd ?? string.Empty).Trim();
+
+        var user = await _loginOtpDao.GetUserByContactNbrAsync(contactNbr);
+        if (user == null)
+            return (new ServiceResult(false, "No account found with this mobile number."), null);
+
+        if (user.RoleCd == "ADMIN")
+            return (new ServiceResult(false, "No account found with this mobile number."), null);
+
+        var otp = await _loginOtpDao.GetLatestValidOtpAsync(contactNbr, otpCd);
+        if (otp == null)
+            return (new ServiceResult(false, "Invalid or expired OTP. Please request a new one."), null);
+
+        if (!user.IsActiveFl)
+            return (new ServiceResult(false, "Your account has been deactivated. Contact support."), null);
+
+        await _loginOtpDao.MarkOtpUsedAsync(otp.MobileVerificationOtpId);
+
+        user.LastLoginTs = DateTime.UtcNow;
+        user.UpdatedBy = "LOGIN_OTP";
+        user.UpdatedTs = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+
+        _logger.LogInformation("OTP login: UserAccountId={Id}", user.UserAccountId);
+
+        return (new ServiceResult(true, "Login successful."), user);
+    }
+
+    private static string GenerateLoginOtp()
+    {
+        // Cryptographically-random 4-digit OTP (0000–9999, zero-padded).
+        return System.Security.Cryptography.RandomNumberGenerator
+            .GetInt32(0, 10_000)
+            .ToString("D4");
     }
 
     /// <summary>Screen A-01: Admin-only login — see IAuthService for the role restriction rationale.</summary>

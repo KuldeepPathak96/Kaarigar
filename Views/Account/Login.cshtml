@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Login — Kaarigar";
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    var currentMethod = string.IsNullOrEmpty(Model.LoginMethodCd) ? "OTP" : Model.LoginMethodCd;
 }
 
 <div class="k-auth-page">
@@ -30,15 +31,16 @@
             <div class="k-alert k-alert--success">@TempData["SuccessMessage"]</div>
         }
 
-
         <form asp-action="Login" asp-controller="Account" method="post" class="k-form" id="loginForm">
             @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="LoginMethodCd" id="loginMethodCd" value="@currentMethod" />
 
             <div class="k-form__group">
                 <label asp-for="ContactNbr">Mobile Number <span class="k-req">*</span></label>
                 <div class="k-input-prefix-group">
                     <span class="k-input-prefix">+91</span>
                     <input asp-for="ContactNbr"
+                           id="contactNbrInput"
                            class="k-input k-input--with-prefix"
                            maxlength="10"
                            inputmode="numeric"
@@ -47,9 +49,38 @@
                 <span asp-validation-for="ContactNbr" class="k-field-error"></span>
             </div>
 
-            <div class="k-form__group">
+            <!-- ── OTP LOGIN (default) ──────────────────────────────────────────── -->
+            <div id="otpSection" style="display: @(currentMethod == "OTP" ? "block" : "none");">
+                <div id="sendOtpRow" class="k-form__group">
+                    <button type="button" id="sendOtpBtn" class="k-btn k-btn--secondary k-btn--full">
+                        <span id="sendOtpBtnText">Send OTP</span>
+                        <span id="sendOtpSpinner" class="k-spinner" style="display:none;"></span>
+                    </button>
+                    <div id="sendOtpMessage" class="k-form__hint" style="display:none;"></div>
+                </div>
+
+                <div id="otpInputRow" class="k-form__group" style="display:none;">
+                    <label asp-for="OtpCd">Enter OTP <span class="k-req">*</span></label>
+                    <input asp-for="OtpCd"
+                           id="otpCdInput"
+                           class="k-input"
+                           maxlength="4"
+                           inputmode="numeric"
+                           autocomplete="one-time-code"
+                           placeholder="0000"
+                           style="letter-spacing: 0.5em; font-size: 1.3rem; text-align: center;" />
+                    <span asp-validation-for="OtpCd" class="k-field-error"></span>
+                    <div class="text-end mt-1">
+                        <a href="#" id="resendOtpLink" class="k-link-small">Resend OTP</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── PASSWORD LOGIN ───────────────────────────────────────────────── -->
+            <div id="passwordSection" class="k-form__group" style="display: @(currentMethod == "PASSWORD" ? "block" : "none");">
                 <label asp-for="Password">Password <span class="k-req">*</span></label>
                 <input asp-for="Password"
+                       id="passwordInput"
                        type="password"
                        class="k-input"
                        placeholder="Enter your password" />
@@ -59,8 +90,15 @@
                 </div>
             </div>
 
+            <!-- ── METHOD TOGGLE ────────────────────────────────────────────────── -->
+            <div class="k-form__group k-form__group--checkbox">
+                <label class="k-checkbox-label">
+                    <input type="checkbox" id="usePasswordToggle" @(currentMethod == "PASSWORD" ? "checked" : "") />
+                    Use password instead of OTP
+                </label>
+            </div>
 
-            <button type="submit" class="k-btn k-btn--primary k-btn--full k-btn--submit" id="loginBtn">
+            <button type="submit" class="k-btn k-btn--primary k-btn--full k-btn--submit" id="loginBtn" disabled>
                 <span id="loginBtnText">Login</span>
                 <span id="loginSpinner" class="k-spinner" style="display:none;"></span>
             </button>
@@ -75,13 +113,183 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function () {
-            const btn = document.getElementById('loginBtn');
-            const text = document.getElementById('loginBtnText');
-            const spinner = document.getElementById('loginSpinner');
-            btn.disabled = true;
-            text.style.display = 'none';
-            spinner.style.display = 'inline-block';
-        });
+        (function () {
+            const loginMethodCd   = document.getElementById('loginMethodCd');
+            const contactNbrInput = document.getElementById('contactNbrInput');
+            const otpSection      = document.getElementById('otpSection');
+            const passwordSection = document.getElementById('passwordSection');
+            const usePasswordToggle = document.getElementById('usePasswordToggle');
+            const sendOtpBtn      = document.getElementById('sendOtpBtn');
+            const sendOtpBtnText  = document.getElementById('sendOtpBtnText');
+            const sendOtpSpinner  = document.getElementById('sendOtpSpinner');
+            const sendOtpMessage  = document.getElementById('sendOtpMessage');
+            const otpInputRow     = document.getElementById('otpInputRow');
+            const otpCdInput      = document.getElementById('otpCdInput');
+            const resendOtpLink   = document.getElementById('resendOtpLink');
+            const loginBtn        = document.getElementById('loginBtn');
+            const passwordInput   = document.getElementById('passwordInput');
+
+            function isValidMobile() {
+                return /^\d{10}$/.test(contactNbrInput.value.trim());
+            }
+
+            function updateLoginButtonState() {
+                if (usePasswordToggle.checked) {
+                    loginBtn.disabled = !(isValidMobile() && passwordInput.value.length > 0);
+                } else {
+                    loginBtn.disabled = !(isValidMobile() && /^\d{4}$/.test(otpCdInput.value.trim()));
+                }
+            }
+
+            // ── Toggle Password <-> OTP ─────────────────────────────────────────
+            usePasswordToggle.addEventListener('change', function () {
+                if (this.checked) {
+                    loginMethodCd.value = 'PASSWORD';
+                    passwordSection.style.display = 'block';
+                    otpSection.style.display = 'none';
+                    stopWebOtpAutofill();
+                } else {
+                    loginMethodCd.value = 'OTP';
+                    passwordSection.style.display = 'none';
+                    otpSection.style.display = 'block';
+                }
+                updateLoginButtonState();
+            });
+
+            // ── Send OTP (AJAX) ─────────────────────────────────────────────────
+            function sendOtp() {
+                if (!isValidMobile()) {
+                    sendOtpMessage.textContent = 'Enter a valid 10-digit mobile number first.';
+                    sendOtpMessage.className = 'k-form__hint k-form__hint--error';
+                    sendOtpMessage.style.display = 'block';
+                    return;
+                }
+
+                sendOtpBtn.disabled = true;
+                sendOtpBtnText.style.display = 'none';
+                sendOtpSpinner.style.display = 'inline-block';
+                sendOtpMessage.style.display = 'none';
+
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                const formData = new FormData();
+                formData.append('contactNbr', contactNbrInput.value.trim());
+                formData.append('__RequestVerificationToken', token);
+
+                fetch('/Account/SendLoginOtp', { method: 'POST', body: formData })
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        sendOtpMessage.textContent = data.message;
+                        sendOtpMessage.className = 'k-form__hint ' + (data.success ? '' : 'k-form__hint--error');
+                        sendOtpMessage.style.display = 'block';
+
+                        if (data.success) {
+                            otpInputRow.style.display = 'block';
+                            sendOtpBtnText.textContent = 'Resend OTP';
+                            otpCdInput.focus();
+                            startWebOtpAutofill();
+                        }
+                    })
+                    .catch(function () {
+                        sendOtpMessage.textContent = 'Something went wrong. Please try again.';
+                        sendOtpMessage.className = 'k-form__hint k-form__hint--error';
+                        sendOtpMessage.style.display = 'block';
+                    })
+                    .finally(function () {
+                        sendOtpBtn.disabled = false;
+                        sendOtpBtnText.style.display = 'inline';
+                        sendOtpSpinner.style.display = 'none';
+                        updateLoginButtonState();
+                    });
+            }
+
+            sendOtpBtn.addEventListener('click', sendOtp);
+            resendOtpLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                sendOtp();
+            });
+
+            contactNbrInput.addEventListener('input', updateLoginButtonState);
+            otpCdInput.addEventListener('input', function () {
+                updateLoginButtonState();
+                maybeAutoSubmitOtp();
+            });
+            passwordInput.addEventListener('input', updateLoginButtonState);
+
+            // ── Auto-submit once a valid 4-digit OTP is entered ─────────────────
+            // Only in OTP mode (never for password login). Guarded so it can't
+            // fire twice (e.g. if the user edits the field again after submit).
+            let otpAutoSubmitted = false;
+
+            function maybeAutoSubmitOtp() {
+                if (usePasswordToggle.checked) return; // password mode, ignore
+                if (otpAutoSubmitted) return;
+                if (!isValidMobile()) return;
+                if (!/^\d{4}$/.test(otpCdInput.value.trim())) return;
+
+                otpAutoSubmitted = true;
+                document.getElementById('loginForm').requestSubmit();
+            }
+
+            // If the user edits the OTP after an attempted auto-submit failed
+            // server-side (e.g. wrong code, page re-rendered with an error),
+            // allow auto-submit to trigger again once they retype a full code.
+            otpCdInput.addEventListener('focus', function () {
+                otpAutoSubmitted = false;
+            });
+
+            // ── WebOTP API: auto-read the SMS and fill the OTP field ────────────
+            // Supported on Chrome for Android only (feature-detected below; a
+            // no-op everywhere else, including iOS Safari and desktop browsers).
+            // iOS Safari already gets a similar experience for free via the
+            // autocomplete="one-time-code" attribute on the OTP <input> -- no
+            // JS needed there.
+            //
+            // Requires the SMS text to end with a line like "yourdomain.com #1234"
+            // (see AuthService.cs) so the browser can verify the code came from
+            // an SMS addressed to this exact site, not just any 4-digit code.
+            let webOtpAbortController = null;
+
+            function startWebOtpAutofill() {
+                if (!('OTPCredential' in window)) return; // not supported on this browser
+                if (usePasswordToggle.checked) return;     // only relevant in OTP mode
+
+                stopWebOtpAutofill(); // cancel any previous listener before starting a new one
+
+                webOtpAbortController = new AbortController();
+
+                navigator.credentials.get({
+                    otp: { transport: ['sms'] },
+                    signal: webOtpAbortController.signal
+                }).then(function (otp) {
+                    if (!otp || !otp.code) return;
+                    otpCdInput.value = otp.code;
+                    updateLoginButtonState();
+                    maybeAutoSubmitOtp();
+                }).catch(function () {
+                    // User dismissed the SMS permission prompt, it timed out, or
+                    // the browser doesn't actually support it despite the feature
+                    // check above -- fall back silently to manual entry.
+                });
+            }
+
+            function stopWebOtpAutofill() {
+                if (webOtpAbortController) {
+                    webOtpAbortController.abort();
+                    webOtpAbortController = null;
+                }
+            }
+
+            // ── Submit spinner ───────────────────────────────────────────────────
+            document.getElementById('loginForm').addEventListener('submit', function () {
+                const btn = document.getElementById('loginBtn');
+                const text = document.getElementById('loginBtnText');
+                const spinner = document.getElementById('loginSpinner');
+                btn.disabled = true;
+                text.style.display = 'none';
+                spinner.style.display = 'inline-block';
+            });
+
+            updateLoginButtonState();
+        })();
     </script>
 }

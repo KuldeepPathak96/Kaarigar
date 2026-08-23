@@ -36,4 +36,13 @@ public interface IJobPostDao
     /// side is missing coordinates).
     /// </summary>
     Task<List<UserAccount>> FindMatchingEmployeesAsync(JobPost jobPost);
+
+    /// <summary>
+    /// Employees who completed (STATUS_CD = 'COMPLETED') the given job post
+    /// — used by "Repeat Shift" to build the priority-notification list.
+    /// </summary>
+    Task<List<UserAccount>> GetCompletedWorkersAsync(int jobPostId);
+
+    /// <summary>Distinct employees who have applied (any status) to the given job post — used to check fill progress before broadcasting a repeat-staff job wider.</summary>
+    Task<int> GetDistinctApplicantCountAsync(int jobPostId);
 }

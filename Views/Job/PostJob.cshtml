@@ -1,7 +1,8 @@
 @model Kaarigar.Models.PostJobViewModel
 @{
     var isEdit = ViewBag.IsEdit == true;
-    ViewData["Title"] = isEdit ? "Edit Job" : "Post a Job";
+    var isRepeat = Model.RepeatFromJobPostId.HasValue;
+    ViewData["Title"] = isEdit ? "Edit Job" : isRepeat ? "Repeat Shift" : "Post a Job";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
@@ -9,9 +10,9 @@
 
     <div class="k-dash-header">
         <div>
-            <h1 class="k-dash-title">@(isEdit ? "Edit Job" : "Post a Job")</h1>
+            <h1 class="k-dash-title">@(isEdit ? "Edit Job" : isRepeat ? "Repeat Shift" : "Post a Job")</h1>
             <p class="k-dash-subtitle">
-                @(isEdit ? "Update the details below." : "Fill in the details to find matching workers nearby.")
+                @(isEdit ? "Update the details below." : isRepeat ? "Confirm the details and pick a new date/time." : "Fill in the details to find matching workers nearby.")
             </p>
         </div>
     </div>
@@ -21,10 +22,21 @@
         <div class="k-alert k-alert--error">@ViewBag.ErrorMessage</div>
     }
 
+    @if (Model.RepeatFromJobPostId.HasValue)
+    {
+        <div class="k-alert k-alert--info">
+            <i data-lucide="repeat" style="width:16px;height:16px;vertical-align:-3px;"></i>
+            Repeating: <strong>@Model.RepeatFromSummaryTxt</strong>. All details below are copied from that job —
+            just set a new date and time.
+        </div>
+    }
+
     <form asp-action="@(isEdit ? "EditJob" : "PostJob")" asp-controller="Job" method="post" class="k-form" id="postJobForm">
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="JobPostId" />
         <input type="hidden" asp-for="StatusCd" />
+        <input type="hidden" asp-for="RepeatFromJobPostId" />
+        <input type="hidden" asp-for="RepeatFromSummaryTxt" />
 
         <div class="k-dash-section">
             <h2 class="k-dash-section__title">Job Details</h2>
@@ -113,6 +125,10 @@
                     <span asp-validation-for="StartTime" class="k-field-error"></span>
                 </div>
             </div>
+            @if (Model.RepeatFromJobPostId.HasValue)
+            {
+                <small class="k-form__hint">Pick the new date and time for this repeat shift — everything else was copied from the original job.</small>
+            }
 
             <div class="k-form__row">
                 <div class="k-form__group">
@@ -131,6 +147,19 @@
             <small class="k-form__hint">
                 Calculated automatically: Start Date + Start Time + Duration (hours).
             </small>
+
+            @if (Model.RepeatFromJobPostId.HasValue)
+            {
+                <div class="k-form__group k-form__group--checkbox" style="margin-top:1.25rem;">
+                    <label class="k-checkbox-label">
+                        <input asp-for="RepeatStaffFl" type="checkbox" />
+                        <span>
+                            <strong>Repeat Staff</strong> — invite the same workers who completed the original shift first.
+                            If they don't respond within 15 minutes, the shift is automatically opened up to other matching workers nearby.
+                        </span>
+                    </label>
+                </div>
+            }
         </div>
 
         <div class="k-dash-section">
@@ -189,7 +218,7 @@
         }
 
         <button type="submit" class="k-btn k-btn--primary k-btn--lg" id="saveBtn">
-            <span id="saveBtnText">@(isEdit ? "Save Changes" : "Post Job")</span>
+            <span id="saveBtnText">@(isEdit ? "Save Changes" : isRepeat ? "Post Repeat Shift" : "Post Job")</span>
             <span id="saveSpinner" class="k-spinner" style="display:none;"></span>
         </button>
     </form>

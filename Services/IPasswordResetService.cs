@@ -4,7 +4,7 @@ namespace Kaarigar.Services;
 
 public interface IPasswordResetService
 {
-    /// <summary>Step 1: validates the email exists, generates + emails a 6-digit OTP.</summary>
+    /// <summary>Step 1: validates the email exists, generates + emails a 4-digit OTP.</summary>
     Task<ServiceResult> RequestOtpAsync(ForgotPasswordModel model);
 
     /// <summary>Step 2: validates the OTP is correct, unused, and not expired.</summary>

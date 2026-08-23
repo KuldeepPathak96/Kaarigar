@@ -18,7 +18,7 @@ public class VerifyOtpModel
     public string EmailId { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "OTP is required.")]
-    [RegularExpression(@"^\d{6}$", ErrorMessage = "Enter the 6-digit OTP.")]
+    [RegularExpression(@"^\d{4}$", ErrorMessage = "Enter the 4-digit OTP.")]
     public string OtpCd { get; set; } = string.Empty;
 }
 
@@ -35,7 +35,7 @@ public class ResetPasswordModel
     /// without trusting the client that "verification" happened.
     /// </summary>
     [Required]
-    [RegularExpression(@"^\d{6}$")]
+    [RegularExpression(@"^\d{4}$")]
     public string OtpCd { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "New password is required.")]

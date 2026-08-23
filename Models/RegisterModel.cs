@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Kaarigar.Models;
 
@@ -54,6 +55,16 @@ public class RegisterModel
     [StringLength(200)]
     public string? CompanyName { get; set; }
 
+    /// <summary>
+    /// Maps to EMPLOYER_PROFILE.BUSINESS_CATEGORY_ID — Employer only.
+    /// Required when RoleCd == "EMPLOYER"; enforced manually in the
+    /// controller (see Register POST), same pattern as WorkCategoryId below.
+    /// </summary>
+    public int? BusinessCategoryId { get; set; }
+
+    /// <summary>Populated by the controller for the dropdown. Not bound from the form.</summary>
+    public List<SelectListItem> BusinessCategoryOptions { get; set; } = new();
+
     // ── EMPLOYEE_PROFILE & EMPLOYER_PROFILE shared location fields ───────────
 
     /// <summary>Maps to EMPLOYER_PROFILE.CITY_NAME / EMPLOYEE_PROFILE.CITY_NAME</summary>
@@ -68,14 +79,22 @@ public class RegisterModel
     // ── EMPLOYEE_PROFILE specific ────────────────────────────────────────────
 
     /// <summary>
-    /// Maps to EMPLOYEE_PROFILE.PREFERRED_RADIUS_NBR — 5 | 10 | 25 | 50 | NULL (Any)
+    /// "Work Preference" — maps to EMPLOYEE_PROFILE.WORK_CATEGORY_ID —
+    /// Employee only. Required when RoleCd == "EMPLOYEE"; enforced manually
+    /// in the controller (see Register POST). Determines which Skills are
+    /// offered on the form.
     /// </summary>
-    public int? PreferredRadiusNbr { get; set; }
+    public int? WorkCategoryId { get; set; }
 
     // ── EMPLOYEE_SKILL ───────────────────────────────────────────────────────
 
-    /// <summary>Maps to EMPLOYEE_SKILL.SKILL_ID for each selected skill.</summary>
-    public HashSet<int> SelectedSkillIds { get; set; } = new();
+    /// <summary>
+    /// Maps to EMPLOYEE_SKILL.SKILL_ID for each selected skill. Rendered as
+    /// checkboxes filtered by WorkCategoryId (see work-category-picker.js).
+    /// List&lt;int&gt; (not HashSet) — the standard, well-supported shape for
+    /// ASP.NET Core's checkbox-list model binding.
+    /// </summary>
+    public List<int> SelectedSkillIds { get; set; } = new();
 
     // ── EMPLOYEE_DOCUMENT (initial capture, upload handled post-registration) ─
 

@@ -89,6 +89,25 @@ public class PostJobViewModel
 
     /// <summary>'ACTIVE' | 'PAUSED' — only meaningful when editing; new posts always start ACTIVE.</summary>
     public string StatusCd { get; set; } = "ACTIVE";
+
+    // ── REPEAT SHIFT ─────────────────────────────────────────────────────────
+    // Populated when this form was opened via "Repeat Shift" on My Job Posts.
+    // Every other field above is prefilled from the original job; only
+    // StartDt/StartTime are left blank for the employer to fill in fresh.
+
+    /// <summary>The original JOB_POST.JOB_POST_ID this form is repeating. Null for a normal new/edit post.</summary>
+    public int? RepeatFromJobPostId { get; set; }
+
+    /// <summary>Original job's title/date, shown as a banner on the form so the employer knows what they're repeating. Not submitted — display only.</summary>
+    public string? RepeatFromSummaryTxt { get; set; }
+
+    /// <summary>
+    /// "Repeat Staff" checkbox. When true, workers who completed the
+    /// original job get a priority notification window (see
+    /// JobNotificationBackgroundService) before the shift is broadcast to
+    /// everyone else who matches.
+    /// </summary>
+    public bool RepeatStaffFl { get; set; }
 }
 
 /// <summary>

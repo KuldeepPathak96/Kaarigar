@@ -13,8 +13,16 @@ public interface IDashboardDao
     Task<int>  GetActiveJobsCountAsync(int userAccountId);
     Task<int>  GetTotalApplicationsAsync(int userAccountId);
     Task<int>  GetJobsFilledAsync(int userAccountId);
-    Task<List<ActivityFeedItem>> GetRecentActivityAsync(int userAccountId, int take = 5);
     Task<string?> GetCompanyNameAsync(int userAccountId);
+
+    /// <summary>ACTIVE job posts with fill progress ("5/6 Confirmed"), for the expanded "Live Shift Status" card. Ordered soonest-starting first.</summary>
+    Task<List<LiveShiftItem>> GetLiveShiftsAsync(int userAccountId);
+
+    /// <summary>Most recent applications received across all of this employer's jobs, for the expanded "Worker Applications" card.</summary>
+    Task<List<ApplicationDetailItem>> GetRecentApplicationsAsync(int userAccountId, int take = 10);
+
+    /// <summary>CLOSED job posts, most recently filled first, for the expanded "Positions Filled" card.</summary>
+    Task<List<FilledPositionItem>> GetRecentlyFilledAsync(int userAccountId, int take = 10);
 
     /// <summary>True once Admin has approved this employer's USER_ACCOUNT.</summary>
     Task<bool> IsEmployerApprovedAsync(int userAccountId);

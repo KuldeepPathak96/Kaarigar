@@ -1499,8 +1499,21 @@ h2.k-legal__part {
     .k-auth-success p {
         color: var(--k-muted);
         line-height: 1.7;
+        margin-bottom: 1rem;
+    }
+
+    .k-auth-success p:last-of-type {
         margin-bottom: 2rem;
     }
+
+    .k-auth-success__eta {
+        color: var(--k-text) !important;
+        font-size: 0.92rem;
+    }
+
+        .k-auth-success__eta strong {
+            color: var(--k-black);
+        }
 
 /* ── ROLE TOGGLE ─────────────────────────────────────────────────────────── */
 .k-role-toggle {
@@ -1785,6 +1798,19 @@ h2.k-legal__part {
             text-decoration: underline;
         }
 
+/* Trust icon row when placed at the BOTTOM of a form (e.g. end of Register),
+   rather than directly under a page subtitle at the top. .k-auth-trust-line
+   itself has a negative top margin + border-bottom specifically so it sits
+   flush under .k-auth-sub at the top of a card -- reusing it lower down in
+   the page makes it collide with whatever's above it. This modifier resets
+   both so the icon row can be dropped in anywhere without that assumption. */
+.k-auth-trust-line--bottom {
+    margin: 1.5rem 0 0;
+    padding-bottom: 0;
+    border-bottom: none;
+    justify-content: center;
+}
+
 /* ── RESPONSIVE — REGISTER PAGE ─────────────────────────────────────────── */
 @media (max-width: 640px) {
     .k-auth-page {
@@ -1988,6 +2014,11 @@ h2.k-legal__part {
     font-size: 12px;
     display: block;
     margin-top: 4px;
+}
+
+.k-form__hint--error {
+    color: #DC2626;
+    font-weight: 600;
 }
 
 .k-form--inline {

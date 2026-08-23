@@ -3,6 +3,7 @@ using Kaarigar.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using System.Linq;
 
 namespace Kaarigar.Controllers
 {
@@ -14,20 +15,34 @@ namespace Kaarigar.Controllers
         private readonly IEmployerProfileService _employerProfileService;
         private readonly IEmployeeProfileService _employeeProfileService;
         private readonly IGeocodingService _geocodingService;
+        private readonly IBusinessCategoryService _businessCategoryService;
 
         public AccountController(
             IAuthService authService,
             IPasswordResetService passwordResetService,
             IEmployerProfileService employerProfileService,
             IEmployeeProfileService employeeProfileService,
-            IGeocodingService geocodingService)
+            IGeocodingService geocodingService,
+            IBusinessCategoryService businessCategoryService)
         {
             _authService = authService;
             _passwordResetService = passwordResetService;
             _employerProfileService = employerProfileService;
             _employeeProfileService = employeeProfileService;
             _geocodingService = geocodingService;
+            _businessCategoryService = businessCategoryService;
 
+        }
+
+        /// <summary>Business Category options for the Employer Register dropdown — same source as the Employer Profile page.</summary>
+        private async Task<List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>> GetBusinessCategoryOptionsAsync()
+        {
+            var categories = await _businessCategoryService.GetAllAsync();
+            return categories
+                .Where(c => c.IsActiveFl)
+                .OrderBy(c => c.CategoryName)
+                .Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem(c.CategoryName, c.BusinessCategoryId.ToString()))
+                .ToList();
         }
 
         // ── LOGOUT ────────────────────────────────────────────────────────────
@@ -48,20 +63,57 @@ namespace Kaarigar.Controllers
             return View(new LoginModel());
         }
 
+        /// <summary>
+        /// AJAX endpoint: user clicks "Send OTP" on the Login page. Returns JSON
+        /// so the page can reveal the OTP field without a full reload.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendLoginOtp([FromForm] string contactNbr)
+        {
+            if (string.IsNullOrWhiteSpace(contactNbr) || contactNbr.Trim().Length != 10)
+                return Json(new { success = false, message = "Enter a valid 10-digit mobile number." });
+
+            var result = await _authService.RequestLoginOtpAsync(contactNbr.Trim());
+            return Json(new { success = result.Success, message = result.Message });
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel vm)
         {
+            if (vm.LoginMethodCd == "PASSWORD")
+            {
+                ModelState.Remove(nameof(vm.OtpCd));
+                if (string.IsNullOrWhiteSpace(vm.Password))
+                    ModelState.AddModelError(nameof(vm.Password), "Password is required.");
+            }
+            else
+            {
+                ModelState.Remove(nameof(vm.Password));
+                if (string.IsNullOrWhiteSpace(vm.OtpCd))
+                    ModelState.AddModelError(nameof(vm.OtpCd), "Enter the 4-digit OTP.");
+            }
+
             if (!ModelState.IsValid)
                 return View(vm);
 
-            var loginModel = new LoginModel
-            {
-                ContactNbr = vm.ContactNbr,
-                Password = vm.Password
-            };
+            ServiceResult result;
+            UserAccount? user;
 
-            var (result, user) = await _authService.LoginAsync(loginModel);
+            if (vm.LoginMethodCd == "PASSWORD")
+            {
+                var loginModel = new LoginModel
+                {
+                    ContactNbr = vm.ContactNbr,
+                    Password = vm.Password
+                };
+                (result, user) = await _authService.LoginAsync(loginModel);
+            }
+            else
+            {
+                (result, user) = await _authService.LoginWithOtpAsync(vm.ContactNbr, vm.OtpCd ?? string.Empty);
+            }
 
             if (result.Success && user != null)
             {
@@ -108,12 +160,15 @@ namespace Kaarigar.Controllers
         // ── REGISTER ──────────────────────────────────────────────────────────
 
         [HttpGet]
-        public IActionResult Register([FromQuery] string? role)
+        public async Task<IActionResult> Register([FromQuery] string? role)
         {
             var currentRole = role?.ToUpper() == "EMPLOYEE" ? "EMPLOYEE" : "EMPLOYER";
             ViewBag.CurrentRole = currentRole;
 
-            return View(new RegisterModel { RoleCd = currentRole });
+            var vm = new RegisterModel { RoleCd = currentRole };
+            vm.BusinessCategoryOptions = await GetBusinessCategoryOptionsAsync();
+
+            return View(vm);
         }
 
         [HttpPost]
@@ -122,18 +177,41 @@ namespace Kaarigar.Controllers
         {
             if (vm.RoleCd == "EMPLOYER")
             {
-                ModelState.Remove(nameof(vm.PreferredRadiusNbr));
+                ModelState.Remove(nameof(vm.WorkCategoryId));
+                ModelState.Remove(nameof(vm.SelectedSkillIds));
                 ModelState.Remove(nameof(vm.DocumentSubtypeCd));
                 ModelState.Remove(nameof(vm.IdLastFourDigitTxt));
+
+                // [Required] doesn't reliably fire for nullable value types
+                // bound from an empty <select>, so validate explicitly.
+                if (vm.BusinessCategoryId is null or <= 0)
+                {
+                    ModelState.AddModelError(nameof(vm.BusinessCategoryId), "Please select your business category.");
+                }
             }
             else
             {
                 ModelState.Remove(nameof(vm.CompanyName));
+                ModelState.Remove(nameof(vm.BusinessCategoryId));
+
+                if (vm.WorkCategoryId is null or <= 0)
+                {
+                    ModelState.AddModelError(nameof(vm.WorkCategoryId), "Please select your work preference.");
+                }
+
+                // Same reasoning as above — [Required]/[MinLength] on a List<int>
+                // bound from dynamically-added checkboxes isn't reliable enough
+                // to trust alone; check the actual count server-side.
+                if (vm.SelectedSkillIds is null || vm.SelectedSkillIds.Count == 0)
+                {
+                    ModelState.AddModelError(nameof(vm.SelectedSkillIds), "Please select at least one skill.");
+                }
             }
 
             if (!ModelState.IsValid)
             {
                 ViewBag.CurrentRole = vm.RoleCd ?? "EMPLOYER";
+                vm.BusinessCategoryOptions = await GetBusinessCategoryOptionsAsync();
                 return View(vm);
             }
 
@@ -147,9 +225,10 @@ namespace Kaarigar.Controllers
                 Password = vm.Password,
                 ConfirmPassword = vm.ConfirmPassword,
                 CompanyName = vm.CompanyName,
+                BusinessCategoryId = vm.BusinessCategoryId,
                 CityName = vm.CityName,
                 AreaAddressTxt = vm.AreaAddressTxt,
-                PreferredRadiusNbr = vm.PreferredRadiusNbr,
+                WorkCategoryId = vm.WorkCategoryId,
                 SelectedSkillIds = vm.SelectedSkillIds,
                 DocumentSubtypeCd = vm.DocumentSubtypeCd,
                 IdLastFourDigitTxt = vm.IdLastFourDigitTxt,
@@ -168,6 +247,7 @@ namespace Kaarigar.Controllers
 
             ViewBag.ErrorMessage = result.Message;
             ViewBag.CurrentRole = vm.RoleCd ?? "EMPLOYER";
+            vm.BusinessCategoryOptions = await GetBusinessCategoryOptionsAsync();
             return View(vm);
         }
 

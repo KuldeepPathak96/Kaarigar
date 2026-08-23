@@ -10,7 +10,7 @@ public class PasswordResetService : IPasswordResetService
     private readonly IEmailSenderService _emailSender;
     private readonly ILogger<PasswordResetService> _logger;
 
-    private const int OtpLength = 6;
+    private const int OtpLength = 4;
     private static readonly TimeSpan OtpValidity = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan ThrottleWindow = TimeSpan.FromMinutes(15);
     private const int MaxRequestsPerWindow = 3;
@@ -123,10 +123,10 @@ public class PasswordResetService : IPasswordResetService
 
     private static string GenerateOtp()
     {
-        // Cryptographically-random 6-digit OTP (000000–999999, zero-padded).
+        // Cryptographically-random 4-digit OTP (0000–9999, zero-padded).
         return System.Security.Cryptography.RandomNumberGenerator
-            .GetInt32(0, 1_000_000)
-            .ToString("D6");
+            .GetInt32(0, 10_000)
+            .ToString("D4");
     }
 
     private static string BuildOtpEmailBody(string firstName, string otpCd) => $@"

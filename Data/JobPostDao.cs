@@ -136,6 +136,28 @@ public class JobPostDao : IJobPostDao
         }).ToList();
     }
 
+    public async Task<List<UserAccount>> GetCompletedWorkersAsync(int jobPostId)
+    {
+        var employeeIds = await _db.JobApplications
+            .Where(a => a.JobPostId == jobPostId && a.StatusCd == "COMPLETED")
+            .Select(a => a.EmployeeUserAccountId)
+            .Distinct()
+            .ToListAsync();
+
+        if (employeeIds.Count == 0) return new List<UserAccount>();
+
+        return await _db.UserAccounts
+            .Where(u => employeeIds.Contains(u.UserAccountId))
+            .ToListAsync();
+    }
+
+    public Task<int> GetDistinctApplicantCountAsync(int jobPostId) =>
+        _db.JobApplications
+           .Where(a => a.JobPostId == jobPostId)
+           .Select(a => a.EmployeeUserAccountId)
+           .Distinct()
+           .CountAsync();
+
     public async Task<List<UserAccount>> FindMatchingEmployeesAsync(JobPost jobPost)
     {
         var requiredSkillIds = await _db.JobSkills

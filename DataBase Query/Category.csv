@@ -1,0 +1,217 @@
+Business Category,Work Category (Role),Individual Skills / Responsibilities
+Restaurants / QSR / Cafe's / Cloud Kitchens,Steward / Waiter,Table Service
+Restaurants / QSR / Cafe's / Cloud Kitchens,Steward / Waiter,Order Taking
+Restaurants / QSR / Cafe's / Cloud Kitchens,Steward / Waiter,Table Setup
+Restaurants / QSR / Cafe's / Cloud Kitchens,Steward / Waiter,Guest Assistance
+Restaurants / QSR / Cafe's / Cloud Kitchens,Kitchen Helper,Food Preparation Support
+Restaurants / QSR / Cafe's / Cloud Kitchens,Kitchen Helper,Kitchen Cleaning
+Restaurants / QSR / Cafe's / Cloud Kitchens,Kitchen Helper,Dishwashing
+Restaurants / QSR / Cafe's / Cloud Kitchens,Kitchen Helper,Material Handling
+Restaurants / QSR / Cafe's / Cloud Kitchens,Kitchen Helper,Food Hygiene
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cook / Commis / Line Cook,Basic Cooking
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cook / Commis / Line Cook,Mise en Place
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cook / Commis / Line Cook,Station Operation
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cook / Commis / Line Cook,Portion Control
+Restaurants / QSR / Cafe's / Cloud Kitchens,Dishwasher / Stewarding,Dishwashing
+Restaurants / QSR / Cafe's / Cloud Kitchens,Dishwasher / Stewarding,Sanitation
+Restaurants / QSR / Cafe's / Cloud Kitchens,Dishwasher / Stewarding,Waste Handling
+Restaurants / QSR / Cafe's / Cloud Kitchens,Dishwasher / Stewarding,Kitchen Support
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cleaner,Dining Area Cleaning
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cleaner,Kitchen Cleaning
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cleaner,Washroom Cleaning
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cleaner,Waste Collection
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cleaner,Consumables Replenishment
+Restaurants / QSR / Cafe's / Cloud Kitchens,Delivery Rider,Order Pickup
+Restaurants / QSR / Cafe's / Cloud Kitchens,Delivery Rider,Route Navigation
+Restaurants / QSR / Cafe's / Cloud Kitchens,Delivery Rider,Delivery
+Restaurants / QSR / Cafe's / Cloud Kitchens,Delivery Rider,Customer Handover
+Restaurants / QSR / Cafe's / Cloud Kitchens,Delivery Rider,App Proof-of-Delivery
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cashier / Billing,POS Billing
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cashier / Billing,Cash Handling
+Restaurants / QSR / Cafe's / Cloud Kitchens,Cashier / Billing,UPI / Card Payment Processing
+Hotels / Resorts / Hospitality,Housekeeping Attendant,Room Cleaning
+Hotels / Resorts / Hospitality,Housekeeping Attendant,Bathroom Sanitation
+Hotels / Resorts / Hospitality,Housekeeping Attendant,Bed Making
+Hotels / Resorts / Hospitality,Housekeeping Attendant,Linen Handling
+Hotels / Resorts / Hospitality,Housekeeping Attendant,Public-Area Cleaning
+Hotels / Resorts / Hospitality,Banquet Staff,Banquet Setup
+Hotels / Resorts / Hospitality,Banquet Staff,Food Service
+Hotels / Resorts / Hospitality,Banquet Staff,Guest Assistance
+Hotels / Resorts / Hospitality,Banquet Staff,Event Reset
+Hotels / Resorts / Hospitality,Kitchen Steward,Utensil Cleaning
+Hotels / Resorts / Hospitality,Kitchen Steward,Kitchen Support
+Hotels / Resorts / Hospitality,Kitchen Steward,Sanitation
+Hotels / Resorts / Hospitality,Kitchen Steward,Waste-Area Maintenance
+Hotels / Resorts / Hospitality,Guest Service Support,Guest Assistance
+Hotels / Resorts / Hospitality,Guest Service Support,Lobby / Queue Support
+Hotels / Resorts / Hospitality,Guest Service Support,Basic Service Coordination
+Warehouses / Distribution / Fulfilment,Warehouse Associate,Inbound Handling
+Warehouses / Distribution / Fulfilment,Warehouse Associate,Put-Away
+Warehouses / Distribution / Fulfilment,Warehouse Associate,Stock Movement
+Warehouses / Distribution / Fulfilment,Warehouse Associate,Inventory Support
+Warehouses / Distribution / Fulfilment,Warehouse Associate,Outbound Staging
+Warehouses / Distribution / Fulfilment,Picker,Order Picking
+Warehouses / Distribution / Fulfilment,Picker,Barcode Scanning
+Warehouses / Distribution / Fulfilment,Picker,Quantity Verification
+Warehouses / Distribution / Fulfilment,Picker,Basic Quality Check
+Warehouses / Distribution / Fulfilment,Packer,Packing
+Warehouses / Distribution / Fulfilment,Packer,Labelling
+Warehouses / Distribution / Fulfilment,Packer,Quantity Verification
+Warehouses / Distribution / Fulfilment,Packer,Packaging Quality
+Warehouses / Distribution / Fulfilment,Sorter,Order / SKU Sorting
+Warehouses / Distribution / Fulfilment,Sorter,Route / Destination Sorting
+Warehouses / Distribution / Fulfilment,Sorter,Label Scanning
+Warehouses / Distribution / Fulfilment,Loader / Unloader,Safe Loading
+Warehouses / Distribution / Fulfilment,Loader / Unloader,Unloading
+Warehouses / Distribution / Fulfilment,Loader / Unloader,Material Movement
+Warehouses / Distribution / Fulfilment,Inventory Associate,Stock Count
+Warehouses / Distribution / Fulfilment,Inventory Associate,Cycle Count
+Warehouses / Distribution / Fulfilment,Inventory Associate,Discrepancy Identification
+Warehouses / Distribution / Fulfilment,Inventory Associate,Records Maintenance
+Warehouses / Distribution / Fulfilment,Dispatch Associate,Order Staging
+Warehouses / Distribution / Fulfilment,Dispatch Associate,Document / Manifest Check
+Warehouses / Distribution / Fulfilment,Dispatch Associate,Handover
+Retail Stores / Supermarkets / Malls,Store Associate / Helper,Shelf Replenishment
+Retail Stores / Supermarkets / Malls,Store Associate / Helper,Customer Assistance
+Retail Stores / Supermarkets / Malls,Store Associate / Helper,Store Support
+Retail Stores / Supermarkets / Malls,Store Associate / Helper,Stock Movement
+Retail Stores / Supermarkets / Malls,Sales Promoter,Product Explanation
+Retail Stores / Supermarkets / Malls,Sales Promoter,Customer Engagement
+Retail Stores / Supermarkets / Malls,Sales Promoter,Approved Demonstration
+Retail Stores / Supermarkets / Malls,Sales Promoter,Lead Capture
+Retail Stores / Supermarkets / Malls,Billing Executive / Cashier,POS Billing
+Retail Stores / Supermarkets / Malls,Billing Executive / Cashier,Cash / UPI / Card Handling
+Retail Stores / Supermarkets / Malls,Billing Executive / Cashier,Return / Bill Support
+Retail Stores / Supermarkets / Malls,Visual Merchandiser,Display Setup
+Retail Stores / Supermarkets / Malls,Visual Merchandiser,Signage Setup
+Retail Stores / Supermarkets / Malls,Visual Merchandiser,Display Maintenance
+Retail Stores / Supermarkets / Malls,Stock / Inventory Associate,Stock Counting
+Retail Stores / Supermarkets / Malls,Stock / Inventory Associate,Goods Receiving
+Retail Stores / Supermarkets / Malls,Stock / Inventory Associate,Shelf Auditing
+Hospitals / Clinics / Diagnostic Centres,Hospital Housekeeping,Non-Clinical Area Cleaning
+Hospitals / Clinics / Diagnostic Centres,Hospital Housekeeping,Sanitation
+Hospitals / Clinics / Diagnostic Centres,Hospital Housekeeping,Facility Waste Procedures
+Hospitals / Clinics / Diagnostic Centres,Patient / Non-Clinical Attendant,Non-Clinical Assistance
+Hospitals / Clinics / Diagnostic Centres,Patient / Non-Clinical Attendant,Mobility Support
+Hospitals / Clinics / Diagnostic Centres,Patient / Non-Clinical Attendant,Escalation of Medical Needs
+Hospitals / Clinics / Diagnostic Centres,Front Desk / Registration Support,Visitor Guidance
+Hospitals / Clinics / Diagnostic Centres,Front Desk / Registration Support,Queue Management
+Hospitals / Clinics / Diagnostic Centres,Front Desk / Registration Support,Approved Data Entry
+Hospitals / Clinics / Diagnostic Centres,Ward / Facility Support,Approved Material Movement
+Hospitals / Clinics / Diagnostic Centres,Ward / Facility Support,Linen Movement
+Manufacturing / Factories,Production / General Helper,Line Support
+Manufacturing / Factories,Production / General Helper,Material Feeding
+Manufacturing / Factories,Production / General Helper,Workstation Housekeeping
+Manufacturing / Factories,Machine Operator,Authorized Machine Operation
+Manufacturing / Factories,Machine Operator,Basic Checks
+Manufacturing / Factories,Machine Operator,Routine Cleaning
+Manufacturing / Factories,Machine Operator,Safety Compliance
+Manufacturing / Factories,Assembly Operator,Assembly
+Manufacturing / Factories,Assembly Operator,Tool Handling
+Manufacturing / Factories,Assembly Operator,Visible Defect Identification
+Manufacturing / Factories,Packaging Operator,Product Packing
+Manufacturing / Factories,Packaging Operator,Labelling
+Manufacturing / Factories,Packaging Operator,Quantity Verification
+Manufacturing / Factories,Quality Checker / Inspector,Visual Inspection
+Manufacturing / Factories,Quality Checker / Inspector,Approved Measurements
+Manufacturing / Factories,Quality Checker / Inspector,Non-Conformance Escalation
+Manufacturing / Factories,Material Handler,Internal Material Movement
+Manufacturing / Factories,Material Handler,Storage
+Manufacturing / Factories,Material Handler,Movement Records
+Manufacturing / Factories,Maintenance Helper,Assisting Qualified Technicians
+Manufacturing / Factories,Maintenance Helper,Spares Handling
+Manufacturing / Factories,Maintenance Helper,Maintenance Housekeeping
+Logistics / Courier / E-commerce,Delivery Executive / Rider,Shipment Pickup
+Logistics / Courier / E-commerce,Delivery Executive / Rider,Route Navigation
+Logistics / Courier / E-commerce,Delivery Executive / Rider,Delivery
+Logistics / Courier / E-commerce,Delivery Executive / Rider,Customer Handover
+Logistics / Courier / E-commerce,Delivery Executive / Rider,Proof of Delivery
+Logistics / Courier / E-commerce,Hub Sorter,Parcel Sorting
+Logistics / Courier / E-commerce,Hub Sorter,Scanning
+Logistics / Courier / E-commerce,Hub Sorter,Destination Routing
+Logistics / Courier / E-commerce,Loading / Unloading Associate,Safe Vehicle Loading
+Logistics / Courier / E-commerce,Loading / Unloading Associate,Safe Vehicle Unloading
+Logistics / Courier / E-commerce,Loading / Unloading Associate,Movement to Assigned Areas
+Logistics / Courier / E-commerce,Dispatch Associate,Shipment Staging
+Logistics / Courier / E-commerce,Dispatch Associate,Manifest Check
+Logistics / Courier / E-commerce,Dispatch Associate,Vehicle Handover
+Events / Exhibitions / Catering,Event Staff / Usher,Guest Welcome
+Events / Exhibitions / Catering,Event Staff / Usher,Directions
+Events / Exhibitions / Catering,Event Staff / Usher,Queue Management
+Events / Exhibitions / Catering,Event Staff / Usher,Event Support
+Events / Exhibitions / Catering,Event Setup Crew,Furniture Setup
+Events / Exhibitions / Catering,Event Setup Crew,Signage Setup
+Events / Exhibitions / Catering,Event Setup Crew,Stall Setup
+Events / Exhibitions / Catering,Event Setup Crew,Post-Event Dismantling & Packing
+Events / Exhibitions / Catering,Catering Staff,Food Service
+Events / Exhibitions / Catering,Catering Staff,Buffet Setup
+Events / Exhibitions / Catering,Catering Staff,Replenishment
+Events / Exhibitions / Catering,Catering Staff,Clearing
+Events / Exhibitions / Catering,Promoter / Brand Ambassador,Customer Engagement
+Events / Exhibitions / Catering,Promoter / Brand Ambassador,Approved Demonstrations / Sampling
+Events / Exhibitions / Catering,Promoter / Brand Ambassador,Lead Collection
+Corporate Offices / Business Parks,Office Housekeeping,Desk Cleaning
+Corporate Offices / Business Parks,Office Housekeeping,Common Area Cleaning
+Corporate Offices / Business Parks,Office Housekeeping,Meeting Room Cleaning
+Corporate Offices / Business Parks,Office Housekeeping,Washroom Cleaning
+Corporate Offices / Business Parks,Pantry Staff,Beverage Preparation & Service
+Corporate Offices / Business Parks,Pantry Staff,Hygiene Maintenance
+Corporate Offices / Business Parks,Pantry Staff,Supply Replenishment
+Corporate Offices / Business Parks,Office Support / Runner,Document Movement
+Corporate Offices / Business Parks,Office Support / Runner,Material Movement
+Corporate Offices / Business Parks,Office Support / Runner,Meeting-Room Support
+Corporate Offices / Business Parks,Reception / Front Desk Support,Visitor Greeting
+Corporate Offices / Business Parks,Reception / Front Desk Support,Directions
+Corporate Offices / Business Parks,Reception / Front Desk Support,Visitor / Call Logging
+Facility Management / Commercial Buildings,Facility Helper,Routine Non-Specialist Tasks
+Facility Management / Commercial Buildings,Facility Helper,Material Movement
+Facility Management / Commercial Buildings,Electrician,Electrical Maintenance
+Facility Management / Commercial Buildings,Electrician,Fault Reporting
+Facility Management / Commercial Buildings,Electrician,Electrical Safety Compliance
+Facility Management / Commercial Buildings,Plumber,Plumbing Installation & Repair
+Facility Management / Commercial Buildings,Plumber,Fault / Leak Identification
+Facility Management / Commercial Buildings,HVAC / AC Technician,Inspection & Cleaning
+Facility Management / Commercial Buildings,HVAC / AC Technician,Servicing
+Facility Management / Commercial Buildings,HVAC / AC Technician,Basic Fault Diagnosis
+Facility Management / Commercial Buildings,Housekeeping Staff,Building-Area Cleaning
+Facility Management / Commercial Buildings,Housekeeping Staff,Consumable Replenishment
+Construction / Infrastructure,General Helper,Material Handling
+Construction / Infrastructure,General Helper,Site Housekeeping
+Construction / Infrastructure,Mason,Brick / Block / Plaster Work
+Construction / Infrastructure,Mason,Mortar & Material Preparation
+Construction / Infrastructure,Painter,Surface Preparation
+Construction / Infrastructure,Painter,Painting & Coating
+Construction / Infrastructure,Carpenter,Cutting & Fitting
+Construction / Infrastructure,Carpenter,Installation & Repairs
+Construction / Infrastructure,Electrician,Electrical Work & Testing
+Construction / Infrastructure,Plumber,Plumbing Installation & Repair
+Construction / Infrastructure,Plumber,Leak Repair
+Quick Commerce / Dark Stores,Dark Store Picker,Digital Order Picking
+Quick Commerce / Dark Stores,Dark Store Picker,Barcode Scanning
+Quick Commerce / Dark Stores,Dark Store Picker,Quantity Confirmation
+Quick Commerce / Dark Stores,Dark Store Packer,Order Packing
+Quick Commerce / Dark Stores,Dark Store Packer,Item & Quantity Verification
+Quick Commerce / Dark Stores,Inventory Associate,Stock Count
+Quick Commerce / Dark Stores,Inventory Associate,Reconciliation
+Quick Commerce / Dark Stores,Inventory Associate,Shelf Replenishment
+Quick Commerce / Dark Stores,Dispatch Associate,Order Staging
+Quick Commerce / Dark Stores,Dispatch Associate,Rider Handover
+Educational Institutions / Campuses,Campus Housekeeping,Classroom & Office Cleaning
+Educational Institutions / Campuses,Campus Housekeeping,Common-Area Cleaning
+Educational Institutions / Campuses,Campus Housekeeping,Washroom Cleaning
+Educational Institutions / Campuses,Campus Housekeeping,Waste Handling
+Educational Institutions / Campuses,Pantry / Canteen Staff,Food Service
+Educational Institutions / Campuses,Pantry / Canteen Staff,Pantry Hygiene
+Educational Institutions / Campuses,Event / Campus Support,Event Setup
+Educational Institutions / Campuses,Event / Campus Support,Attendee Movement Support
+Automotive / Service Centres / Dealerships,Workshop Helper,Technician Support
+Automotive / Service Centres / Dealerships,Workshop Helper,Tool & Parts Handling
+Automotive / Service Centres / Dealerships,Workshop Helper,Workshop Housekeeping
+Automotive / Service Centres / Dealerships,Car Washer / Detailer,Vehicle Washing
+Automotive / Service Centres / Dealerships,Car Washer / Detailer,Interior Cleaning
+Automotive / Service Centres / Dealerships,Car Washer / Detailer,Detailing
+Automotive / Service Centres / Dealerships,Parts / Inventory Associate,Parts Picking
+Automotive / Service Centres / Dealerships,Parts / Inventory Associate,Organization
+Automotive / Service Centres / Dealerships,Parts / Inventory Associate,Stock Counting
+Automotive / Service Centres / Dealerships,Service Support Executive,Customer Assistance
+Automotive / Service Centres / Dealerships,Service Support Executive,Job-Card & Data Support
