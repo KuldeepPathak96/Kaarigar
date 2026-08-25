@@ -19,6 +19,9 @@ public class AppDbContext : DbContext
     public DbSet<BusinessCategory> BusinessCategories { get; set; }
     public DbSet<WorkCategory> WorkCategories { get; set; }
     public DbSet<WorkCategorySkill> WorkCategorySkills { get; set; }
+    public DbSet<KaarigarInvoice> KaarigarInvoices { get; set; }
+    public DbSet<WebsiteInvoice> WebsiteInvoices { get; set; }
+    public DbSet<InvoiceNumberSequence> InvoiceNumberSequences { get; set; }
     public DbSet<HourlyRateOption> HourlyRateOptions { get; set; }
     public DbSet<Skill> Skills { get; set; }
     public DbSet<JobSkill> JobSkills { get; set; }

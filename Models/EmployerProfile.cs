@@ -76,6 +76,15 @@ public class EmployerProfile
     [StringLength(20)]
     public string BusinessProofReviewStatusCd { get; set; } = "PENDING";
 
+    /// <summary>Used on the "Bill To" block of generated invoices. Optional — many small businesses aren't GST-registered.</summary>
+    [Column("GSTIN_TXT")]
+    [StringLength(15)]
+    public string? GstinTxt { get; set; }
+
+    /// <summary>Per-employer commission rate used for the Kaarigar Invoice. NULL = use platform default (see InvoiceCalculationService).</summary>
+    [Column("SERVICE_CHARGE_PCT")]
+    public decimal? ServiceChargePct { get; set; }
+
     // Audit
     [Column("CREATED_BY")] public string CreatedBy { get; set; } = "SYSTEM";
     [Column("CREATED_TS")] public DateTime CreatedTs { get; set; } = DateTime.UtcNow;

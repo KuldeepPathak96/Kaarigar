@@ -24,6 +24,7 @@
             (Icon:"grid",         Label:"Dashboard",    Href:"/dashboard/employer",       Active: IsActive("/dashboard/employer")),
             (Icon:"briefcase",    Label:"Post a Job",   Href:"/job/post",                 Active: IsActive("/job/post") || IsActive("/job/edit")),
             (Icon:"list",         Label:"My Job Posts", Href:"/job/my-jobs",              Active: IsActive("/job/my-jobs") || IsActive("/job/applicants") || IsActive("/job/applicant")),
+            (Icon:"dollar-sign",  Label:"My Billing",   Href:"/billing/my-invoices",      Active: IsActive("/billing/my-invoices")),
             (Icon:"user",         Label:"My Profile",   Href:"/account/profile",          Active: IsActive("/account/profile")),
         },
         "EMPLOYEE" => new[]
@@ -44,6 +45,7 @@
             (Icon:"briefcase",    Label:"Employers",    Href:"/admin/employers",          Active: IsActive("/admin/employers")),
             (Icon:"users",        Label:"Employees",    Href:"/admin/employees",          Active: IsActive("/admin/employees")),
             (Icon:"list",         Label:"Job Posts",    Href:"/admin/jobs",               Active: IsActive("/admin/jobs")),
+            (Icon:"dollar-sign",  Label:"Billing",      Href:"/admin/billing",            Active: IsActive("/admin/billing")),
             (Icon:"play-circle",  Label:"Learning Videos", Href:"/admin/learning-videos", Active: IsActive("/admin/learning-videos")),
             (Icon:"bell",         Label:"Notif Logs",   Href:"/admin/notifications",      Active: IsActive("/admin/notifications")),
         },

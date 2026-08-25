@@ -98,8 +98,34 @@
         </div>
 
         <div class="k-form__group">
+            <label>Work Category</label>
+            @if (!string.IsNullOrEmpty(Model.WorkCategoryName))
+            {
+                <div class="k-chip-list">
+                    <span class="k-chip">@Model.WorkCategoryName</span>
+                </div>
+            }
+            else
+            {
+                <p>Not specified</p>
+            }
+        </div>
+
+        <div class="k-form__group">
             <label>Skills</label>
-            <p>@(Model.SkillNames.Any() ? string.Join(", ", Model.SkillNames) : "Not specified")</p>
+            @if (Model.SkillNames.Any())
+            {
+                <div class="k-chip-list">
+                    @foreach (var skill in Model.SkillNames)
+                    {
+                        <span class="k-chip">@skill</span>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Not specified</p>
+            }
         </div>
     </div>
 

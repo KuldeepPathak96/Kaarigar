@@ -2055,6 +2055,11 @@ h2.k-legal__part {
     color: #854D0E;
 }
 
+.k-badge--blue {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
 .k-table {
     width: 100%;
     border-collapse: collapse;
@@ -2113,6 +2118,35 @@ h2.k-legal__part {
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 6px;
+}
+
+/* Read-only chip display — used on Admin Employee/Employer Detail pages so
+   Work Category / Business Category / Skills look the same as they do on
+   the Registration page's chip pickers, just without the checkbox behavior. */
+.k-chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.k-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 1.05rem;
+    border: 1.5px solid var(--k-yellow);
+    background: var(--k-yellow);
+    color: var(--k-black);
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.k-chip--muted {
+    border-color: var(--k-border);
+    background: var(--k-white);
+    color: var(--k-muted);
+    font-weight: 500;
 }
 
 .k-checkbox-chip {

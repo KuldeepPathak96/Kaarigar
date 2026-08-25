@@ -191,6 +191,63 @@ public class WhatsAppNotificationService : IWhatsAppNotificationService
     // ── Provider integration ─────────────────────────────────────────────────
 
     /// <summary>
+    /// Sends a document (e.g. invoice PDF) as a WhatsApp document message with
+    /// a caption. Same "safe no-op until configured" behavior as text
+    /// messages — while WhatsAppSettings.IsConfigured is false, this logs and
+    /// returns "SENT" without making an HTTP call, so invoice generation
+    /// never breaks just because WhatsApp isn't wired up yet.
+    /// </summary>
+    public async Task<string> SendDocumentAsync(string toContactNbr, string documentUrl, string filename, string caption)
+    {
+        if (!_settings.IsConfigured)
+        {
+            _logger.LogInformation(
+                "WhatsApp API not configured yet — document '{Filename}' NOT sent to {ToContactNbr}. URL would have been: {DocumentUrl}",
+                filename, toContactNbr, documentUrl);
+            return "SENT"; // optimistic placeholder until a real API key is dropped in
+        }
+
+        try
+        {
+            var client = _httpClientFactory.CreateClient(HttpClientName);
+            var url = $"{_settings.ApiBaseUrl.TrimEnd('/')}/{_settings.ApiVersion}/{_settings.PhoneNumberId}/messages";
+
+            var payload = new WhatsAppDocumentMessageRequest
+            {
+                To = NormalizeToE164(toContactNbr),
+                Document = new WhatsAppDocumentMessageBody
+                {
+                    Link = documentUrl,
+                    Filename = filename,
+                    Caption = caption,
+                },
+            };
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = JsonContent.Create(payload),
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settings.AccessToken);
+
+            var response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+                return "SENT";
+
+            var errorBody = await response.Content.ReadAsStringAsync();
+            _logger.LogError(
+                "WhatsApp Cloud API document send failed for {ToContactNbr}: {StatusCode} — {Body}",
+                toContactNbr, (int)response.StatusCode, errorBody);
+            return "FAILED";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "WhatsApp Cloud API document send threw an exception for {ToContactNbr}.", toContactNbr);
+            return "FAILED";
+        }
+    }
+
+    /// <summary>
     /// Sends one WhatsApp text message via the Meta Cloud API and returns
     /// "SENT" or "FAILED". While WhatsAppSettings.IsConfigured is false (no
     /// real API key yet), this is a no-op that always returns "SENT" so the
@@ -313,5 +370,35 @@ public class WhatsAppNotificationService : IWhatsAppNotificationService
 
         [JsonPropertyName("preview_url")]
         public bool PreviewUrl { get; set; } = true;
+    }
+
+    private class WhatsAppDocumentMessageRequest
+    {
+        [JsonPropertyName("messaging_product")]
+        public string MessagingProduct { get; set; } = "whatsapp";
+
+        [JsonPropertyName("recipient_type")]
+        public string RecipientType { get; set; } = "individual";
+
+        [JsonPropertyName("to")]
+        public string To { get; set; } = string.Empty;
+
+        [JsonPropertyName("type")]
+        public string Type { get; set; } = "document";
+
+        [JsonPropertyName("document")]
+        public WhatsAppDocumentMessageBody Document { get; set; } = new();
+    }
+
+    private class WhatsAppDocumentMessageBody
+    {
+        [JsonPropertyName("link")]
+        public string Link { get; set; } = string.Empty;
+
+        [JsonPropertyName("filename")]
+        public string Filename { get; set; } = string.Empty;
+
+        [JsonPropertyName("caption")]
+        public string Caption { get; set; } = string.Empty;
     }
 }

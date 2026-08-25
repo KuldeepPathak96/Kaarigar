@@ -1,0 +1,130 @@
+@using Kaarigar.Services
+@{
+    ViewData["Title"] = "My Billing — Kaarigar";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var summary = ViewBag.Summary as BillingDashboardSummary;
+    var invoices = ViewBag.Invoices as List<BillingDashboardRow> ?? new List<BillingDashboardRow>();
+}
+
+<div class="k-dash-page">
+
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">My Billing</h1>
+            <p class="k-dash-subtitle">Invoices generated automatically each time a job is marked complete.</p>
+        </div>
+    </div>
+
+    <div class="k-kpi-grid k-kpi-grid--3">
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#FFF7CC">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">₹@(summary?.TotalKaarigarAmt.ToString("N0") ?? "0")</div>
+                <div class="k-kpi-card__label">Kaarigar Invoices (@summary?.TotalKaarigarInvoices)</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#DBEAFE">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E40AF" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">₹@(summary?.TotalWebsiteAmt.ToString("N0") ?? "0")</div>
+                <div class="k-kpi-card__label">Website Invoices (@summary?.TotalWebsiteInvoices)</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#FEE2E2">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">₹@(summary?.PendingPaymentAmt.ToString("N0") ?? "0")</div>
+                <div class="k-kpi-card__label">Pending Payment (@summary?.PendingPaymentCount)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="k-dash-section">
+        <form method="get" asp-action="MyInvoices" asp-controller="Billing" class="k-form k-form--inline" style="flex-wrap:wrap">
+            <select name="invoiceType" class="k-input k-select" style="max-width:180px">
+                <option value="">All Invoice Types</option>
+                <option value="KAARIGAR" selected="@(ViewBag.InvoiceTypeFilter == "KAARIGAR")">Kaarigar Invoice</option>
+                <option value="WEBSITE" selected="@(ViewBag.InvoiceTypeFilter == "WEBSITE")">Website Invoice</option>
+            </select>
+            <select name="status" class="k-input k-select" style="max-width:180px">
+                <option value="">All Statuses</option>
+                <option value="DUE" selected="@(ViewBag.StatusFilter == "DUE")">Due</option>
+                <option value="PENDING_PAYMENT" selected="@(ViewBag.StatusFilter == "PENDING_PAYMENT")">Pending Payment</option>
+                <option value="PAID" selected="@(ViewBag.StatusFilter == "PAID")">Paid</option>
+            </select>
+            <button type="submit" class="k-btn k-btn--primary k-btn--sm">Filter</button>
+        </form>
+    </div>
+
+    <div class="k-dash-section">
+        @if (!invoices.Any())
+        {
+            <div class="k-empty-state">
+                <div class="k-empty-state__icon"><i data-lucide="receipt"></i></div>
+                <p class="k-empty-state__text">No invoices yet — these are generated automatically once a job is marked complete.</p>
+            </div>
+        }
+        else
+        {
+            <div class="k-responsive-table-wrap">
+                <table class="k-table k-table--responsive">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Invoice No.</th>
+                            <th>Date</th>
+                            <th>Worker</th>
+                            <th>Job</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var inv in invoices)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="k-badge @(inv.InvoiceType == "KAARIGAR" ? "k-badge--amber" : "k-badge--blue")">
+                                        @(inv.InvoiceType == "KAARIGAR" ? "Kaarigar" : "Website")
+                                    </span>
+                                </td>
+                                <td>@inv.InvoiceNbr</td>
+                                <td>@inv.InvoiceDt.ToString("dd/MM/yyyy")</td>
+                                <td>@inv.WorkerName</td>
+                                <td>@inv.JobTitle</td>
+                                <td>₹@inv.TotalAmt.ToString("N2")</td>
+                                <td>
+                                    <span class="k-badge @(inv.StatusCd == "PAID" ? "k-badge--green" : "k-badge--amber")">@inv.StatusCd</span>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(inv.PdfFilePathTxt))
+                                    {
+                                        <a href="/billing/@(inv.InvoiceType == "KAARIGAR" ? "kaarigar-invoice" : "website-invoice")/@inv.InvoiceId/download"
+                                           target="_blank" class="k-btn k-btn--secondary k-btn--sm">
+                                            <i data-lucide="download"></i> PDF
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

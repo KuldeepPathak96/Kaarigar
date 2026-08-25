@@ -46,6 +46,7 @@ public class EmployeeDetailViewModel
     public bool IsApprovedFl { get; set; }
 
     public List<string> SkillNames { get; set; } = new();
+    public string? WorkCategoryName { get; set; }
     public string? CityName { get; set; }
     public string? AreaAddressTxt { get; set; }
     public string? AddressTxt { get; set; }

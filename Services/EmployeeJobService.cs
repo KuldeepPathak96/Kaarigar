@@ -8,15 +8,18 @@ public class EmployeeJobService : IEmployeeJobService
     private readonly IEmployeeJobDao _dao;
     private readonly IEmployerProfileDao _employerProfileDao;
     private readonly IWhatsAppNotificationService _whatsAppService;
+    private readonly IInvoiceGenerationService _invoiceGenerationService;
     private readonly ILogger<EmployeeJobService> _logger;
 
     public EmployeeJobService(
         IEmployeeJobDao dao, IEmployerProfileDao employerProfileDao,
-        IWhatsAppNotificationService whatsAppService, ILogger<EmployeeJobService> logger)
+        IWhatsAppNotificationService whatsAppService, IInvoiceGenerationService invoiceGenerationService,
+        ILogger<EmployeeJobService> logger)
     {
         _dao = dao;
         _employerProfileDao = employerProfileDao;
         _whatsAppService = whatsAppService;
+        _invoiceGenerationService = invoiceGenerationService;
         _logger = logger;
     }
 
@@ -233,6 +236,20 @@ public class EmployeeJobService : IEmployeeJobService
         _logger.LogInformation(
             "Kaarigar {EmployeeId} entered {OtpType} OTP for JobApplicationId={JobApplicationId}",
             employeeUserAccountId, expectingType, jobApplicationId);
+
+        if (nextStatus == "COMPLETED")
+        {
+            // Fire-and-log: invoice generation failure must never block the
+            // worker's OTP confirmation — it's already recorded as complete.
+            try
+            {
+                await _invoiceGenerationService.GenerateForJobApplicationAsync(jobApplicationId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Invoice generation failed for JobApplicationId={JobApplicationId}", jobApplicationId);
+            }
+        }
 
         return new ServiceResult(
             true,

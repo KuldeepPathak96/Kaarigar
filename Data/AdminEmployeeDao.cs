@@ -105,6 +105,16 @@ public class AdminEmployeeDao : IAdminEmployeeDao
         var skills = (await GetSkillNamesForUsersAsync(new List<int> { userAccountId }))
             .TryGetValue(userAccountId, out var sk) ? sk : new List<string>();
 
+        string? workCategoryName = null;
+        if (row.Profile.WorkCategoryId.HasValue)
+        {
+            workCategoryName = await _db.WorkCategories
+                .AsNoTracking()
+                .Where(wc => wc.WorkCategoryId == row.Profile.WorkCategoryId.Value)
+                .Select(wc => wc.CategoryName)
+                .FirstOrDefaultAsync();
+        }
+
         var applicationsCount = await _db.JobApplications.AsNoTracking()
             .CountAsync(a => a.EmployeeUserAccountId == userAccountId);
         var completedCount = await _db.JobApplications.AsNoTracking()
@@ -139,6 +149,7 @@ public class AdminEmployeeDao : IAdminEmployeeDao
             IsActiveFl = row.User.IsActiveFl,
             IsApprovedFl = row.User.IsApprovedFl,
             SkillNames = skills,
+            WorkCategoryName = workCategoryName,
             CityName = row.Profile.CityName,
             AreaAddressTxt = row.Profile.AreaAddressTxt,
             AddressTxt = row.Profile.AddressTxt,

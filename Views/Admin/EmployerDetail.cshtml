@@ -101,7 +101,16 @@
             </div>
             <div class="k-form__group">
                 <label>Business Category</label>
-                <p>@(Model.BusinessCategoryName ?? "Not provided")</p>
+                @if (!string.IsNullOrEmpty(Model.BusinessCategoryName))
+                {
+                    <div class="k-chip-list">
+                        <span class="k-chip">@Model.BusinessCategoryName</span>
+                    </div>
+                }
+                else
+                {
+                    <p>Not provided</p>
+                }
             </div>
         </div>
 
