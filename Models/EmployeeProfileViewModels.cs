@@ -63,6 +63,10 @@ public class EmployeeProfileViewModel
     /// <summary>Populated by the controller for the checkbox list, grouped by Skill.CategoryName. Not bound from the form.</summary>
     public List<Skill> SkillOptions { get; set; } = new();
 
+    /// <summary>"Work Preference" — same field as Registration. Determines which Skills are offered.</summary>
+    [Required(ErrorMessage = "Please select your work preference.")]
+    public int? WorkCategoryId { get; set; }
+
     // ── ID Proof upload (EMPLOYEE_DOCUMENT, DOCUMENT_TYPE_CD = 'ID_PROOF') ──
 
     /// <summary>'AADHAAR' | 'PAN' | 'VOTER_ID' | 'DRIVING_LICENSE' — the employee's own selection of which ID they're uploading.</summary>

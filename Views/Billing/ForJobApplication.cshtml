@@ -1,15 +1,39 @@
 @using Kaarigar.Models
 @{
-    ViewData["Title"] = "Invoices — Kaarigar";
+    ViewData["Title"] = "Bill — Kaarigar";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     var kaarigarInvoice = ViewBag.KaarigarInvoice as KaarigarInvoice;
     var websiteInvoice = ViewBag.WebsiteInvoice as WebsiteInvoice;
+    var stillGenerating = ViewBag.StillGenerating as bool? ?? false;
+    var jobTitle = ViewBag.JobTitle as string;
+    var workerName = ViewBag.WorkerName as string;
 }
 
 <div class="k-dash-header">
-    <h1 class="k-dash-title">Invoices for This Job</h1>
-    <p class="k-dash-subtitle">Generated automatically when the job was marked complete.</p>
+    <h1 class="k-dash-title">Bill for This Job</h1>
+    <p class="k-dash-subtitle">
+        @jobTitle @(!string.IsNullOrEmpty(workerName) ? $"— {workerName}" : "") — generated automatically when the job was marked complete.
+    </p>
 </div>
+
+@if (stillGenerating)
+{
+    <div class="k-alert k-alert--info">
+        The bill for this job is still being generated — this usually only takes a moment. Please refresh this page shortly.
+    </div>
+}
+
+@if (websiteInvoice != null)
+{
+    <!-- ── FINAL PAYMENT AMOUNT — the headline number the employer cares about ── -->
+    <div class="k-dash-section k-pay-summary">
+        <div class="k-pay-summary__label">Final Payment Amount — @(workerName ?? "Worker") will receive</div>
+        <div class="k-pay-summary__amount">₹@websiteInvoice.ManpowerAmt.ToString("N2")</div>
+        <div class="k-pay-summary__meta">
+            @websiteInvoice.HoursWorkedNbr.ToString("0.##") hrs × ₹@websiteInvoice.HourlyRateAmt.ToString("0.##")/hr
+        </div>
+    </div>
+}
 
 <div class="k-dash-section">
     <h2 class="k-dash-section__title">Kaarigar Invoice — Platform Service Charge</h2>
@@ -49,11 +73,11 @@
                 <tr><th>Invoice No.</th><td>@websiteInvoice.InvoiceNbr</td></tr>
                 <tr><th>Date</th><td>@websiteInvoice.InvoiceDt.ToString("dd/MM/yyyy")</td></tr>
                 <tr><th>Hours × Rate</th><td>@websiteInvoice.HoursWorkedNbr.ToString("0.##") hrs × ₹@websiteInvoice.HourlyRateAmt.ToString("0.##")/hr</td></tr>
-                <tr><th>Manpower Amount</th><td>₹@websiteInvoice.ManpowerAmt.ToString("N2")</td></tr>
+                <tr><th>Manpower Amount (paid to Worker)</th><td>₹@websiteInvoice.ManpowerAmt.ToString("N2")</td></tr>
                 <tr><th>PF Employer Contribution</th><td>₹@websiteInvoice.PfEmployerAmt.ToString("N2")</td></tr>
                 <tr><th>ESIC Employer Contribution</th><td>₹@websiteInvoice.EsicEmployerAmt.ToString("N2")</td></tr>
                 <tr><th>GST (@websiteInvoice.GstRatePct%)</th><td>₹@((websiteInvoice.CgstAmt + websiteInvoice.SgstAmt + websiteInvoice.IgstAmt).ToString("N2"))</td></tr>
-                <tr><th>Total Payable</th><td><strong>₹@websiteInvoice.TotalAmt.ToString("N2")</strong></td></tr>
+                <tr><th>Total Payable (by Employer)</th><td><strong>₹@websiteInvoice.TotalAmt.ToString("N2")</strong></td></tr>
                 <tr><th>Status</th><td><span class="k-badge">@websiteInvoice.StatusCd</span></td></tr>
             </tbody>
         </table></div>

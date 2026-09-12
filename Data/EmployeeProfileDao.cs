@@ -78,6 +78,7 @@ public class EmployeeProfileDao : IEmployeeProfileDao
             existing.LongitudeNbr = profile.LongitudeNbr;
             existing.PreferredRadiusNbr = profile.PreferredRadiusNbr;
             existing.IsNotificationEnabledFl = profile.IsNotificationEnabledFl;
+            existing.WorkCategoryId = profile.WorkCategoryId;
             existing.UpdatedBy = "EMPLOYEE_PROFILE_EDIT";
             existing.UpdatedTs = DateTime.UtcNow;
         }

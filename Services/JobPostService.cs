@@ -9,6 +9,7 @@ public class JobPostService : IJobPostService
     private readonly IEmployerProfileDao _employerProfileDao;
     private readonly IHourlyRateOptionDao _hourlyRateOptionDao;
     private readonly IJobNotificationQueue _notificationQueue;
+    private readonly IWorkCategoryDao _workCategoryDao;
     private readonly ILogger<JobPostService> _logger;
 
     public JobPostService(
@@ -16,12 +17,14 @@ public class JobPostService : IJobPostService
         IEmployerProfileDao employerProfileDao,
         IHourlyRateOptionDao hourlyRateOptionDao,
         IJobNotificationQueue notificationQueue,
+        IWorkCategoryDao workCategoryDao,
         ILogger<JobPostService> logger)
     {
         _dao = dao;
         _employerProfileDao = employerProfileDao;
         _hourlyRateOptionDao = hourlyRateOptionDao;
         _notificationQueue = notificationQueue;
+        _workCategoryDao = workCategoryDao;
         _logger = logger;
     }
 
@@ -41,8 +44,6 @@ public class JobPostService : IJobPostService
             LongitudeNbr = loaded?.Profile?.LongitudeNbr,
             StartDt = DateTime.Today.AddDays(1),
             StartTime = new TimeSpan(9, 0, 0),
-            SkillOptions = ToSkillOptions(skills),
-            JobTitleOptions = ToTitleOptions(skills),
             HourlyRateOptionsList = ToRateOptions(rateOptions),
         };
     }
@@ -52,18 +53,16 @@ public class JobPostService : IJobPostService
         var jobPost = await _dao.GetJobPostForEmployerAsync(jobPostId, employerUserAccountId);
         if (jobPost == null) return null;
 
-        var skills = await _dao.GetActiveSkillsAsync();
         var rateOptions = await _hourlyRateOptionDao.GetActiveAsync();
 
         return new PostJobViewModel
         {
             JobPostId = jobPost.JobPostId,
             JobTitle = jobPost.JobTitle,
+            WorkCategoryId = jobPost.WorkCategoryId,
             RequiredWorkerNbr = jobPost.RequiredWorkerNbr,
             DescriptionTxt = jobPost.DescriptionTxt,
             SelectedSkillIds = jobPost.JobSkills.Select(js => js.SkillId).ToList(),
-            SkillOptions = ToSkillOptions(skills),
-            JobTitleOptions = ToTitleOptions(skills),
             HourlyRateOptionsList = ToRateOptions(rateOptions),
             HourlyWageAmt = jobPost.HourlyWageAmt,
             StartDt = jobPost.StartDt,
@@ -83,13 +82,13 @@ public class JobPostService : IJobPostService
         var original = await _dao.GetJobPostForEmployerAsync(jobPostId, employerUserAccountId);
         if (original == null) return null;
 
-        var skills = await _dao.GetActiveSkillsAsync();
         var rateOptions = await _hourlyRateOptionDao.GetActiveAsync();
 
         return new PostJobViewModel
         {
             // Everything below is copied from the original job...
             JobTitle = original.JobTitle,
+            WorkCategoryId = original.WorkCategoryId,
             RequiredWorkerNbr = original.RequiredWorkerNbr,
             DescriptionTxt = original.DescriptionTxt,
             SelectedSkillIds = original.JobSkills.Select(js => js.SkillId).ToList(),
@@ -105,8 +104,6 @@ public class JobPostService : IJobPostService
             StartDt = null,
             StartTime = null,
 
-            SkillOptions = ToSkillOptions(skills),
-            JobTitleOptions = ToTitleOptions(skills),
             HourlyRateOptionsList = ToRateOptions(rateOptions),
 
             RepeatFromJobPostId = original.JobPostId,
@@ -128,10 +125,15 @@ public class JobPostService : IJobPostService
         var validation = Validate(model);
         if (validation != null) return new ServiceResult(false, validation);
 
+        var workCategory = await _workCategoryDao.GetByIdAsync(model.WorkCategoryId!.Value);
+        if (workCategory == null)
+            return new ServiceResult(false, "Please select a valid worker category.");
+
         var jobPost = new JobPost
         {
             EmployerUserAccountId = employerUserAccountId,
-            JobTitle = model.JobTitle.Trim(),
+            JobTitle = workCategory.CategoryName,
+            WorkCategoryId = model.WorkCategoryId,
             DescriptionTxt = model.DescriptionTxt?.Trim(),
             RequiredWorkerNbr = model.RequiredWorkerNbr,
             HourlyWageAmt = model.HourlyWageAmt,
@@ -187,11 +189,16 @@ public class JobPostService : IJobPostService
         if (existing == null)
             return new ServiceResult(false, "Job post not found.");
 
+        var workCategory = await _workCategoryDao.GetByIdAsync(model.WorkCategoryId!.Value);
+        if (workCategory == null)
+            return new ServiceResult(false, "Please select a valid worker category.");
+
         var jobPost = new JobPost
         {
             JobPostId = model.JobPostId.Value,
             EmployerUserAccountId = employerUserAccountId,
-            JobTitle = model.JobTitle.Trim(),
+            JobTitle = workCategory.CategoryName,
+            WorkCategoryId = model.WorkCategoryId,
             DescriptionTxt = model.DescriptionTxt?.Trim(),
             RequiredWorkerNbr = model.RequiredWorkerNbr,
             HourlyWageAmt = model.HourlyWageAmt,
@@ -238,8 +245,8 @@ public class JobPostService : IJobPostService
 
     private static string? Validate(PostJobViewModel model)
     {
-        if (string.IsNullOrWhiteSpace(model.JobTitle))
-            return "Please select a job title.";
+        if (model.WorkCategoryId is null or <= 0)
+            return "Please select a worker category.";
 
         if (string.IsNullOrWhiteSpace(model.LocationAddressTxt))
             return "Job location is required — it's used to match nearby workers.";
@@ -264,13 +271,6 @@ public class JobPostService : IJobPostService
         var combined = string.Join(", ", parts);
         return string.IsNullOrWhiteSpace(combined) ? null : combined;
     }
-
-    private static List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ToSkillOptions(List<Skill> skills) =>
-        skills.Select(s => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem(s.SkillName, s.SkillId.ToString())).ToList();
-
-    /// <summary>Job Title dropdown — same Skill list, but the option VALUE is the skill's name (that's what gets saved as JobTitle).</summary>
-    private static List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ToTitleOptions(List<Skill> skills) =>
-        skills.Select(s => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem(s.SkillName, s.SkillName)).ToList();
 
     private static List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ToRateOptions(List<HourlyRateOption> rates) =>
         rates.Select(r => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem(

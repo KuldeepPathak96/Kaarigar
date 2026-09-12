@@ -196,14 +196,46 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/city-area-picker.js"></script>
     <script>
-        document.getElementById('profileForm').addEventListener('submit', function () {
-            const btn = document.getElementById('saveBtn');
-            const text = document.getElementById('saveBtnText');
-            const spinner = document.getElementById('saveSpinner');
-            btn.disabled = true;
-            text.style.display = 'none';
-            spinner.style.display = 'inline-block';
-        });
+        (function () {
+            var form = document.getElementById('profileForm');
+            var btn = document.getElementById('saveBtn');
+            var text = document.getElementById('saveBtnText');
+            var spinner = document.getElementById('saveSpinner');
+
+            function showBusy() {
+                btn.disabled = true;
+                text.style.display = 'none';
+                spinner.style.display = 'inline-block';
+                // Safety net: if we're still here after 5s (slow network, or some
+                // validation path this didn't anticipate), restore the button so
+                // the user is never stuck looking at a dead spinner.
+                setTimeout(function () {
+                    btn.disabled = false;
+                    text.style.display = 'inline';
+                    spinner.style.display = 'none';
+                }, 5000);
+            }
+
+            // Canonical fix: hook jQuery Validate's own submitHandler, which only
+            // ever runs once the form is genuinely valid and about to submit for
+            // real. This replaces guessing at validation state from a separate
+            // 'submit' listener (which was unreliable — jQuery Validate blocking a
+            // submission doesn't stop other 'submit' listeners from still running,
+            // so the button kept getting disabled/hidden even on blocked attempts).
+            $(function () {
+                var validator = $(form).data('validator');
+                if (validator) {
+                    validator.settings.submitHandler = function (theForm) {
+                        showBusy();
+                        theForm.submit();
+                    };
+                } else {
+                    // No validator attached to this form for some reason — fall back
+                    // to the plain behavior rather than never showing a busy state.
+                    form.addEventListener('submit', showBusy);
+                }
+            });
+        })();
 
         // ── Interactive Location Map ────────────────────────────────────────
         const kLocationMap = initKaarigarLocationMap({

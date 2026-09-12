@@ -54,6 +54,7 @@ public class JobPostDao : IJobPostDao
         if (existing == null) return;
 
         existing.JobTitle = jobPost.JobTitle;
+        existing.WorkCategoryId = jobPost.WorkCategoryId;
         existing.DescriptionTxt = jobPost.DescriptionTxt;
         existing.RequiredWorkerNbr = jobPost.RequiredWorkerNbr;
         existing.HourlyWageAmt = jobPost.HourlyWageAmt;

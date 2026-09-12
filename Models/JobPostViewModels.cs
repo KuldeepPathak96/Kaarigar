@@ -18,12 +18,22 @@ public class PostJobViewModel
     /// schema change was needed. Job Category has been removed: Job Title +
     /// Required Skills together now cover what Category used to.
     /// </summary>
-    [Required(ErrorMessage = "Job title is required.")]
+    /// <summary>
+    /// Auto-set server-side from the selected Work Category's name — no
+    /// longer chosen directly via a dropdown (see WorkCategoryId below).
+    /// Kept as a plain string since JOB_POST.JOB_TITLE is read in many
+    /// places (Browse, Job Detail, invoices) for display.
+    /// </summary>
     [StringLength(200)]
     public string JobTitle { get; set; } = string.Empty;
 
-    /// <summary>Populated by the controller — same Skill list as SkillOptions, but Value=SkillName for this dropdown.</summary>
-    public List<SelectListItem> JobTitleOptions { get; set; } = new();
+    /// <summary>
+    /// "Worker Category" — same Work Category cascade used on Registration
+    /// and the Worker's own Profile page. Determines which Skills are
+    /// offered below, and JobTitle is derived from this on save.
+    /// </summary>
+    [Required(ErrorMessage = "Please select a worker category.")]
+    public int? WorkCategoryId { get; set; }
 
     [Required(ErrorMessage = "Number of workers required is required.")]
     [Range(1, 500, ErrorMessage = "Enter a number of workers between 1 and 500.")]
@@ -32,11 +42,8 @@ public class PostJobViewModel
     [StringLength(4000)]
     public string? DescriptionTxt { get; set; }
 
-    /// <summary>Selected SKILL.SKILL_ID values from the multi-select.</summary>
+    /// <summary>Selected SKILL.SKILL_ID values, filtered by WorkCategoryId (see work-category-picker.js).</summary>
     public List<int> SelectedSkillIds { get; set; } = new();
-
-    /// <summary>Populated by the controller for the multi-select checkboxes.</summary>
-    public List<SelectListItem> SkillOptions { get; set; } = new();
 
     /// <summary>Chosen from the admin-editable HOURLY_RATE_OPTION dropdown — not typed freely.</summary>
     [Required(ErrorMessage = "Per hour rate is required.")]

@@ -43,11 +43,11 @@
 
             <div class="k-form__row">
                 <div class="k-form__group">
-                    <label asp-for="JobTitle">Worker Category <span class="k-req">*</span></label>
-                    <select asp-for="JobTitle" asp-items="Model.JobTitleOptions" class="k-input">
-                        <option value="">-- Select Worker Category --</option>
-                    </select>
-                    <span asp-validation-for="JobTitle" class="k-field-error"></span>
+                    <label asp-for="WorkCategoryId">Worker Category <span class="k-req">*</span></label>
+                    <select asp-for="WorkCategoryId" id="postJobWorkCategoryId" class="k-input"
+                            data-work-category-picker
+                            data-initial-value="@Model.WorkCategoryId"></select>
+                    <span asp-validation-for="WorkCategoryId" class="k-field-error"></span>
                 </div>
 
                 <div class="k-form__group">
@@ -75,18 +75,10 @@
 
             <div class="k-form__group">
                 <label>Required Skills</label>
-                <div class="k-checkbox-grid">
-                    @for (int i = 0; i < Model.SkillOptions.Count; i++)
-                    {
-                        var skill = Model.SkillOptions[i];
-                        var isChecked = Model.SelectedSkillIds.Contains(int.Parse(skill.Value));
-                        <label class="k-checkbox-chip">
-                            <input type="checkbox" name="SelectedSkillIds" value="@skill.Value" checked="@isChecked" />
-                            <span>@skill.Text</span>
-                        </label>
-                    }
-                </div>
-                <small class="k-form__hint">Select any additional skills relevant to this job (optional).</small>
+                <div class="k-checkbox-grid" id="postJobSkillsPicker"
+                     data-skills-picker data-work-category-source="postJobWorkCategoryId"
+                     data-initial-skill-ids="@string.Join(",", Model.SelectedSkillIds)"></div>
+                <small class="k-form__hint">Select a Worker Category above to see relevant skills.</small>
             </div>
 
             <div class="k-form__group">
@@ -226,6 +218,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/work-category-picker.js"></script>
     <script>
         document.getElementById('postJobForm').addEventListener('submit', function () {
             const btn = document.getElementById('saveBtn');

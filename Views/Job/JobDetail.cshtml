@@ -236,6 +236,13 @@
                                 <td data-label="" style="white-space:nowrap">
                                     <a href="/job/applicant/@applicant.JobApplicationId" class="k-btn k-btn--sm k-btn--secondary">View Profile</a>
 
+                                    @if (applicant.StatusCd == "COMPLETED")
+                                    {
+                                        <a href="/billing/job/@applicant.JobApplicationId" class="k-btn k-btn--sm k-btn--primary">
+                                            <i data-lucide="receipt" style="width:14px;height:14px;vertical-align:-2px;"></i> View Bill
+                                        </a>
+                                    }
+
                                     @if (applicant.CanCancel)
                                     {
                                         <button type="button" class="k-btn k-btn--sm k-btn--danger" onclick="document.getElementById('cancel-modal-@applicant.JobApplicationId').classList.remove('k-hidden')">Cancel</button>

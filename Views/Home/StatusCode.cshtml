@@ -1,0 +1,15 @@
+@{
+    ViewData["Title"] = "Something went wrong";
+    int code = ViewBag.StatusCode ?? 0;
+}
+
+<div style="max-width:520px;margin:80px auto;text-align:center;padding:0 20px;font-family:system-ui,-apple-system,sans-serif;">
+    <div style="font-size:48px;margin-bottom:16px;">⚠️</div>
+    <h1 style="font-size:22px;margin-bottom:12px;">Something went wrong</h1>
+    <p style="color:#555;line-height:1.6;margin-bottom:24px;">@ViewBag.Message</p>
+    <div style="display:flex;gap:12px;justify-content:center;">
+        <a href="javascript:history.back()" style="padding:10px 20px;border:1px solid #ccc;border-radius:8px;text-decoration:none;color:#333;">Go Back</a>
+        <a href="/" style="padding:10px 20px;background:#FFCC00;border-radius:8px;text-decoration:none;color:#111;font-weight:600;">Go to Home</a>
+    </div>
+    <p style="color:#aaa;font-size:12px;margin-top:32px;">Error @code</p>
+</div>

@@ -121,6 +121,14 @@ public class JobPost
     [StringLength(10)]
     public string GenderPreferenceCd { get; set; } = "ANY";
 
+    /// <summary>
+    /// The Work Category this job was posted under (drives which Skills were
+    /// offered when posting) — same field/table as EMPLOYEE_PROFILE.WORK_CATEGORY_ID.
+    /// Nullable since jobs posted before this field existed won't have one.
+    /// </summary>
+    [Column("WORK_CATEGORY_ID")]
+    public int? WorkCategoryId { get; set; }
+
     /// <summary>'ACTIVE' | 'PAUSED' | 'CLOSED'</summary>
     [Required]
     [Column("STATUS_CD")]

@@ -1,10 +1,21 @@
 using Kaarigar.Data;
 using Kaarigar.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Persist DataProtection keys to disk so antiforgery tokens and auth cookies
+// issued before an app restart stay valid afterward. Without this, every
+// restart regenerates the encryption keys, silently invalidating every
+// already-loaded form's antiforgery token — the form still looks fine, but
+// submitting it fails with a bare "HTTP ERROR 400" and no useful message
+// (this was happening on Employee/Employer Profile saves during dev restarts).
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "App_Data", "DataProtection-Keys")))
+    .SetApplicationName("Kaarigar");
 
 // Add MVC Services
 builder.Services.AddControllersWithViews();
@@ -124,6 +135,12 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+// Friendly page for non-exception error statuses (400 Bad Request — e.g. an
+// expired antiforgery token on a form left open too long — 403, etc.) so the
+// user sees an actionable message instead of the browser's bare "This page
+// isn't working" screen.
+app.UseStatusCodePagesWithReExecute("/Home/StatusCode/{0}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

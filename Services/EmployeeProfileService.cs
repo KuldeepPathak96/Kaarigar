@@ -52,6 +52,7 @@ public class EmployeeProfileService : IEmployeeProfileService
             LongitudeNbr = profile?.LongitudeNbr,
             PreferredRadiusNbr = profile?.PreferredRadiusNbr,
             IsNotificationEnabledFl = profile?.IsNotificationEnabledFl ?? true,
+            WorkCategoryId = profile?.WorkCategoryId,
 
             SelectedSkillIds = skillIds,
             SkillOptions = skillOptions,
@@ -123,6 +124,7 @@ public class EmployeeProfileService : IEmployeeProfileService
             LongitudeNbr = model.LongitudeNbr,
             PreferredRadiusNbr = model.PreferredRadiusNbr,
             IsNotificationEnabledFl = model.IsNotificationEnabledFl,
+            WorkCategoryId = model.WorkCategoryId,
         });
 
         await _dao.ReplaceSkillsAsync(userAccountId, model.SelectedSkillIds);

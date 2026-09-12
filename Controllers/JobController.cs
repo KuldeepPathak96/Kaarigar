@@ -296,8 +296,6 @@ public class JobController : Controller
     {
         var session = UserSession.FromContext(HttpContext);
         var fresh = await _jobPostService.GetNewJobFormAsync(session.UserAccountId);
-        vm.SkillOptions = fresh.SkillOptions;
-        vm.JobTitleOptions = fresh.JobTitleOptions;
         vm.HourlyRateOptionsList = fresh.HourlyRateOptionsList;
     }
 }

@@ -1,3 +1,6 @@
 .vs/
 obj/
 bin/
+
+# DataProtection keys (machine-specific, should not be committed)
+App_Data/DataProtection-Keys/

@@ -44,27 +44,32 @@ public class BillingController : Controller
         return View();
     }
 
-    /// <summary>Employer or Admin: list every Kaarigar Invoice + Website Invoice pair for a given JobApplication.</summary>
+    /// <summary>Employer or Admin: the Kaarigar Invoice + Website Invoice pair for a given JobApplication.</summary>
     [HttpGet("/billing/job/{jobApplicationId:int}")]
     public async Task<IActionResult> ForJobApplication(int jobApplicationId)
     {
         var session = UserSession.FromContext(HttpContext);
         if (!session.IsLoggedIn) return RedirectToAction("Login", "Account");
 
+        var application = await _db.JobApplications
+            .Include(a => a.JobPost)
+            .FirstOrDefaultAsync(a => a.JobApplicationId == jobApplicationId);
+
+        if (application == null) return NotFound("Job application not found.");
+
+        var employerUserAccountId = application.JobPost.EmployerUserAccountId;
+
+        // Employers may only see their own bills; Admins may see any.
+        if (session.RoleCd != "ADMIN" && employerUserAccountId != session.UserAccountId)
+            return Forbid();
+
         var kaarigarInvoice = await _db.KaarigarInvoices.FirstOrDefaultAsync(i => i.JobApplicationId == jobApplicationId);
         var websiteInvoice = await _db.WebsiteInvoices.FirstOrDefaultAsync(i => i.JobApplicationId == jobApplicationId);
+        var worker = await _db.UserAccounts.FindAsync(application.EmployeeUserAccountId);
 
-        if (kaarigarInvoice == null && websiteInvoice == null)
-            return NotFound("No invoices have been generated for this job yet.");
-
-        // Employers may only see their own invoices; Admins may see any.
-        if (session.RoleCd != "ADMIN")
-        {
-            var ownsInvoice = kaarigarInvoice?.EmployerUserAccountId == session.UserAccountId
-                               || websiteInvoice?.EmployerUserAccountId == session.UserAccountId;
-            if (!ownsInvoice) return Forbid();
-        }
-
+        ViewBag.JobTitle = application.JobPost.JobTitle;
+        ViewBag.WorkerName = worker != null ? $"{worker.FirstName} {worker.LastName}".Trim() : null;
+        ViewBag.StillGenerating = kaarigarInvoice == null && websiteInvoice == null;
         ViewBag.KaarigarInvoice = kaarigarInvoice;
         ViewBag.WebsiteInvoice = websiteInvoice;
         return View();
