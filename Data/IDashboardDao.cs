@@ -24,6 +24,9 @@ public interface IDashboardDao
     /// <summary>CLOSED job posts, most recently filled first, for the expanded "Positions Filled" card.</summary>
     Task<List<FilledPositionItem>> GetRecentlyFilledAsync(int userAccountId, int take = 10);
 
+    /// <summary>Workers who checked in (JOB_STARTED) today, across any of this employer's jobs. Newest check-in first.</summary>
+    Task<List<TodaysWorkerItem>> GetTodaysWorkersAsync(int userAccountId);
+
     /// <summary>True once Admin has approved this employer's USER_ACCOUNT.</summary>
     Task<bool> IsEmployerApprovedAsync(int userAccountId);
 

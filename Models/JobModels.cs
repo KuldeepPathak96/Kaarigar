@@ -35,6 +35,11 @@ public class JobPost
     [Column("DESCRIPTION_TXT")]
     public string? DescriptionTxt { get; set; }
 
+    /// <summary>Optional note shown to workers — dress code, footwear, uniform, items to bring, etc.</summary>
+    [Column("NOTE_FOR_WORKER_TXT")]
+    [StringLength(1000)]
+    public string? NoteForWorkerTxt { get; set; }
+
     [Column("REQUIRED_WORKER_NBR")]
     public int RequiredWorkerNbr { get; set; } = 1;
 
@@ -219,6 +224,10 @@ public class JobApplication
 
     [Column("APPLIED_TS")]
     public DateTime AppliedTs { get; set; } = DateTime.UtcNow;
+
+    /// <summary>Set once, the moment this application first reaches STATUS_CD = 'JOB_STARTED' (worker entered the Job Starting OTP). Unlike UPDATED_TS, this is never overwritten by later status changes — it's the worker's actual check-in time, used by the Employer dashboard's "Today's Worker" section.</summary>
+    [Column("JOB_STARTED_TS")]
+    public DateTime? JobStartedTs { get; set; }
 
     [Column("CANCEL_REASON_CD")] [StringLength(30)] public string? CancelReasonCd { get; set; }
     [Column("CANCEL_REASON_TXT")] [StringLength(500)] public string? CancelReasonTxt { get; set; }

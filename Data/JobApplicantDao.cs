@@ -75,6 +75,10 @@ public class JobApplicantDao : IJobApplicantDao
         if (newIndex <= currentIndex) return; // never move backwards
 
         application.StatusCd = newStatusCd;
+        if (newStatusCd == "JOB_STARTED" && application.JobStartedTs == null)
+        {
+            application.JobStartedTs = DateTime.UtcNow;
+        }
         application.UpdatedBy = "JOB_APPLICANT_SCREEN";
         application.UpdatedTs = DateTime.UtcNow;
         await _db.SaveChangesAsync();

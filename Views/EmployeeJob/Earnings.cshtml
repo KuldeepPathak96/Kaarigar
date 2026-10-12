@@ -1,0 +1,96 @@
+@model Kaarigar.Models.EmployeeEarningsViewModel
+@{
+    ViewData["Title"] = "My Earnings";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="k-dash-page">
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">My Earnings</h1>
+            <p class="k-dash-subtitle">What you've earned through completed shifts.</p>
+        </div>
+    </div>
+
+    <div class="k-kpi-grid k-kpi-grid--4">
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#FFF7CC">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">₹@Model.ThisMonthTotalAmt.ToString("N0")</div>
+                <div class="k-kpi-card__label">This Month's Earnings</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#D1FAE5">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.ThisMonthJobsCompleted</div>
+                <div class="k-kpi-card__label">Jobs Completed</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#DBEAFE">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E40AF" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">@Model.ThisMonthTotalHours.ToString("0.#")</div>
+                <div class="k-kpi-card__label">Hours Worked</div>
+            </div>
+        </div>
+
+        <div class="k-kpi-card">
+            <div class="k-kpi-card__icon" style="background:#EDE9FE">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="k-kpi-card__body">
+                <div class="k-kpi-card__value">₹@Model.ThisMonthAvgHourlyRate.ToString("0.#")</div>
+                <div class="k-kpi-card__label">Avg Hourly Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Earnings History</h2>
+
+        @if (!Model.History.Any())
+        {
+            <div class="k-empty-state">
+                <div class="k-empty-state__icon"><i data-lucide="wallet"></i></div>
+                <p class="k-empty-state__text">No completed jobs yet — earnings will show up here once a shift is marked complete.</p>
+            </div>
+        }
+        else
+        {
+            <div class="k-responsive-table-wrap">
+                <table class="k-table k-table--responsive">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Job</th>
+                            <th>Employer</th>
+                            <th>Hours × Rate</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var h in Model.History)
+                        {
+                            <tr>
+                                <td>@h.InvoiceDt.ToString("dd MMM yyyy")</td>
+                                <td>@h.JobTitle</td>
+                                <td>@h.EmployerDisplayName</td>
+                                <td>@h.HoursWorked.ToString("0.#") hrs × ₹@h.HourlyRate.ToString("0.#")</td>
+                                <td><strong>₹@h.AmountAmt.ToString("N2")</strong></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

@@ -8,10 +8,12 @@ public interface IInvoiceGenerationService
 {
     /// <summary>
     /// Called the moment a JobApplication reaches STATUS_CD = 'COMPLETED'
-    /// (Satisfaction OTP confirmed). Generates the Kaarigar Invoice
-    /// (commission) and the Website Invoice (worker-funding amount), saves
-    /// both to the database, and renders their PDFs. Payment collection is
-    /// NOT part of this — it just creates the two invoice records.
+    /// (Satisfaction OTP confirmed). Generates the Website Invoice
+    /// (Kaarigar's commission — class KaarigarInvoice) and the Employee
+    /// Invoice (Hours x Rate — class WebsiteInvoice), saves both to the
+    /// database, and renders their PDFs. Payment collection is handled
+    /// separately — the worker marks the Employee Invoice collected
+    /// themselves (see BillingController.MarkEmployeeInvoiceCollected).
     ///
     /// Safe to call more than once for the same JobApplicationId — if
     /// invoices already exist for it, this is a no-op (see the UNIQUE
@@ -23,18 +25,20 @@ public interface IInvoiceGenerationService
 public class InvoiceGenerationService : IInvoiceGenerationService
 {
     // ── Statutory / commercial assumptions — CONFIRM THESE WITH FINANCE BEFORE GO-LIVE ──
-    // PF Employer Contribution: 13% (12% EPF + ~0.5%–1% EDLI/admin, matches the
-    // "13%" label on the real sample invoice), capped at a ₹15,000/month wage ceiling.
-    private const decimal PfEmployerRatePct = 13.00m;
-    private const decimal PfWageCeilingAmt = 15_000m;
-
-    // ESIC Employer Contribution: 3.25% of gross wage, only applicable when
-    // gross wage for the period is <= ₹21,000 (the ESIC wage threshold).
-    private const decimal EsicEmployerRatePct = 3.25m;
-    private const decimal EsicWageThresholdAmt = 21_000m;
-
+    //
+    // BUSINESS TERMINOLOGY (see BillingModels.cs header comment for the full
+    // C#-class <-> business-term mapping):
+    //   "Employee Invoice" (class WebsiteInvoice) = Hours x Rate ONLY. No PF,
+    //     no ESIC, no GST. Paid directly worker <-> employer, outside the
+    //     platform; the worker marks it collected themselves.
+    //   "Website Invoice" (class KaarigarInvoice) = 19% Service Fee on the
+    //     Employee Invoice amount, PLUS 18% GST computed on (Employee
+    //     Invoice Amount + Service Fee Amount). This is the only amount the
+    //     platform bills the Employer for — the wage itself is only the GST
+    //     calculation base, it is not part of what's payable here.
+    //
     // Kaarigar's own commission — used only when EmployerProfile.ServiceChargePct is not set.
-    private const decimal DefaultServiceChargePct = 15.00m;
+    private const decimal DefaultServiceChargePct = 19.00m;
 
     private const decimal GstRatePct = 18.00m;
     private const string KaarigarHomeState = "Gujarat";
@@ -93,23 +97,27 @@ public class InvoiceGenerationService : IInvoiceGenerationService
 
         var hours = jobPost.DurationHourNbr ?? 0m;
         var rate = jobPost.HourlyWageAmt ?? 0m;
-        var manpowerAmt = Math.Round(hours * rate, 2);
 
-        var pfBase = Math.Min(manpowerAmt, PfWageCeilingAmt);
-        var pfEmployerAmt = Math.Round(pfBase * PfEmployerRatePct / 100m, 2);
-
-        var esicApplicable = manpowerAmt <= EsicWageThresholdAmt;
-        var esicEmployerAmt = esicApplicable ? Math.Round(manpowerAmt * EsicEmployerRatePct / 100m, 2) : 0m;
+        // "Employee Invoice Amount" — Hours x Rate. This is the ONLY amount
+        // on the Employee Invoice (WebsiteInvoice); no PF/ESIC/GST are added
+        // to it. It also doubles as the GST calculation base for the
+        // Website Invoice (KaarigarInvoice) below.
+        var employeeInvoiceAmt = Math.Round(hours * rate, 2);
 
         var serviceChargePct = employerProfile?.ServiceChargePct ?? DefaultServiceChargePct;
-        var serviceChargeAmt = Math.Round(manpowerAmt * serviceChargePct / 100m, 2);
+        var serviceChargeAmt = Math.Round(employeeInvoiceAmt * serviceChargePct / 100m, 2);
 
         var invoiceDt = DateTime.UtcNow.Date;
         var dueDt = invoiceDt; // "payable right away" per business requirement
 
-        // ── Kaarigar Invoice (commission) ───────────────────────────────────
-        var kaarigarTaxable = serviceChargeAmt;
-        var (kCgst, kSgst, kIgst, kTotal) = ApplyGst(kaarigarTaxable, gstTypeCd);
+        // ── Website Invoice (Kaarigar's own commission — class KaarigarInvoice) ──
+        // GST is computed on (Employee Invoice Amount + Service Fee), but only
+        // the Service Fee + GST is actually payable here — the wage itself is
+        // collected directly by the worker, not billed through this invoice.
+        var kaarigarGstBaseAmt = Math.Round(employeeInvoiceAmt + serviceChargeAmt, 2);
+        var (kCgst, kSgst, kIgst, _) = ApplyGst(kaarigarGstBaseAmt, gstTypeCd);
+        var kaarigarGstTotal = kCgst + kSgst + kIgst;
+        var kaarigarTotal = Math.Round(serviceChargeAmt + kaarigarGstTotal, 2);
 
         var kaarigarInvoice = new KaarigarInvoice
         {
@@ -123,20 +131,21 @@ public class InvoiceGenerationService : IInvoiceGenerationService
             PlaceOfSupplyTxt = placeOfSupply,
             GstTypeCd = gstTypeCd,
             ServiceChargeAmt = serviceChargeAmt,
-            TaxableAmt = kaarigarTaxable,
+            TaxableAmt = kaarigarGstBaseAmt, // GST calculation base (wage + service fee) — NOT the payable amount
             GstRatePct = GstRatePct,
             CgstAmt = kCgst,
             SgstAmt = kSgst,
             IgstAmt = kIgst,
-            TotalAmt = kTotal,
+            TotalAmt = kaarigarTotal, // service fee + GST only — wage excluded
             StatusCd = "DUE",
             CreatedBy = "SATISFACTION_OTP",
         };
 
-        // ── Website Invoice (worker-funding amount) ─────────────────────────
-        var websiteTaxable = Math.Round(manpowerAmt + pfEmployerAmt + esicEmployerAmt, 2);
-        var (wCgst, wSgst, wIgst, wTotal) = ApplyGst(websiteTaxable, gstTypeCd);
-
+        // ── Employee Invoice (Hours x Rate only — class WebsiteInvoice) ──────
+        // No PF Employer Contribution, no ESIC Employer Contribution, no GST.
+        // Collected directly by the worker from the Employer; see
+        // BillingController.MarkEmployeeInvoiceCollected for how the worker
+        // marks it received.
         var websiteInvoice = new WebsiteInvoice
         {
             InvoiceNbr = await _invoiceNumberService.GetNextInvoiceNumberAsync("WEBSITE_INVOICE", "WEB"),
@@ -150,15 +159,15 @@ public class InvoiceGenerationService : IInvoiceGenerationService
             GstTypeCd = gstTypeCd,
             HoursWorkedNbr = hours,
             HourlyRateAmt = rate,
-            ManpowerAmt = manpowerAmt,
-            PfEmployerAmt = pfEmployerAmt,
-            EsicEmployerAmt = esicEmployerAmt,
-            TaxableAmt = websiteTaxable,
-            GstRatePct = GstRatePct,
-            CgstAmt = wCgst,
-            SgstAmt = wSgst,
-            IgstAmt = wIgst,
-            TotalAmt = wTotal,
+            ManpowerAmt = employeeInvoiceAmt,
+            PfEmployerAmt = 0m,
+            EsicEmployerAmt = 0m,
+            TaxableAmt = employeeInvoiceAmt,
+            GstRatePct = 0m,
+            CgstAmt = 0m,
+            SgstAmt = 0m,
+            IgstAmt = 0m,
+            TotalAmt = employeeInvoiceAmt,
             StatusCd = "PENDING_PAYMENT",
             CreatedBy = "SATISFACTION_OTP",
         };
@@ -180,12 +189,12 @@ public class InvoiceGenerationService : IInvoiceGenerationService
             {
                 await SendInvoiceViaWhatsAppAsync(
                     employer.ContactNbr, kaarigarInvoice.PdfFilePathTxt, kaarigarInvoice.InvoiceNbr,
-                    $"Kaarigar Invoice {kaarigarInvoice.InvoiceNbr} — Platform Service Charge ₹{kaarigarInvoice.TotalAmt:N2}. Payable immediately.",
+                    $"Website Invoice {kaarigarInvoice.InvoiceNbr} — Platform Service Fee ₹{kaarigarInvoice.TotalAmt:N2}. Payable immediately.",
                     async () => { kaarigarInvoice.WhatsAppSentTs = DateTime.UtcNow; await _db.SaveChangesAsync(); });
 
                 await SendInvoiceViaWhatsAppAsync(
                     employer.ContactNbr, websiteInvoice.PdfFilePathTxt, websiteInvoice.InvoiceNbr,
-                    $"Website Invoice {websiteInvoice.InvoiceNbr} — Worker Funding Amount ₹{websiteInvoice.TotalAmt:N2}. Please pay to release the worker's payout.",
+                    $"Employee Invoice {websiteInvoice.InvoiceNbr} — Amount Payable to Worker ₹{websiteInvoice.TotalAmt:N2}. Please pay {worker?.FirstName ?? "the worker"} directly.",
                     async () => { websiteInvoice.WhatsAppSentTs = DateTime.UtcNow; await _db.SaveChangesAsync(); });
             }
         }
@@ -198,7 +207,7 @@ public class InvoiceGenerationService : IInvoiceGenerationService
         }
 
         _logger.LogInformation(
-            "Generated invoices for JobApplicationId={Id}: Kaarigar {KaarigarInvoiceNbr} (₹{KaarigarTotal}), Website {WebsiteInvoiceNbr} (₹{WebsiteTotal})",
+            "Generated invoices for JobApplicationId={Id}: Website Invoice {KaarigarInvoiceNbr} (₹{KaarigarTotal}), Employee Invoice {WebsiteInvoiceNbr} (₹{WebsiteTotal})",
             jobApplicationId, kaarigarInvoice.InvoiceNbr, kaarigarInvoice.TotalAmt, websiteInvoice.InvoiceNbr, websiteInvoice.TotalAmt);
     }
 

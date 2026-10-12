@@ -2,7 +2,7 @@
 @{
     var isEdit = ViewBag.IsEdit == true;
     var isRepeat = Model.RepeatFromJobPostId.HasValue;
-    ViewData["Title"] = isEdit ? "Edit Job" : isRepeat ? "Repeat Shift" : "Post a Job";
+    ViewData["Title"] = isEdit ? "Edit Shift" : isRepeat ? "Repeat Shift" : "Post a Shift";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
@@ -10,9 +10,9 @@
 
     <div class="k-dash-header">
         <div>
-            <h1 class="k-dash-title">@(isEdit ? "Edit Job" : isRepeat ? "Repeat Shift" : "Post a Job")</h1>
+            <h1 class="k-dash-title">@(isEdit ? "Edit Shift" : isRepeat ? "Repeat Shift" : "Post a Shift")</h1>
             <p class="k-dash-subtitle">
-                @(isEdit ? "Update the details below." : isRepeat ? "Confirm the details and pick a new date/time." : "Fill in the details to find matching workers nearby.")
+                @(isEdit ? "Update the details below." : isRepeat ? "Confirm the details and pick a new date/time." : "Find verified workers near your location in minutes.")
             </p>
         </div>
     </div>
@@ -39,7 +39,7 @@
         <input type="hidden" asp-for="RepeatFromSummaryTxt" />
 
         <div class="k-dash-section">
-            <h2 class="k-dash-section__title">Job Details</h2>
+            <h2 class="k-dash-section__title">Shift Details</h2>
 
             <div class="k-form__row">
                 <div class="k-form__group">
@@ -67,11 +67,11 @@
                 </div>
             </div>
 
-            <div class="k-form__group">
+           @*  <div class="k-form__group">
                 <label asp-for="DescriptionTxt">Job Description</label>
                 <textarea asp-for="DescriptionTxt" class="k-input" rows="4" placeholder="Describe the job responsibilities, timings, etc."></textarea>
                 <span asp-validation-for="DescriptionTxt" class="k-field-error"></span>
-            </div>
+            </div> *@
 
             <div class="k-form__group">
                 <label>Required Skills</label>
@@ -191,6 +191,17 @@
                     <input asp-for="ContactNbr" class="k-input k-input--with-prefix" maxlength="10" inputmode="numeric" />
                 </div>
                 <span asp-validation-for="ContactNbr" class="k-field-error"></span>
+            </div>
+        </div>
+
+        <div class="k-dash-section">
+            <h2 class="k-dash-section__title">Note for Worker</h2>
+            <div class="k-form__group">
+                <label asp-for="NoteForWorkerTxt">Anything the worker should know before showing up? (optional)</label>
+                <textarea asp-for="NoteForWorkerTxt" class="k-input" rows="3" maxlength="1000"
+                          placeholder="e.g. Black formal shoes and full-sleeve uniform required. No jewellery on the floor. Bring your own apron."></textarea>
+                <span asp-validation-for="NoteForWorkerTxt" class="k-field-error"></span>
+                <small class="k-form__hint">Shown to the worker on the job card and in their application — dress code, footwear, uniform, anything they should bring.</small>
             </div>
         </div>
 

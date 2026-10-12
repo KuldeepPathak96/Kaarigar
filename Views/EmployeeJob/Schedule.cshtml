@@ -1,0 +1,112 @@
+@model Kaarigar.Models.EmployeeScheduleViewModel
+@{
+    ViewData["Title"] = "My Shift Schedule";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    string FormatRange(TimeSpan? start, TimeSpan? end)
+    {
+        if (!start.HasValue) return "";
+        var s = DateTime.Today.Add(start.Value).ToString("h:mm tt");
+        if (!end.HasValue) return s;
+        var e = DateTime.Today.Add(end.Value).ToString("h:mm tt");
+        return $"{s} - {e}";
+    }
+}
+
+<div class="k-dash-page">
+    <div class="k-dash-header">
+        <div>
+            <h1 class="k-dash-title">My Shift Schedule</h1>
+            <p class="k-dash-subtitle">Your upcoming confirmed shifts.</p>
+        </div>
+    </div>
+
+    <div class="k-schedule-tabs">
+        <button type="button" class="k-schedule-tab active" data-tab="today">Today <span class="k-badge">@Model.Today.Count</span></button>
+        <button type="button" class="k-schedule-tab" data-tab="tomorrow">Tomorrow <span class="k-badge">@Model.Tomorrow.Count</span></button>
+        <button type="button" class="k-schedule-tab" data-tab="next3">Next 3 Days <span class="k-badge">@Model.NextThreeDays.Count</span></button>
+    </div>
+
+    @{
+        var sections = new (string Key, List<Kaarigar.Models.ScheduleShiftItemViewModel> Items)[]
+        {
+            ("today", Model.Today),
+            ("tomorrow", Model.Tomorrow),
+            ("next3", Model.NextThreeDays),
+        };
+    }
+
+    @foreach (var dayGroup in sections)
+    {
+        <div class="k-schedule-panel" data-panel="@dayGroup.Key" style="display:@(dayGroup.Key == "today" ? "block" : "none")">
+            @if (!dayGroup.Items.Any())
+            {
+                <div class="k-empty-state">
+                    <div class="k-empty-state__icon"><i data-lucide="calendar"></i></div>
+                    <p class="k-empty-state__text">No shifts scheduled for this period.</p>
+                    <a href="/jobs/browse" class="k-btn k-btn--green k-btn--sm">Find Work Near Me</a>
+                </div>
+            }
+            else
+            {
+                @foreach (var shift in dayGroup.Items)
+                {
+                    <div class="k-dash-section k-shift-card">
+                        <div class="k-shift-card__head">
+                            <div>
+                                <h3 class="k-shift-card__title">@shift.JobTitle</h3>
+                                <p class="k-shift-card__sub">@shift.EmployerDisplayName</p>
+                            </div>
+                            <span class="k-badge">@shift.ShiftDt.ToString("dd MMM yyyy")</span>
+                        </div>
+
+                        <div class="k-shift-card__meta">
+                            @if (shift.StartTime.HasValue)
+                            {
+                                <span><i data-lucide="clock" style="width:14px;height:14px;vertical-align:-2px;"></i> @FormatRange(shift.StartTime, shift.EndTime)</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(shift.LocationAddressTxt))
+                            {
+                                <span><i data-lucide="map-pin" style="width:14px;height:14px;vertical-align:-2px;"></i> @shift.LocationAddressTxt</span>
+                            }
+                        </div>
+
+                        <div class="k-shift-card__actions">
+                            @if (!string.IsNullOrWhiteSpace(shift.MapUrl))
+                            {
+                                <a href="@shift.MapUrl" target="_blank" class="k-btn k-btn--sm k-btn--secondary">
+                                    <i data-lucide="navigation" style="width:14px;height:14px;vertical-align:-2px;"></i> Navigate
+                                </a>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(shift.EmployerContactNbr))
+                            {
+                                <a href="tel:@shift.EmployerContactNbr" class="k-btn k-btn--sm k-btn--secondary">
+                                    <i data-lucide="phone" style="width:14px;height:14px;vertical-align:-2px;"></i> Call Employer
+                                </a>
+                            }
+                            @if (shift.CanCheckIn)
+                            {
+                                <a href="/applications" class="k-btn k-btn--sm k-btn--green">
+                                    <i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:-2px;"></i> Check In (Enter OTP)
+                                </a>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.k-schedule-tab').forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.k-schedule-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.k-schedule-panel').forEach(p => p.style.display = 'none');
+                tab.classList.add('active');
+                document.querySelector('.k-schedule-panel[data-panel="' + tab.dataset.tab + '"]').style.display = 'block';
+            });
+        });
+    </script>
+}

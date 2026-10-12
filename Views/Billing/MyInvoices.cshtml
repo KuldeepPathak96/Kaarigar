@@ -24,7 +24,7 @@
             </div>
             <div class="k-kpi-card__body">
                 <div class="k-kpi-card__value">₹@(summary?.TotalKaarigarAmt.ToString("N0") ?? "0")</div>
-                <div class="k-kpi-card__label">Kaarigar Invoices (@summary?.TotalKaarigarInvoices)</div>
+                <div class="k-kpi-card__label">Website Invoices (@summary?.TotalKaarigarInvoices)</div>
             </div>
         </div>
 
@@ -36,7 +36,7 @@
             </div>
             <div class="k-kpi-card__body">
                 <div class="k-kpi-card__value">₹@(summary?.TotalWebsiteAmt.ToString("N0") ?? "0")</div>
-                <div class="k-kpi-card__label">Website Invoices (@summary?.TotalWebsiteInvoices)</div>
+                <div class="k-kpi-card__label">Employee Invoices (@summary?.TotalWebsiteInvoices)</div>
             </div>
         </div>
 
@@ -57,8 +57,8 @@
         <form method="get" asp-action="MyInvoices" asp-controller="Billing" class="k-form k-form--inline" style="flex-wrap:wrap">
             <select name="invoiceType" class="k-input k-select" style="max-width:180px">
                 <option value="">All Invoice Types</option>
-                <option value="KAARIGAR" selected="@(ViewBag.InvoiceTypeFilter == "KAARIGAR")">Kaarigar Invoice</option>
-                <option value="WEBSITE" selected="@(ViewBag.InvoiceTypeFilter == "WEBSITE")">Website Invoice</option>
+                <option value="KAARIGAR" selected="@(ViewBag.InvoiceTypeFilter == "KAARIGAR")">Website Invoice</option>
+                <option value="WEBSITE" selected="@(ViewBag.InvoiceTypeFilter == "WEBSITE")">Employee Invoice</option>
             </select>
             <select name="status" class="k-input k-select" style="max-width:180px">
                 <option value="">All Statuses</option>
@@ -100,7 +100,7 @@
                             <tr>
                                 <td>
                                     <span class="k-badge @(inv.InvoiceType == "KAARIGAR" ? "k-badge--amber" : "k-badge--blue")">
-                                        @(inv.InvoiceType == "KAARIGAR" ? "Kaarigar" : "Website")
+                                        @(inv.InvoiceType == "KAARIGAR" ? "Website" : "Employee")
                                     </span>
                                 </td>
                                 <td>@inv.InvoiceNbr</td>

@@ -61,6 +61,28 @@ public class EmployerProfileViewModel
     /// <summary>Populated by the controller for the dropdown. Not bound from the form.</summary>
     public List<SelectListItem> BusinessCategoryOptions { get; set; } = new();
 
+    // ── Billing Information — VERY IMPORTANT, reflected on every invoice's
+    //    "Bill To" block (see InvoicePdfService.cs). All optional, each
+    //    with a sensible fallback if left blank. ──────────────────────────
+
+    /// <summary>Name to print on invoices. Leave blank to use Company Name.</summary>
+    [StringLength(200)]
+    public string? InvoiceNameTxt { get; set; }
+
+    [StringLength(15, ErrorMessage = "GSTIN must be 15 characters.")]
+    public string? GstinTxt { get; set; }
+
+    /// <summary>Billing/registered address. Leave blank to use the City/Area above.</summary>
+    [StringLength(400)]
+    public string? BillingAddressTxt { get; set; }
+
+    [StringLength(150)]
+    public string? FinanceContactTxt { get; set; }
+
+    [EmailAddress(ErrorMessage = "Enter a valid email address.")]
+    [StringLength(150)]
+    public string? AccountsEmailTxt { get; set; }
+
     // ── Logo upload ──────────────────────────────────────────────────────────
 
     /// <summary>Existing logo path, shown as a preview. Null if none uploaded yet.</summary>

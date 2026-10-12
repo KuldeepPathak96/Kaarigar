@@ -36,6 +36,9 @@ public class EmployerDashboardViewModel
     public List<ApplicationDetailItem> RecentApplications { get; set; } = new();
     public List<FilledPositionItem> RecentlyFilled       { get; set; } = new();
 
+    /// <summary>Workers who checked in (JOB_STARTED) today, on any of this employer's jobs.</summary>
+    public List<TodaysWorkerItem> TodaysWorkers          { get; set; } = new();
+
     // Greeting
     public string EmployerName         { get; set; } = string.Empty;
     public string? CompanyName         { get; set; }
@@ -89,6 +92,16 @@ public class FilledPositionItem
     public int RequiredWorkerNbr { get; set; }
     public int ConfirmedWorkerNbr { get; set; }
     public DateTime? FilledTs    { get; set; }
+}
+
+/// <summary>One row in the "Today's Worker" section — a worker who checked in (JOB_STARTED) today, on any of this employer's jobs. Clicking a row goes to that job's Applicants page.</summary>
+public class TodaysWorkerItem
+{
+    public int JobPostId       { get; set; }
+    public int JobApplicationId { get; set; }
+    public string WorkerName   { get; set; } = string.Empty;
+    public string CategoryTxt  { get; set; } = string.Empty; // the job's title — "what role" this worker is doing today
+    public DateTime CheckInTs  { get; set; }
 }
 
 // ── EMPLOYEE DASHBOARD (Screen W-01) ─────────────────────────────────────────

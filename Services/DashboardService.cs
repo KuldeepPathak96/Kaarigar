@@ -28,6 +28,7 @@ public class DashboardService : IDashboardService
         var liveShifts = await _dao.GetLiveShiftsAsync(userAccountId);
         var recentApplications = await _dao.GetRecentApplicationsAsync(userAccountId, take: 10);
         var recentlyFilled = await _dao.GetRecentlyFilledAsync(userAccountId, take: 10);
+        var todaysWorkers = await _dao.GetTodaysWorkersAsync(userAccountId);
         var company = await _dao.GetCompanyNameAsync(userAccountId);
         var isApproved = await _dao.IsEmployerApprovedAsync(userAccountId);
 
@@ -40,6 +41,7 @@ public class DashboardService : IDashboardService
             LiveShifts = liveShifts,
             RecentApplications = recentApplications,
             RecentlyFilled = recentlyFilled,
+            TodaysWorkers = todaysWorkers,
             CompanyName = company,
             IsApproved = isApproved,
         };

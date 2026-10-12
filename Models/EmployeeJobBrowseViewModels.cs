@@ -19,6 +19,7 @@ public class JobBrowseListItemViewModel
 
     public decimal? HourlyWageAmt { get; set; }
     public DateTime? StartDt { get; set; }
+    public TimeSpan? StartTime { get; set; }
     public int? DurationHourNbr { get; set; }
 
     /// <summary>City/area label only — never the exact street address or GPS pin.</summary>
@@ -26,6 +27,9 @@ public class JobBrowseListItemViewModel
     public double? DistanceKm { get; set; }
 
     public DateTime PostedTs { get; set; }
+
+    /// <summary>Optional employer note — dress code, footwear, uniform, items to bring, etc. Shown on the job card so a worker knows what to expect before taking the job.</summary>
+    public string? NoteForWorkerTxt { get; set; }
 
     /// <summary>True if this job's required skills overlap the employee's own skills (or the job requires none). Informational badge only — jobs are never hidden based on this.</summary>
     public bool MatchesSkills { get; set; }

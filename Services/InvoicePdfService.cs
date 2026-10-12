@@ -30,9 +30,16 @@ public class InvoicePdfService : IInvoicePdfService
 
     public Task<string> GenerateKaarigarInvoicePdfAsync(KaarigarInvoice invoice, EmployerProfile? employerProfile, UserAccount? employer, UserAccount? worker, JobPost jobPost)
     {
+        // "Website Invoice" business term — see BillingModels.cs header.
+        // Service Fee is the only payable line item; GST is shown as computed
+        // on (wage + service fee), but the wage itself isn't billed here —
+        // it's paid directly to the worker (see the Employee Invoice below).
+        var wageBaseAmt = invoice.TaxableAmt - invoice.ServiceChargeAmt;
         var lineItems = new List<(string Name, string Note, decimal Taxable, decimal Gst)>
         {
-            ("Kaarigar Platform Service Charge", $"Job: {jobPost.JobTitle} — Worker: {FullName(worker)}", invoice.ServiceChargeAmt, invoice.CgstAmt + invoice.SgstAmt + invoice.IgstAmt)
+            ("Kaarigar Platform Service Fee",
+             $"Job: {jobPost.JobTitle} — Worker: {FullName(worker)}. GST calculated on wage (₹{wageBaseAmt:N2}) + service fee (₹{invoice.ServiceChargeAmt:N2}) = ₹{invoice.TaxableAmt:N2}.",
+             invoice.ServiceChargeAmt, invoice.CgstAmt + invoice.SgstAmt + invoice.IgstAmt)
         };
 
         var path = BuildOutputPath("kaarigar-invoices", invoice.InvoiceNbr);
@@ -41,7 +48,7 @@ public class InvoicePdfService : IInvoicePdfService
             invoice.InvoiceNbr, invoice.InvoiceDt, invoice.DueDt, invoice.PlaceOfSupplyTxt,
             employerProfile, employer,
             lineItems,
-            invoice.TaxableAmt, invoice.CgstAmt, invoice.SgstAmt, invoice.IgstAmt, invoice.TotalAmt,
+            invoice.ServiceChargeAmt, invoice.CgstAmt, invoice.SgstAmt, invoice.IgstAmt, invoice.TotalAmt,
             invoice.GstTypeCd);
 
         return Task.FromResult(path);
@@ -49,18 +56,15 @@ public class InvoicePdfService : IInvoicePdfService
 
     public Task<string> GenerateWebsiteInvoicePdfAsync(WebsiteInvoice invoice, EmployerProfile? employerProfile, UserAccount? employer, UserAccount? worker, JobPost jobPost)
     {
-        var jobNote = $"Job: {jobPost.JobTitle} — Worker: {FullName(worker)} — {invoice.HoursWorkedNbr:0.##} hrs @ Rs.{invoice.HourlyRateAmt:0.##}/hr";
+        // "Employee Invoice" business term — see BillingModels.cs header.
+        // Hours x Rate ONLY. No PF/ESIC/GST line items — paid directly by
+        // the Employer to the worker, outside the platform.
+        var jobNote = $"Job: {jobPost.JobTitle} — Worker: {FullName(worker)} — {invoice.HoursWorkedNbr:0.##} hrs @ Rs.{invoice.HourlyRateAmt:0.##}/hr. No GST — paid directly to the worker.";
 
         var lineItems = new List<(string Name, string Note, decimal Taxable, decimal Gst)>
         {
-            ("Manpower Services", jobNote, invoice.ManpowerAmt, 0),
-            ("Provident Fund Employer Contribution", "Statutory employer PF contribution for this shift", invoice.PfEmployerAmt, 0),
+            ("Wages (Hours × Rate)", jobNote, invoice.ManpowerAmt, 0),
         };
-
-        if (invoice.EsicEmployerAmt > 0)
-        {
-            lineItems.Add(("ESIC Employer Contribution", "Statutory employer ESIC contribution for this shift", invoice.EsicEmployerAmt, 0));
-        }
 
         var path = BuildOutputPath("website-invoices", invoice.InvoiceNbr);
         RenderInvoicePdf(
@@ -68,7 +72,7 @@ public class InvoicePdfService : IInvoicePdfService
             invoice.InvoiceNbr, invoice.InvoiceDt, invoice.DueDt, invoice.PlaceOfSupplyTxt,
             employerProfile, employer,
             lineItems,
-            invoice.TaxableAmt, invoice.CgstAmt, invoice.SgstAmt, invoice.IgstAmt, invoice.TotalAmt,
+            invoice.ManpowerAmt, 0m, 0m, 0m, invoice.TotalAmt,
             invoice.GstTypeCd);
 
         return Task.FromResult(path);
@@ -92,11 +96,19 @@ public class InvoicePdfService : IInvoicePdfService
         var companyGstin = company["Gstin"] ?? "";
         var companyState = company["State"] ?? "24-Gujarat";
 
-        var billToName = employerProfile?.CompanyName ?? FullName(employer);
-        var billToAddress = string.Join(", ", new[] { employerProfile?.AreaAddressTxt, employerProfile?.CityName }
-            .Where(s => !string.IsNullOrWhiteSpace(s)));
+        var billToName = !string.IsNullOrWhiteSpace(employerProfile?.InvoiceNameTxt)
+            ? employerProfile!.InvoiceNameTxt
+            : (employerProfile?.CompanyName ?? FullName(employer));
+
+        var billToAddress = !string.IsNullOrWhiteSpace(employerProfile?.BillingAddressTxt)
+            ? employerProfile!.BillingAddressTxt
+            : string.Join(", ", new[] { employerProfile?.AreaAddressTxt, employerProfile?.CityName }
+                .Where(s => !string.IsNullOrWhiteSpace(s)));
+
         var billToContact = employer?.ContactNbr ?? "";
         var billToGstin = employerProfile?.GstinTxt ?? "—";
+        var billToFinanceContact = employerProfile?.FinanceContactTxt;
+        var billToAccountsEmail = employerProfile?.AccountsEmailTxt;
 
         var absolutePath = Path.Combine(_env.ContentRootPath, "wwwroot", outputPath);
         Directory.CreateDirectory(Path.GetDirectoryName(absolutePath)!);
@@ -138,6 +150,15 @@ public class InvoicePdfService : IInvoicePdfService
                         c.Item().Text(billToName).Bold();
                         c.Item().Text(billToAddress);
                         c.Item().Text($"Contact No: {billToContact}    GSTIN: {billToGstin}");
+                        if (!string.IsNullOrWhiteSpace(billToFinanceContact) || !string.IsNullOrWhiteSpace(billToAccountsEmail))
+                        {
+                            var financeLine = string.Join("    ", new[]
+                            {
+                                !string.IsNullOrWhiteSpace(billToFinanceContact) ? $"Finance Contact: {billToFinanceContact}" : null,
+                                !string.IsNullOrWhiteSpace(billToAccountsEmail) ? $"Accounts Email: {billToAccountsEmail}" : null,
+                            }.Where(s => s != null));
+                            c.Item().Text(financeLine);
+                        }
                     });
 
                     col.Item().PaddingTop(4).Table(table =>

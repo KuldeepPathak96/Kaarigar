@@ -65,6 +65,11 @@ public class EmployerProfileDao : IEmployerProfileDao
             existing.BusinessCategoryId = profile.BusinessCategoryId;
             existing.BusinessProofTypeCd = profile.BusinessProofTypeCd;
             existing.BusinessProofNumberTxt = profile.BusinessProofNumberTxt;
+            existing.InvoiceNameTxt = profile.InvoiceNameTxt;
+            existing.GstinTxt = profile.GstinTxt;
+            existing.BillingAddressTxt = profile.BillingAddressTxt;
+            existing.FinanceContactTxt = profile.FinanceContactTxt;
+            existing.AccountsEmailTxt = profile.AccountsEmailTxt;
 
             // Only overwrite file-related fields when a new file was actually
             // uploaded (service layer leaves these null on the incoming

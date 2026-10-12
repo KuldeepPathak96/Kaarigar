@@ -42,6 +42,10 @@ public class PostJobViewModel
     [StringLength(4000)]
     public string? DescriptionTxt { get; set; }
 
+    /// <summary>Optional — shown to workers on the job card / My Applications: dress code, footwear, uniform, items to bring, etc. Kept separate from DescriptionTxt so it reads as a short, scannable checklist rather than being buried in the general description.</summary>
+    [StringLength(1000, ErrorMessage = "Keep the note under 1000 characters.")]
+    public string? NoteForWorkerTxt { get; set; }
+
     /// <summary>Selected SKILL.SKILL_ID values, filtered by WorkCategoryId (see work-category-picker.js).</summary>
     public List<int> SelectedSkillIds { get; set; } = new();
 

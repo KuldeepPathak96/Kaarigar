@@ -24,6 +24,9 @@ public class EmployeeApplicationListItemViewModel
 
     public DateTime AppliedTs { get; set; }
 
+    /// <summary>Optional employer note — dress code, footwear, uniform, items to bring, etc. Worth re-checking once a job is confirmed.</summary>
+    public string? NoteForWorkerTxt { get; set; }
+
     /// <summary>PENDING | EMPLOYER_VIEWED | EMPLOYER_CONTACTED | JOB_STARTED | COMPLETED</summary>
     public string StatusCd { get; set; } = "PENDING";
 

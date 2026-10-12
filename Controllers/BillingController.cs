@@ -44,7 +44,7 @@ public class BillingController : Controller
         return View();
     }
 
-    /// <summary>Employer or Admin: the Kaarigar Invoice + Website Invoice pair for a given JobApplication.</summary>
+    /// <summary>Employer, Admin, or the Worker themselves: the Website Invoice + Employee Invoice pair for a given JobApplication.</summary>
     [HttpGet("/billing/job/{jobApplicationId:int}")]
     public async Task<IActionResult> ForJobApplication(int jobApplicationId)
     {
@@ -58,9 +58,11 @@ public class BillingController : Controller
         if (application == null) return NotFound("Job application not found.");
 
         var employerUserAccountId = application.JobPost.EmployerUserAccountId;
+        var isEmployer = employerUserAccountId == session.UserAccountId;
+        var isWorker = application.EmployeeUserAccountId == session.UserAccountId;
 
-        // Employers may only see their own bills; Admins may see any.
-        if (session.RoleCd != "ADMIN" && employerUserAccountId != session.UserAccountId)
+        // Employers and the worker themselves may see their own bills; Admins may see any.
+        if (session.RoleCd != "ADMIN" && !isEmployer && !isWorker)
             return Forbid();
 
         var kaarigarInvoice = await _db.KaarigarInvoices.FirstOrDefaultAsync(i => i.JobApplicationId == jobApplicationId);
@@ -72,7 +74,42 @@ public class BillingController : Controller
         ViewBag.StillGenerating = kaarigarInvoice == null && websiteInvoice == null;
         ViewBag.KaarigarInvoice = kaarigarInvoice;
         ViewBag.WebsiteInvoice = websiteInvoice;
+        // Only the worker who did this job can mark their own Employee Invoice collected.
+        ViewBag.CanMarkCollected = isWorker;
         return View();
+    }
+
+    /// <summary>
+    /// Worker: "I received this payment from the Employer directly." Only
+    /// the worker on this specific job can mark it — not the Employer, not
+    /// anyone else. Admin can also mark it on the worker's behalf if needed
+    /// (e.g. a support request), since Admin can see any invoice.
+    /// </summary>
+    [HttpPost("/billing/employee-invoice/{id:int}/mark-collected")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MarkEmployeeInvoiceCollected(int id)
+    {
+        var session = UserSession.FromContext(HttpContext);
+        if (!session.IsLoggedIn) return RedirectToAction("Login", "Account");
+
+        var invoice = await _db.WebsiteInvoices.FirstOrDefaultAsync(i => i.WebsiteInvoiceId == id);
+        if (invoice == null) return NotFound();
+
+        if (session.RoleCd != "ADMIN" && invoice.WorkerUserAccountId != session.UserAccountId)
+            return Forbid();
+
+        if (invoice.StatusCd != "COLLECTED")
+        {
+            invoice.StatusCd = "COLLECTED";
+            invoice.CollectedByEmployeeTs = DateTime.UtcNow;
+            invoice.PaidTs = DateTime.UtcNow;
+            invoice.UpdatedBy = session.RoleCd == "ADMIN" ? "ADMIN_MARK_COLLECTED" : "EMPLOYEE_MARK_COLLECTED";
+            invoice.UpdatedTs = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Marked as collected — thanks for confirming!";
+        }
+
+        return RedirectToAction(nameof(ForJobApplication), new { jobApplicationId = invoice.JobApplicationId });
     }
 
     [HttpGet("/billing/kaarigar-invoice/{id:int}/download")]

@@ -80,6 +80,26 @@ public class EmployeeJobController : Controller
         return View(vm);
     }
 
+    // ── MY SHIFT SCHEDULE ────────────────────────────────────────────────────
+
+    [HttpGet("/my-schedule")]
+    public async Task<IActionResult> Schedule()
+    {
+        var session = UserSession.FromContext(HttpContext);
+        var vm = await _jobService.GetScheduleAsync(session.UserAccountId);
+        return View(vm);
+    }
+
+    // ── EARNINGS ─────────────────────────────────────────────────────────────
+
+    [HttpGet("/earnings")]
+    public async Task<IActionResult> Earnings()
+    {
+        var session = UserSession.FromContext(HttpContext);
+        var vm = await _jobService.GetEarningsAsync(session.UserAccountId);
+        return View(vm);
+    }
+
     // ── W-06: ENTER OTP (employer-generated, Kaarigar-entered) ───────────────
 
     [HttpPost("/applications/{id:int}/verify-otp")]

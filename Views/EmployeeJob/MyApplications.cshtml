@@ -67,6 +67,13 @@
                         <p class="k-job-card__meta"><i data-lucide="banknote" style="width:14px;height:14px;vertical-align:-2px;"></i> ₹@app.HourlyWageAmt.Value.ToString("N0") / hour</p>
                     }
 
+                    @if (!string.IsNullOrWhiteSpace(app.NoteForWorkerTxt))
+                    {
+                        <p class="k-job-card__note">
+                            <i data-lucide="info" style="width:14px;height:14px;vertical-align:-2px;"></i> @app.NoteForWorkerTxt
+                        </p>
+                    }
+
                     <p class="k-job-card__meta" style="color:#aaa;font-size:12px">Applied @app.AppliedTs.ToString("dd MMM yyyy")</p>
 
                     <div class="k-job-card__actions" style="flex-direction:column;align-items:stretch;gap:8px">
@@ -75,6 +82,9 @@
                         @if (app.StatusCd == "COMPLETED")
                         {
                             <div class="k-alert k-alert--success"><i data-lucide="check-circle" style="width:16px;height:16px;vertical-align:-3px;"></i> Job completed. Thank you!</div>
+                            <a href="/billing/job/@app.JobApplicationId" class="k-btn k-btn--sm k-btn--secondary">
+                                <i data-lucide="receipt" style="width:14px;height:14px;vertical-align:-2px;"></i> View Bill / Mark Payment Collected
+                            </a>
                         }
                         else if (app.AwaitingSatisfactionOtp)
                         {

@@ -53,7 +53,7 @@
             </div>
         </a>
 
-        <div class="k-kpi-card k-kpi-card--expandable" data-kpi-toggle>
+        <a href="/job/my-jobs" class="k-kpi-card k-kpi-card--link">
             <div class="k-kpi-card__icon" style="background:#D1FAE5">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2">
                     <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
@@ -65,39 +65,9 @@
             </div>
             <div class="k-kpi-card__badge k-kpi-card__badge--green">Live</div>
             <div class="k-kpi-card__expand-hint">
-                Details <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
+                Go to Job List <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="transform:rotate(-90deg)"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-
-            <div class="k-kpi-detail-panel">
-                @if (!Model.LiveShifts.Any())
-                {
-                    <div class="k-detail-panel-empty">No live or upcoming shifts right now.</div>
-                }
-                else
-                {
-                    @foreach (var shift in Model.LiveShifts)
-                    {
-                        <div class="k-shift-item">
-                            <div class="k-shift-item__main">
-                                <div class="k-shift-item__title">@shift.JobTitle</div>
-                                <div class="k-shift-item__progress @(shift.IsFullyStaffed ? "k-shift-item__progress--full" : "")">
-                                    @shift.ConfirmedWorkerNbr/@shift.RequiredWorkerNbr Confirmed
-                                </div>
-                                <div class="k-shift-item__timing">@shift.StartsInText</div>
-                            </div>
-                            @if (shift.IsFullyStaffed)
-                            {
-                                <span class="k-shift-item__cta k-shift-item__cta--muted">Fully Staffed</span>
-                            }
-                            else
-                            {
-                                <a href="/job/applicants/@shift.JobPostId" class="k-shift-item__cta">Find @shift.StillNeededNbr More Worker@(shift.StillNeededNbr == 1 ? "" : "s")</a>
-                            }
-                        </div>
-                    }
-                }
-            </div>
-        </div>
+        </a>
 
         <a href="/job/my-jobs" class="k-kpi-card k-kpi-card--link k-kpi-card--quick-action">
             <div class="k-kpi-card__icon" style="background:#EDE9FE">
@@ -158,11 +128,47 @@
 
     </div><!-- /.k-kpi-grid -->
 
+    <!-- ── TODAY'S WORKER ───────────────────────────────────────────── -->
+    <div class="k-dash-section">
+        <div class="k-dash-section__header">
+            <h2 class="k-dash-section__title">Today's Worker</h2>
+        </div>
+
+        @if (!Model.TodaysWorkers.Any())
+        {
+            <div class="k-detail-panel-empty">No one has checked in yet today.</div>
+        }
+        else
+        {
+            <table class="k-table k-table--clickable-rows">
+                <thead>
+                    <tr>
+                        <th>Worker Name</th>
+                        <th>Check-in Time</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var worker in Model.TodaysWorkers)
+                    {
+                        <tr data-row-href="/job/applicants/@worker.JobPostId">
+                            <td>@worker.WorkerName</td>
+                            <td>@worker.CheckInTs.ToLocalTime().ToString("hh:mm tt")</td>
+                            <td>@worker.CategoryTxt</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
 </div><!-- /.k-dash-page -->
 
 @section Scripts {
     <script>
         (function () {
+            var kpiGrid = document.querySelector('.k-kpi-grid--4');
+
             document.querySelectorAll('[data-kpi-toggle]').forEach(function (card) {
                 card.addEventListener('click', function (e) {
                     // Let links inside the expanded detail panel (e.g. "Find 3
@@ -178,6 +184,21 @@
                     });
 
                     card.classList.toggle('is-open', !isOpen);
+
+                    // Equal-height cards by default; only stop stretching
+                    // siblings while something is actually expanded.
+                    if (kpiGrid) {
+                        var anyOpen = document.querySelector('[data-kpi-toggle].is-open') !== null;
+                        kpiGrid.classList.toggle('k-kpi-grid--has-open', anyOpen);
+                    }
+                });
+            });
+
+            // "Today's Worker" table — clicking anywhere on a row navigates
+            // to that job's Applicants page.
+            document.querySelectorAll('.k-table--clickable-rows tbody tr[data-row-href]').forEach(function (row) {
+                row.addEventListener('click', function () {
+                    window.location.href = row.getAttribute('data-row-href');
                 });
             });
         })();

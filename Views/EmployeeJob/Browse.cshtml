@@ -1,6 +1,6 @@
 @model Kaarigar.Models.JobBrowseViewModel
 @{
-    ViewData["Title"] = "Browse Jobs";
+    ViewData["Title"] = "Find Work Near Me";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
@@ -8,7 +8,7 @@
 
     <div class="k-dash-header">
         <div>
-            <h1 class="k-dash-title">Browse Available Jobs</h1>
+            <h1 class="k-dash-title">Find Work Near Me</h1>
             <p class="k-dash-subtitle">
                 Showing all open jobs
                 @if (Model.MatchesMyProfileOnly)
@@ -136,10 +136,22 @@
                     {
                         <p class="k-job-card__meta">
                             <i data-lucide="calendar" style="width:14px;height:14px;vertical-align:-2px;"></i> Starts @job.StartDt.Value.ToString("dd MMM yyyy")
-                            @if (job.DurationHourNbr.HasValue)
+                            @if (job.StartTime.HasValue)
+                            {
+                                var endTime = job.StartTime.Value.Add(TimeSpan.FromHours(job.DurationHourNbr ?? 0));
+                                <text> • @DateTime.Today.Add(job.StartTime.Value).ToString("h:mm tt") - @DateTime.Today.Add(endTime).ToString("h:mm tt")</text>
+                            }
+                            else if (job.DurationHourNbr.HasValue)
                             {
                                 <text> · @job.DurationHourNbr hour(s)</text>
                             }
+                        </p>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(job.NoteForWorkerTxt))
+                    {
+                        <p class="k-job-card__note">
+                            <i data-lucide="info" style="width:14px;height:14px;vertical-align:-2px;"></i> @job.NoteForWorkerTxt
                         </p>
                     }
 

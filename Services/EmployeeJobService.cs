@@ -1,5 +1,6 @@
 using Kaarigar.Data;
 using Kaarigar.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kaarigar.Services;
 
@@ -9,17 +10,20 @@ public class EmployeeJobService : IEmployeeJobService
     private readonly IEmployerProfileDao _employerProfileDao;
     private readonly IWhatsAppNotificationService _whatsAppService;
     private readonly IInvoiceGenerationService _invoiceGenerationService;
+    private readonly Kaarigar.Data.AppDbContext _db;
     private readonly ILogger<EmployeeJobService> _logger;
 
     public EmployeeJobService(
         IEmployeeJobDao dao, IEmployerProfileDao employerProfileDao,
         IWhatsAppNotificationService whatsAppService, IInvoiceGenerationService invoiceGenerationService,
+        Kaarigar.Data.AppDbContext db,
         ILogger<EmployeeJobService> logger)
     {
         _dao = dao;
         _employerProfileDao = employerProfileDao;
         _whatsAppService = whatsAppService;
         _invoiceGenerationService = invoiceGenerationService;
+        _db = db;
         _logger = logger;
     }
 
@@ -99,10 +103,12 @@ public class EmployeeJobService : IEmployeeJobService
                                                           .Where(n => n.Length > 0).ToList(),
                     HourlyWageAmt = x.Job.HourlyWageAmt,
                     StartDt = x.Job.StartDt,
+                    StartTime = x.Job.StartTime,
                     DurationHourNbr = x.Job.DurationHourNbr,
                     LocationLabel = ExtractCityLabel(x.Job.LocationAddressTxt),
                     DistanceKm = x.DistanceKm,
                     PostedTs = x.Job.CreatedTs,
+                    NoteForWorkerTxt = x.Job.NoteForWorkerTxt,
                     HasApplied = appliedIds.Contains(x.Job.JobPostId),
                     MatchesSkills = x.MatchesSkills,
                 };
@@ -200,6 +206,7 @@ public class EmployeeJobService : IEmployeeJobService
                 LocationLabel = ExtractCityLabel(a.JobPost.LocationAddressTxt),
                 MapUrl = a.JobPost.GoogleMapsUrl,
                 AppliedTs = a.AppliedTs,
+                NoteForWorkerTxt = a.JobPost.NoteForWorkerTxt,
                 StatusCd = a.StatusCd,
             };
         }).ToList();
@@ -284,4 +291,100 @@ public class EmployeeJobService : IEmployeeJobService
     }
 
     private static double ToRadians(double degrees) => degrees * Math.PI / 180.0;
+
+    // ── MY SHIFT SCHEDULE ────────────────────────────────────────────────────
+
+    public async Task<EmployeeScheduleViewModel> GetScheduleAsync(int employeeUserAccountId)
+    {
+        var today = DateTime.Today;
+        var horizon = today.AddDays(5); // covers "today", "tomorrow", "next 3 days"
+
+        var applications = await _db.JobApplications
+            .Include(a => a.JobPost)
+            .Where(a => a.EmployeeUserAccountId == employeeUserAccountId
+                        && a.StatusCd != "CANCELLED" && a.StatusCd != "COMPLETED"
+                        && a.JobPost.StartDt != null
+                        && a.JobPost.StartDt.Value.Date >= today
+                        && a.JobPost.StartDt.Value.Date < horizon)
+            .OrderBy(a => a.JobPost.StartDt)
+            .ToListAsync();
+
+        var employerIds = applications.Select(a => a.JobPost.EmployerUserAccountId).Distinct().ToList();
+        var categoryNames = await _dao.GetEmployerBusinessCategoryNamesAsync(employerIds);
+
+        var vm = new EmployeeScheduleViewModel();
+
+        foreach (var a in applications)
+        {
+            categoryNames.TryGetValue(a.JobPost.EmployerUserAccountId, out var categoryName);
+            var startDate = a.JobPost.StartDt!.Value.Date;
+
+            var item = new ScheduleShiftItemViewModel
+            {
+                JobApplicationId = a.JobApplicationId,
+                JobTitle = a.JobPost.JobTitle,
+                EmployerDisplayName = string.IsNullOrWhiteSpace(categoryName) ? "Registered Employer" : $"{categoryName} Employer",
+                ShiftDt = startDate,
+                StartTime = a.JobPost.StartTime,
+                EndTime = a.JobPost.StartTime.HasValue
+                    ? a.JobPost.StartTime.Value.Add(TimeSpan.FromHours(a.JobPost.DurationHourNbr ?? 0))
+                    : null,
+                LocationAddressTxt = a.JobPost.LocationAddressTxt,
+                MapUrl = a.JobPost.GoogleMapsUrl,
+                EmployerContactNbr = a.JobPost.ContactNbr,
+                StatusCd = a.StatusCd,
+            };
+
+            if (startDate == today) vm.Today.Add(item);
+            else if (startDate == today.AddDays(1)) vm.Tomorrow.Add(item);
+            else vm.NextThreeDays.Add(item);
+        }
+
+        return vm;
+    }
+
+    // ── EARNINGS ─────────────────────────────────────────────────────────────
+
+    public async Task<EmployeeEarningsViewModel> GetEarningsAsync(int employeeUserAccountId)
+    {
+        var monthStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+        var invoices = await _db.WebsiteInvoices
+            .Include(i => i.JobPost)
+            .Where(i => i.WorkerUserAccountId == employeeUserAccountId)
+            .OrderByDescending(i => i.InvoiceDt)
+            .ToListAsync();
+
+        var employerIds = invoices.Select(i => i.EmployerUserAccountId).Distinct().ToList();
+        var categoryNames = await _dao.GetEmployerBusinessCategoryNamesAsync(employerIds);
+
+        var thisMonth = invoices.Where(i => i.InvoiceDt >= monthStart).ToList();
+
+        var vm = new EmployeeEarningsViewModel
+        {
+            ThisMonthTotalAmt = thisMonth.Sum(i => i.ManpowerAmt),
+            ThisMonthJobsCompleted = thisMonth.Count,
+            ThisMonthTotalHours = thisMonth.Sum(i => i.HoursWorkedNbr),
+        };
+
+        vm.ThisMonthAvgHourlyRate = vm.ThisMonthTotalHours > 0
+            ? Math.Round(vm.ThisMonthTotalAmt / vm.ThisMonthTotalHours, 2)
+            : 0;
+
+        vm.History = invoices.Select(i =>
+        {
+            categoryNames.TryGetValue(i.EmployerUserAccountId, out var categoryName);
+            return new EarningsHistoryItemViewModel
+            {
+                JobTitle = i.JobPost?.JobTitle ?? "—",
+                EmployerDisplayName = string.IsNullOrWhiteSpace(categoryName) ? "Registered Employer" : $"{categoryName} Employer",
+                InvoiceDt = i.InvoiceDt,
+                HoursWorked = i.HoursWorkedNbr,
+                HourlyRate = i.HourlyRateAmt,
+                AmountAmt = i.ManpowerAmt,
+            };
+        }).ToList();
+
+        return vm;
+    }
 }

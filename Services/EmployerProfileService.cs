@@ -48,6 +48,12 @@ public class EmployerProfileService : IEmployerProfileService
             LongitudeNbr = profile?.LongitudeNbr,
             BusinessCategoryId = profile?.BusinessCategoryId,
 
+            InvoiceNameTxt = profile?.InvoiceNameTxt,
+            GstinTxt = profile?.GstinTxt,
+            BillingAddressTxt = profile?.BillingAddressTxt,
+            FinanceContactTxt = profile?.FinanceContactTxt,
+            AccountsEmailTxt = profile?.AccountsEmailTxt,
+
             ExistingLogoPath = profile?.LogoFilePathTxt,
 
             BusinessProofTypeCd = profile?.BusinessProofTypeCd,
@@ -127,6 +133,11 @@ public class EmployerProfileService : IEmployerProfileService
             LongitudeNbr = model.LongitudeNbr,
             ContactPersonName = model.ContactPersonName.Trim(),
             BusinessCategoryId = model.BusinessCategoryId,
+            InvoiceNameTxt = string.IsNullOrWhiteSpace(model.InvoiceNameTxt) ? null : model.InvoiceNameTxt.Trim(),
+            GstinTxt = string.IsNullOrWhiteSpace(model.GstinTxt) ? null : model.GstinTxt.Trim().ToUpperInvariant(),
+            BillingAddressTxt = string.IsNullOrWhiteSpace(model.BillingAddressTxt) ? null : model.BillingAddressTxt.Trim(),
+            FinanceContactTxt = string.IsNullOrWhiteSpace(model.FinanceContactTxt) ? null : model.FinanceContactTxt.Trim(),
+            AccountsEmailTxt = string.IsNullOrWhiteSpace(model.AccountsEmailTxt) ? null : model.AccountsEmailTxt.Trim().ToLowerInvariant(),
             BusinessProofTypeCd = model.BusinessProofTypeCd,
             BusinessProofNumberTxt = model.BusinessProofNumberTxt?.Trim(),
             LogoFilePathTxt = newLogoPath ?? string.Empty,          // empty = "don't overwrite", see Dao

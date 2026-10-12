@@ -81,6 +81,31 @@ public class EmployerProfile
     [StringLength(15)]
     public string? GstinTxt { get; set; }
 
+    // ── Billing Information (reflected on the invoice "Bill To" block) ──────
+    // Deliberately separate from CompanyName / AreaAddressTxt+CityName above:
+    // a business's legal invoicing name and billing address often differ
+    // from its trading name or job-site address.
+
+    /// <summary>Name to print on invoices. Falls back to CompanyName if not set.</summary>
+    [Column("INVOICE_NAME_TXT")]
+    [StringLength(200)]
+    public string? InvoiceNameTxt { get; set; }
+
+    /// <summary>Billing/registered address for invoices. Falls back to AreaAddressTxt + CityName if not set.</summary>
+    [Column("BILLING_ADDRESS_TXT")]
+    [StringLength(400)]
+    public string? BillingAddressTxt { get; set; }
+
+    /// <summary>Name of the person who handles payments/invoices on the employer's side.</summary>
+    [Column("FINANCE_CONTACT_TXT")]
+    [StringLength(150)]
+    public string? FinanceContactTxt { get; set; }
+
+    /// <summary>Email for invoice/accounts correspondence.</summary>
+    [Column("ACCOUNTS_EMAIL_TXT")]
+    [StringLength(150)]
+    public string? AccountsEmailTxt { get; set; }
+
     /// <summary>Per-employer commission rate used for the Kaarigar Invoice. NULL = use platform default (see InvoiceCalculationService).</summary>
     [Column("SERVICE_CHARGE_PCT")]
     public decimal? ServiceChargePct { get; set; }

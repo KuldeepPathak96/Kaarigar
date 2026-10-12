@@ -10,22 +10,22 @@
     <div class="k-dash-header">
         <div>
             <h1 class="k-dash-title">
-                Welcome back, @Model.EmployeeName <i data-lucide="hard-hat" style="width:24px;height:24px;vertical-align:-4px;"></i>
+                👋 Welcome, @Model.EmployeeName <i data-lucide="hard-hat" style="width:24px;height:24px;vertical-align:-4px;"></i>
             </h1>
-            <p class="k-dash-subtitle">Find your next job and track your applications.</p>
+            <p class="k-dash-subtitle">Ready for today's work?</p>
         </div>
         @if (Model.IsApproved)
         {
             <a href="/jobs/browse" class="k-btn k-btn--green k-btn--lg">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                Browse Jobs
+                🔍 Find Work Near Me
             </a>
         }
         else
         {
             <span class="k-btn k-btn--green k-btn--lg" style="opacity:.6;cursor:not-allowed" title="Your account is pending Admin approval">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                Browse Jobs
+                🔍 Find Work Near Me
             </span>
         }
     </div>
@@ -148,6 +148,30 @@
                     <div class="k-quick-action-card__title">Enter OTP</div>
                     <div class="k-quick-action-card__sub">Confirm with employer's code</div>
                 </div>
+            </a>
+            <a href="/learning-videos" class="k-quick-action-card">
+                <div class="k-quick-action-card__icon" style="background:#DBEAFE">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1E40AF" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                </div>
+                <div>
+                    <div class="k-quick-action-card__title">Learning Videos</div>
+                    <div class="k-quick-action-card__sub">Improve your skills</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="k-dash-section">
+        <h2 class="k-dash-section__title">Need Help?</h2>
+        <div class="k-help-grid">
+            <a href="https://wa.me/919726728838" target="_blank" class="k-help-item">
+                <i data-lucide="message-circle" style="width:20px;height:20px;color:#16CA4F"></i> WhatsApp Us
+            </a>
+            <a href="tel:+919726728838" class="k-help-item">
+                <i data-lucide="phone" style="width:20px;height:20px;color:#1E40AF"></i> Call Support
+            </a>
+            <a href="/faqs" class="k-help-item">
+                <i data-lucide="help-circle" style="width:20px;height:20px;color:#B45309"></i> FAQs
             </a>
         </div>
     </div>

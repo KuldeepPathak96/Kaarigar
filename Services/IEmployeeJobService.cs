@@ -23,4 +23,10 @@ public interface IEmployeeJobService
     /// status: JOB_START while not yet started, SATISFACTION once started.
     /// </summary>
     Task<ServiceResult> VerifyOtpAsync(int employeeUserAccountId, int jobApplicationId, string otpCd);
+
+    /// <summary>Accepted/in-progress shifts grouped into Today / Tomorrow / Next 3 Days, by JobPost.StartDt.</summary>
+    Task<EmployeeScheduleViewModel> GetScheduleAsync(int employeeUserAccountId);
+
+    /// <summary>This month's totals + full history, from completed jobs' Website Invoice amounts (what the worker actually receives).</summary>
+    Task<EmployeeEarningsViewModel> GetEarningsAsync(int employeeUserAccountId);
 }

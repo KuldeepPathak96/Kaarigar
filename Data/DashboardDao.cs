@@ -147,6 +147,37 @@ public class DashboardDao : IDashboardDao
         }).ToList();
     }
 
+    public async Task<List<TodaysWorkerItem>> GetTodaysWorkersAsync(int userAccountId)
+    {
+        var todayUtc = DateTime.UtcNow.Date;
+
+        var rows = await _db.JobApplications
+            .AsNoTracking()
+            .Where(a => a.JobPost.EmployerUserAccountId == userAccountId &&
+                        a.JobStartedTs != null &&
+                        a.JobStartedTs.Value.Date == todayUtc)
+            .OrderByDescending(a => a.JobStartedTs)
+            .Select(a => new
+            {
+                a.JobApplicationId,
+                a.JobPostId,
+                a.JobPost.JobTitle,
+                CheckInTs = a.JobStartedTs!.Value,
+                EmployeeFirstName = a.EmployeeUserAccount.FirstName,
+                EmployeeLastName = a.EmployeeUserAccount.LastName,
+            })
+            .ToListAsync();
+
+        return rows.Select(r => new TodaysWorkerItem
+        {
+            JobPostId = r.JobPostId,
+            JobApplicationId = r.JobApplicationId,
+            WorkerName = $"{r.EmployeeFirstName} {r.EmployeeLastName}".Trim(),
+            CategoryTxt = r.JobTitle,
+            CheckInTs = r.CheckInTs,
+        }).ToList();
+    }
+
     public async Task<string?> GetCompanyNameAsync(int userAccountId) =>
         await _db.EmployerProfiles
                  .AsNoTracking()

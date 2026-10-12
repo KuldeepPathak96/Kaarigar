@@ -185,6 +185,45 @@
             </div>
         </div>
 
+        <div class="k-dash-section">
+            <h2 class="k-dash-section__title">Billing Information</h2>
+            <p class="k-form__hint" style="margin-top:-0.5rem; margin-bottom:1rem;">
+                <strong>Very important</strong> — these details appear on every invoice we generate for you. All optional; leave blank to fall back to the details above.
+            </p>
+
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label asp-for="InvoiceNameTxt">Invoice Name</label>
+                    <input asp-for="InvoiceNameTxt" class="k-input" placeholder="Leave blank to use Company Name above" />
+                    <span asp-validation-for="InvoiceNameTxt" class="k-field-error"></span>
+                </div>
+                <div class="k-form__group">
+                    <label asp-for="GstinTxt">GST Number</label>
+                    <input asp-for="GstinTxt" class="k-input" placeholder="e.g. 24ABCDE1234F1Z5" maxlength="15" style="text-transform:uppercase" />
+                    <span asp-validation-for="GstinTxt" class="k-field-error"></span>
+                </div>
+            </div>
+
+            <div class="k-form__group">
+                <label asp-for="BillingAddressTxt">Billing Address</label>
+                <textarea asp-for="BillingAddressTxt" class="k-input" rows="2" placeholder="Leave blank to use City/Area above"></textarea>
+                <span asp-validation-for="BillingAddressTxt" class="k-field-error"></span>
+            </div>
+
+            <div class="k-form__row">
+                <div class="k-form__group">
+                    <label asp-for="FinanceContactTxt">Finance Contact</label>
+                    <input asp-for="FinanceContactTxt" class="k-input" placeholder="Name of the person who handles payments" />
+                    <span asp-validation-for="FinanceContactTxt" class="k-field-error"></span>
+                </div>
+                <div class="k-form__group">
+                    <label asp-for="AccountsEmailTxt">Accounts Email</label>
+                    <input asp-for="AccountsEmailTxt" type="email" class="k-input" placeholder="accounts@yourcompany.com" />
+                    <span asp-validation-for="AccountsEmailTxt" class="k-field-error"></span>
+                </div>
+            </div>
+        </div>
+
         <button type="submit" class="k-btn k-btn--primary k-btn--lg" id="saveBtn">
             <span id="saveBtnText">Save Changes</span>
             <span id="saveSpinner" class="k-spinner" style="display:none;"></span>

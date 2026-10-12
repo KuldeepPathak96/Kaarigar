@@ -365,9 +365,17 @@
 
 .k-kpi-grid--4 {
     grid-template-columns: repeat(4, 1fr);
-    /* So an expanded card (which grows taller) doesn't force its row
-       siblings to stretch to match -- each card sizes to its own content
-       and simply top-aligns within the (now taller) row track. */
+    /* Equal-height cards by default (grid's normal "stretch" behaviour) so
+       all 4 KPI cards line up regardless of how much footer content
+       (badge / "Details" hint / "Go to Job List") each one has.
+       .k-kpi-grid--has-open switches this off only while a card is
+       actually expanded, so the taller expanded card doesn't force its
+       row-siblings to stretch to match it too. Toggled via JS in
+       Employer.cshtml alongside each card's own .is-open class. */
+    align-items: stretch;
+}
+
+.k-kpi-grid--4.k-kpi-grid--has-open {
     align-items: start;
 }
 
@@ -920,8 +928,9 @@
 /* ── EXPANDABLE KPI CARDS (Employer Dashboard) ────────────────────────────── */
 /* Each expandable card contains its OWN nested .k-kpi-detail-panel — clicking
    the card grows that card in place, it does not open a separate section
-   elsewhere on the page. align-items:start on .k-kpi-grid--4 (above) stops
-   the taller card from stretching its row-siblings. */
+   elsewhere on the page. .k-kpi-grid--has-open (added to the grid by JS
+   whenever any card is open) stops the taller card from stretching its
+   row-siblings; the rest of the time the grid stays equal-height. */
 
 .k-kpi-card--link {
     text-decoration: none;
@@ -1133,4 +1142,15 @@
         padding-top: 0.85rem;
         margin-top: 0.85rem;
     }
+}
+
+/* ── TODAY'S WORKER TABLE (Employer Dashboard) ────────────────────────────── */
+
+.k-table--clickable-rows tbody tr {
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.k-table--clickable-rows tbody tr:hover {
+    background-color: var(--k-surface, #f7f7f8);
 }

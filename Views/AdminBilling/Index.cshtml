@@ -11,7 +11,7 @@
     <div class="k-dash-header">
         <div>
             <h1 class="k-dash-title">Billing</h1>
-            <p class="k-dash-subtitle">Kaarigar Invoices and Website Invoices generated on job completion.</p>
+            <p class="k-dash-subtitle">Website Invoices (platform service fee) and Employee Invoices (hours × rate, collected directly by workers) generated on job completion.</p>
         </div>
     </div>
 
@@ -34,7 +34,7 @@
             </div>
             <div class="k-kpi-card__body">
                 <div class="k-kpi-card__value">₹@(summary?.TotalKaarigarAmt.ToString("N0") ?? "0")</div>
-                <div class="k-kpi-card__label">Kaarigar Invoices (@summary?.TotalKaarigarInvoices)</div>
+                <div class="k-kpi-card__label">Website Invoices (@summary?.TotalKaarigarInvoices)</div>
             </div>
         </div>
 
@@ -46,7 +46,7 @@
             </div>
             <div class="k-kpi-card__body">
                 <div class="k-kpi-card__value">₹@(summary?.TotalWebsiteAmt.ToString("N0") ?? "0")</div>
-                <div class="k-kpi-card__label">Website Invoices (@summary?.TotalWebsiteInvoices)</div>
+                <div class="k-kpi-card__label">Employee Invoices (@summary?.TotalWebsiteInvoices)</div>
             </div>
         </div>
 
@@ -80,14 +80,15 @@
         <form method="get" asp-action="Index" asp-controller="AdminBilling" class="k-form k-form--inline" style="flex-wrap:wrap">
             <select name="invoiceType" class="k-input k-select" style="max-width:180px">
                 <option value="">All Invoice Types</option>
-                <option value="KAARIGAR" selected="@(ViewBag.InvoiceTypeFilter == "KAARIGAR")">Kaarigar Invoice</option>
-                <option value="WEBSITE" selected="@(ViewBag.InvoiceTypeFilter == "WEBSITE")">Website Invoice</option>
+                <option value="KAARIGAR" selected="@(ViewBag.InvoiceTypeFilter == "KAARIGAR")">Website Invoice</option>
+                <option value="WEBSITE" selected="@(ViewBag.InvoiceTypeFilter == "WEBSITE")">Employee Invoice</option>
             </select>
 
             <select name="status" class="k-input k-select" style="max-width:180px">
                 <option value="">All Statuses</option>
                 <option value="DUE" selected="@(ViewBag.StatusFilter == "DUE")">Due</option>
                 <option value="PENDING_PAYMENT" selected="@(ViewBag.StatusFilter == "PENDING_PAYMENT")">Pending Payment</option>
+                <option value="COLLECTED" selected="@(ViewBag.StatusFilter == "COLLECTED")">Collected (Employee Invoice)</option>
                 <option value="PAID" selected="@(ViewBag.StatusFilter == "PAID")">Paid</option>
                 <option value="OVERDUE" selected="@(ViewBag.StatusFilter == "OVERDUE")">Overdue</option>
             </select>
@@ -133,7 +134,7 @@
                             <tr>
                                 <td>
                                     <span class="k-badge @(inv.InvoiceType == "KAARIGAR" ? "k-badge--amber" : "k-badge--blue")">
-                                        @(inv.InvoiceType == "KAARIGAR" ? "Kaarigar" : "Website")
+                                        @(inv.InvoiceType == "KAARIGAR" ? "Website" : "Employee")
                                     </span>
                                 </td>
                                 <td>@inv.InvoiceNbr</td>
@@ -143,7 +144,7 @@
                                 <td>@inv.JobTitle</td>
                                 <td>₹@inv.TotalAmt.ToString("N2")</td>
                                 <td>
-                                    <span class="k-badge @(inv.StatusCd == "PAID" ? "k-badge--green" : inv.StatusCd == "OVERDUE" ? "k-badge--red" : "k-badge--amber")">
+                                    <span class="k-badge @((inv.StatusCd == "PAID" || inv.StatusCd == "COLLECTED") ? "k-badge--green" : inv.StatusCd == "OVERDUE" ? "k-badge--red" : "k-badge--amber")">
                                         @inv.StatusCd
                                     </span>
                                 </td>
@@ -175,7 +176,7 @@
                                         </button>
                                     </form>
 
-                                    @if (inv.StatusCd != "PAID")
+                                    @if (inv.StatusCd != "PAID" && inv.StatusCd != "COLLECTED")
                                     {
                                         <form method="post" asp-action="MarkPaid" asp-controller="AdminBilling" style="display:inline">
                                             @Html.AntiForgeryToken()

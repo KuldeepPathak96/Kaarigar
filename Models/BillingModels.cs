@@ -4,12 +4,38 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kaarigar.Models;
 
+/* ============================================================================
+   BUSINESS-TERM <-> C#-CLASS MAPPING (read this first)
+   ============================================================================
+   The business terminology for these two invoices changed after this file
+   was first written. The C# class names and DB table names were NOT
+   renamed (that would touch routes, DbSet names, and several Views for a
+   purely cosmetic change) -- so the mapping is:
+
+     Business term "Employee Invoice"  ==  C# class WebsiteInvoice  (table WEBSITE_INVOICE)
+       Hours x Rate ONLY. No PF Employer Contribution, no ESIC Employer
+       Contribution, no GST. The Employer pays the worker this amount
+       directly (cash/UPI/etc, outside the platform) -- the worker then
+       marks it collected themselves (see CollectedByEmployeeTs / StatusCd
+       = "COLLECTED" below).
+
+     Business term "Website Invoice"   ==  C# class KaarigarInvoice (table KAARIGAR_INVOICE)
+       19% Service Fee on the Employee Invoice amount, plus 18% GST
+       computed on (Employee Invoice Amount + Service Fee Amount). This is
+       the only amount the platform itself bills the Employer for -- the
+       wage portion is referenced only as the GST calculation base, it is
+       NOT part of what's payable on this invoice.
+
+   See InvoiceGenerationService.cs for the actual calculation.
+   ============================================================================ */
+
 /// <summary>
-/// Kaarigar's own commission invoice for one completed job (one
-/// JOB_APPLICATION). Generated automatically the moment the Employer
-/// confirms the Satisfaction OTP. Payable immediately — payment collection
-/// itself is a separate, later feature; this only creates and records the
-/// invoice.
+/// BUSINESS TERM: "Website Invoice". Kaarigar's own commission invoice for
+/// one completed job (one JOB_APPLICATION): 19% Service Fee on the Employee
+/// Invoice amount + 18% GST on (Employee Invoice Amount + Service Fee).
+/// Generated automatically the moment the Employer confirms the
+/// Satisfaction OTP. Payable immediately — payment collection itself is a
+/// separate, later feature; this only creates and records the invoice.
 /// </summary>
 [Table("KAARIGAR_INVOICE")]
 public class KaarigarInvoice
@@ -105,11 +131,14 @@ public class KaarigarInvoice
 }
 
 /// <summary>
-/// The invoice that funds the worker's payout for one completed job (wage +
-/// PF Employer Contribution + ESIC Employer Contribution + GST). Generated
-/// alongside KaarigarInvoice at Satisfaction OTP confirmation. The Employer
-/// pays this one via a QR-code payment page — that payment flow is a
-/// separate, later feature; this only creates and records the invoice.
+/// BUSINESS TERM: "Employee Invoice". What the worker is owed for one
+/// completed job: Hours x Rate ONLY — no PF Employer Contribution, no ESIC
+/// Employer Contribution, no GST (all zeroed by InvoiceGenerationService).
+/// The Employer pays the worker this amount directly (cash/UPI/etc,
+/// outside the platform); the worker then marks it collected themselves
+/// via StatusCd = "COLLECTED" / CollectedByEmployeeTs below. Generated
+/// alongside the Website Invoice (KaarigarInvoice) at Satisfaction OTP
+/// confirmation.
 /// </summary>
 [Table("WEBSITE_INVOICE")]
 public class WebsiteInvoice
@@ -187,7 +216,7 @@ public class WebsiteInvoice
     [Column("TOTAL_AMT")]
     public decimal TotalAmt { get; set; }
 
-    /// <summary>PENDING_PAYMENT | PAID | OVERDUE | CANCELLED</summary>
+    /// <summary>PENDING_PAYMENT | COLLECTED | CANCELLED. "COLLECTED" = the worker marked they received this amount directly from the Employer (see CollectedByEmployeeTs).</summary>
     [Required]
     [Column("STATUS_CD")]
     [StringLength(20)]
@@ -202,6 +231,10 @@ public class WebsiteInvoice
 
     [Column("PAID_TS")]
     public DateTime? PaidTs { get; set; }
+
+    /// <summary>Set when the worker taps "Mark Payment Collected" — they're confirming they personally received this amount from the Employer (cash/UPI/etc), outside the platform. Null until then.</summary>
+    [Column("COLLECTED_BY_EMPLOYEE_TS")]
+    public DateTime? CollectedByEmployeeTs { get; set; }
 
     [Column("CREATED_BY")] public string CreatedBy { get; set; } = "SYSTEM";
     [Column("CREATED_TS")] public DateTime CreatedTs { get; set; } = DateTime.UtcNow;

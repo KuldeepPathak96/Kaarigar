@@ -2,11 +2,12 @@
 @{
     ViewData["Title"] = "Bill — Kaarigar";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    var kaarigarInvoice = ViewBag.KaarigarInvoice as KaarigarInvoice;
-    var websiteInvoice = ViewBag.WebsiteInvoice as WebsiteInvoice;
+    var kaarigarInvoice = ViewBag.KaarigarInvoice as KaarigarInvoice;   // business term: "Website Invoice" (platform's own commission)
+    var websiteInvoice = ViewBag.WebsiteInvoice as WebsiteInvoice;      // business term: "Employee Invoice" (hours x rate, paid directly to worker)
     var stillGenerating = ViewBag.StillGenerating as bool? ?? false;
     var jobTitle = ViewBag.JobTitle as string;
     var workerName = ViewBag.WorkerName as string;
+    var canMarkCollected = ViewBag.CanMarkCollected as bool? ?? false;
 }
 
 <div class="k-dash-header">
@@ -15,6 +16,11 @@
         @jobTitle @(!string.IsNullOrEmpty(workerName) ? $"— {workerName}" : "") — generated automatically when the job was marked complete.
     </p>
 </div>
+
+@if (TempData["SuccessMessage"] is string success)
+{
+    <div class="k-alert k-alert--success">@success</div>
+}
 
 @if (stillGenerating)
 {
@@ -27,7 +33,7 @@
 {
     <!-- ── FINAL PAYMENT AMOUNT — the headline number the employer cares about ── -->
     <div class="k-dash-section k-pay-summary">
-        <div class="k-pay-summary__label">Final Payment Amount — @(workerName ?? "Worker") will receive</div>
+        <div class="k-pay-summary__label">Employee Invoice Amount — @(workerName ?? "Worker") collects this directly</div>
         <div class="k-pay-summary__amount">₹@websiteInvoice.ManpowerAmt.ToString("N2")</div>
         <div class="k-pay-summary__meta">
             @websiteInvoice.HoursWorkedNbr.ToString("0.##") hrs × ₹@websiteInvoice.HourlyRateAmt.ToString("0.##")/hr
@@ -36,32 +42,10 @@
 }
 
 <div class="k-dash-section">
-    <h2 class="k-dash-section__title">Kaarigar Invoice — Platform Service Charge</h2>
-    @if (kaarigarInvoice == null)
-    {
-        <p class="k-empty-state__text">Not generated yet.</p>
-    }
-    else
-    {
-        <div class="k-responsive-table-wrap"><table class="k-table k-table--responsive">
-            <tbody>
-                <tr><th>Invoice No.</th><td>@kaarigarInvoice.InvoiceNbr</td></tr>
-                <tr><th>Date</th><td>@kaarigarInvoice.InvoiceDt.ToString("dd/MM/yyyy")</td></tr>
-                <tr><th>Due Date</th><td>@kaarigarInvoice.DueDt.ToString("dd/MM/yyyy")</td></tr>
-                <tr><th>Service Charge</th><td>₹@kaarigarInvoice.ServiceChargeAmt.ToString("N2")</td></tr>
-                <tr><th>GST (@kaarigarInvoice.GstRatePct%)</th><td>₹@((kaarigarInvoice.CgstAmt + kaarigarInvoice.SgstAmt + kaarigarInvoice.IgstAmt).ToString("N2"))</td></tr>
-                <tr><th>Total Payable</th><td><strong>₹@kaarigarInvoice.TotalAmt.ToString("N2")</strong></td></tr>
-                <tr><th>Status</th><td><span class="k-badge">@kaarigarInvoice.StatusCd</span></td></tr>
-            </tbody>
-        </table></div>
-        <a class="k-btn k-btn--primary k-btn--sm" style="margin-top:1rem;" href="/billing/kaarigar-invoice/@kaarigarInvoice.KaarigarInvoiceId/download" target="_blank">
-            <i data-lucide="download"></i> Download PDF
-        </a>
-    }
-</div>
-
-<div class="k-dash-section">
-    <h2 class="k-dash-section__title">Website Invoice — Worker Funding Amount</h2>
+    <h2 class="k-dash-section__title">Employee Invoice — Hours × Rate</h2>
+    <p class="k-form__hint" style="margin-top:-0.5rem; margin-bottom:1rem;">
+        No PF, ESIC, or GST on this invoice. The Employer pays this amount directly to the worker (cash/UPI/etc), outside the platform.
+    </p>
     @if (websiteInvoice == null)
     {
         <p class="k-empty-state__text">Not generated yet.</p>
@@ -73,18 +57,66 @@
                 <tr><th>Invoice No.</th><td>@websiteInvoice.InvoiceNbr</td></tr>
                 <tr><th>Date</th><td>@websiteInvoice.InvoiceDt.ToString("dd/MM/yyyy")</td></tr>
                 <tr><th>Hours × Rate</th><td>@websiteInvoice.HoursWorkedNbr.ToString("0.##") hrs × ₹@websiteInvoice.HourlyRateAmt.ToString("0.##")/hr</td></tr>
-                <tr><th>Manpower Amount (paid to Worker)</th><td>₹@websiteInvoice.ManpowerAmt.ToString("N2")</td></tr>
-                <tr><th>PF Employer Contribution</th><td>₹@websiteInvoice.PfEmployerAmt.ToString("N2")</td></tr>
-                <tr><th>ESIC Employer Contribution</th><td>₹@websiteInvoice.EsicEmployerAmt.ToString("N2")</td></tr>
-                <tr><th>GST (@websiteInvoice.GstRatePct%)</th><td>₹@((websiteInvoice.CgstAmt + websiteInvoice.SgstAmt + websiteInvoice.IgstAmt).ToString("N2"))</td></tr>
-                <tr><th>Total Payable (by Employer)</th><td><strong>₹@websiteInvoice.TotalAmt.ToString("N2")</strong></td></tr>
-                <tr><th>Status</th><td><span class="k-badge">@websiteInvoice.StatusCd</span></td></tr>
+                <tr><th>Amount Payable to Worker</th><td><strong>₹@websiteInvoice.TotalAmt.ToString("N2")</strong></td></tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        <span class="k-badge @(websiteInvoice.StatusCd == "COLLECTED" ? "k-badge--green" : "k-badge--amber")">
+                            @(websiteInvoice.StatusCd == "COLLECTED" ? "Collected by Worker" : "Pending Collection")
+                        </span>
+                        @if (websiteInvoice.CollectedByEmployeeTs.HasValue)
+                        {
+                            <span class="k-form__hint" style="margin-left:0.5rem;">on @websiteInvoice.CollectedByEmployeeTs.Value.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</span>
+                        }
+                    </td>
+                </tr>
             </tbody>
         </table></div>
-        <p class="k-form__hint" style="margin-top:0.75rem;">
-            Payment collection (QR code) is not part of this feature yet — this invoice is generated and recorded only.
-        </p>
-        <a class="k-btn k-btn--primary k-btn--sm" href="/billing/website-invoice/@websiteInvoice.WebsiteInvoiceId/download" target="_blank">
+
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1rem;">
+            <a class="k-btn k-btn--secondary k-btn--sm" href="/billing/website-invoice/@websiteInvoice.WebsiteInvoiceId/download" target="_blank">
+                <i data-lucide="download"></i> Download PDF
+            </a>
+
+            @if (canMarkCollected && websiteInvoice.StatusCd != "COLLECTED")
+            {
+                <form method="post" asp-action="MarkEmployeeInvoiceCollected" asp-controller="Billing" asp-route-id="@websiteInvoice.WebsiteInvoiceId">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="k-btn k-btn--primary k-btn--sm">
+                        <i data-lucide="check-circle"></i> Mark Payment Collected
+                    </button>
+                </form>
+            }
+        </div>
+    }
+</div>
+
+<div class="k-dash-section">
+    <h2 class="k-dash-section__title">Website Invoice — Platform Service Fee</h2>
+    @if (kaarigarInvoice == null)
+    {
+        <p class="k-empty-state__text">Not generated yet.</p>
+    }
+    else
+    {
+        <div class="k-responsive-table-wrap"><table class="k-table k-table--responsive">
+            <tbody>
+                <tr><th>Invoice No.</th><td>@kaarigarInvoice.InvoiceNbr</td></tr>
+                <tr><th>Date</th><td>@kaarigarInvoice.InvoiceDt.ToString("dd/MM/yyyy")</td></tr>
+                <tr><th>Due Date</th><td>@kaarigarInvoice.DueDt.ToString("dd/MM/yyyy")</td></tr>
+                <tr><th>Service Fee (19%)</th><td>₹@kaarigarInvoice.ServiceChargeAmt.ToString("N2")</td></tr>
+                <tr>
+                    <th>GST (@kaarigarInvoice.GstRatePct%)</th>
+                    <td>
+                        ₹@((kaarigarInvoice.CgstAmt + kaarigarInvoice.SgstAmt + kaarigarInvoice.IgstAmt).ToString("N2"))
+                        <span class="k-form__hint">on wage + service fee = ₹@kaarigarInvoice.TaxableAmt.ToString("N2")</span>
+                    </td>
+                </tr>
+                <tr><th>Total Payable (by Employer to Kaarigar)</th><td><strong>₹@kaarigarInvoice.TotalAmt.ToString("N2")</strong></td></tr>
+                <tr><th>Status</th><td><span class="k-badge">@kaarigarInvoice.StatusCd</span></td></tr>
+            </tbody>
+        </table></div>
+        <a class="k-btn k-btn--primary k-btn--sm" style="margin-top:1rem;" href="/billing/kaarigar-invoice/@kaarigarInvoice.KaarigarInvoiceId/download" target="_blank">
             <i data-lucide="download"></i> Download PDF
         </a>
     }
